@@ -1,0 +1,133 @@
+_schema-version: 3.3.0
+ID: cuibono
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: cuibono-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: cuibono-auth
+  - name: cuibono-db
+  - name: cuibono-connectivity
+  - name: cuibono-destination
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    readiness-health-check-http-endpoint: /health
+    readiness-health-check-type: http
+  build-parameters:
+    builder: npm
+- name: cuibono-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: cuibono-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: cuibono
+  type: approuter.nodejs
+  path: app/router
+  requires:
+  - name: srv-api
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: srv-api
+      url: ~{srv-url}
+  - name: cuibono-auth
+  - name: cuibono-destination
+  - name: cuibono-html5-runtime
+  parameters:
+    disk-quota: 256M
+    keep-existing-routes: true
+    memory: 256M
+- name: cuibono-app-deployer
+  type: com.sap.application.content
+  path: gen
+  requires:
+  - name: cuibono-html5-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: app/
+    requires:
+    - artifacts:
+      - amalisovcuibono.zip
+      name: amalisovcuibono
+      target-path: app//
+- name: amalisovcuibono
+  type: html5
+  path: app/amalisov.cuibono
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: cuibono-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: cuibono-${org}-${space}
+    path: ./xs-security.json
+    service: NoAuthentication
+    service-plan: application
+- name: cuibono-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: cuibono-connectivity
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: connectivity
+    service-plan: lite
+- name: cuibono-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: OAuth2UserTokenExchange
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: cuibono-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+    service: destination
+    service-plan: lite
+- name: cuibono-html5-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: cuibono-html5-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production
