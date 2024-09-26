@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "cds serve",
+      "name": "cds-ts watch",
       "request": "launch",
       "type": "node",
       "cwd": "${workspaceFolder}",

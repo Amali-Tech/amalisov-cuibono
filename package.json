@@ -21,8 +21,9 @@
     "rimraf": "^5.0.5"
   },
   "scripts": {
-    "start": "cds-serve",
-    "watch-amalisov.cuibono": "cds watch --open amalisov.cuibono/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "start": "cds-ts serve",
+    "watch": "npx cds-ts watch --with-mocks --profile development",
+    "watch:fe": "cds-ts watch --open amalisov.cuibono/index.html?sap-ui-xx-viewCache=false --livereload false",
     "undeploy": "cf undeploy cuibono --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
