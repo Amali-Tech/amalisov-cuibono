@@ -48,7 +48,11 @@
       "minUI5Version": "1.128.1",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {}
+        "sap.f": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.ui.comp": {},
+        "sap.ui.fl": {}
       }
     },
     "contentDensities": {
@@ -93,9 +97,7 @@
         {
           "name": "RouteMain",
           "pattern": ":?query:",
-          "target": [
-            "TargetMain"
-          ]
+          "target": ["TargetMain"]
         }
       ],
       "targets": {
