@@ -8,6 +8,7 @@
   "dependencies": {
     "@cap-js/hana": "^1",
     "@sap/cds": "^8",
+    "@sap/eslint-plugin-cds": "^3.0.5",
     "@sap/xssec": "^4",
     "express": "^4",
     "ts-node": "^10.9.2",
@@ -16,9 +17,17 @@
   "devDependencies": {
     "@cap-js/cds-types": "^0.6",
     "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^8",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9.11.1",
+    "@sap/cds-dk": "^8.2.3",
     "cds-plugin-ui5": "^0.9.3",
-    "rimraf": "^5.0.5"
+    "eslint": "^8.57.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "rimraf": "^5.0.5",
+    "typescript-eslint": "^8.7.0"
   },
   "scripts": {
     "start": "cds-ts serve",
@@ -26,7 +35,9 @@
     "watch:fe": "cds-ts watch --open amalisov.cuibono/index.html?sap-ui-xx-viewCache=false --livereload false",
     "undeploy": "cf undeploy cuibono --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
-    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "prepare": " cd .. && husky .husky",
+    "precommit": "eslint ."
   },
   "cds": {
     "requires": {
@@ -41,5 +52,8 @@
   },
   "workspaces": [
     "app/*"
-  ]
+  ],
+  "eslintConfig": {
+    "extends": "plugin:@sap/cds/recommended"
+  }
 }
