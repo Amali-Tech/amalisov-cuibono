@@ -8,6 +8,7 @@
   "dependencies": {
     "@cap-js/hana": "^1",
     "@sap/cds": "^8",
+    "@sap/eslint-plugin-cds": "^3.0.5",
     "@sap/xssec": "^4",
     "express": "^4",
     "ts-node": "^10.9.2",
@@ -19,7 +20,7 @@
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@eslint/js": "^9.11.1",
-    "@sap/cds-dk": "^8",
+    "@sap/cds-dk": "^8.2.3",
     "cds-plugin-ui5": "^0.9.3",
     "eslint": "^8.57.1",
     "globals": "^15.9.0",
@@ -51,5 +52,8 @@
   },
   "workspaces": [
     "app/*"
-  ]
+  ],
+  "eslintConfig": {
+    "extends": "plugin:@sap/cds/recommended"
+  }
 }
