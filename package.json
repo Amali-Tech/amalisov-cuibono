@@ -18,6 +18,7 @@
     "typescript": "^5.6.2"
   },
   "devDependencies": {
+    "@cap-js/cds-typer": "^0.26.0",
     "@cap-js/cds-types": "^0.6",
     "@cap-js/sqlite": "^1",
     "@commitlint/cli": "^19.5.0",
