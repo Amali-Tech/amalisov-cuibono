@@ -1,0 +1,48 @@
+<mvc:View
+    controllerName="amalisov.cuibono.controller.Participants"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:fb="sap.ui.comp.filterbar"
+>
+    <f:DynamicPage
+        id="dynamicPageId2"
+        headerExpanded="true"
+    >
+        <f:header>
+            <f:DynamicPageHeader
+                id="filterHeader2"
+                pinnable="true"
+            >
+                <f:content>
+                    <fb:FilterBar
+                        id="filterbar"
+                        persistencyKey="myPersKey"
+                        useToolbar="false"
+                        search=""
+                        dragDropConfig="move"
+                    >
+                        <fb:filterGroupItems>
+                            <fb:FilterGroupItem
+                                id="SearchItem"
+                                name="search"
+                                label="{i18n>search}"
+                                groupName="group1"
+                            >
+                                <fb:control>
+                                    <m:Input
+                                        id="search"
+                                        name="SearchItems"
+                                    />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content />
+    </f:DynamicPage>
+</mvc:View>
