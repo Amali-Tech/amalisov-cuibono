@@ -19,6 +19,8 @@ entity TrancheParticipation {
       calculatedPayoutAmount : Decimal;
       excluded               : Boolean;
       finalPayoutAmount      : Decimal;
+      justification          : String;
+      overRuled              : Boolean;
       participant            : Association to Person;
       bonusTranche           : Association to BonusTranche
 }
@@ -39,5 +41,5 @@ entity Person {
 
 entity Location {
   key ID   : UUID;
-      name : String(50) not null; 
+      name : String(50) not null;
 }

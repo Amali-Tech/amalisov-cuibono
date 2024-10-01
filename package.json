@@ -37,11 +37,10 @@
     "start": "cds-ts serve",
     "watch": "npx cds-ts watch --with-mocks --profile development",
     "watch:fe": "cds-ts watch --open amalisov.cuibono/index.html?sap-ui-xx-viewCache=false --livereload false",
-    "gen-types": "npx @cap-js/cds-typer \"*\" --outputDirectory @cds-models",
     "undeploy": "cf undeploy cuibono --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-    "prepare": " cd .. && husky .husky",
+    "prepare": "husky .husky",
     "precommit": "eslint ."
   },
   "cds": {
@@ -54,6 +53,9 @@
     "sql": {
       "native_hana_associations": false
     }
+  },
+  "imports": {
+    "#cds-models": "./@cds-models/*/index.js"
   },
   "workspaces": [
     "app/*"
