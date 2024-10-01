@@ -1,0 +1,25 @@
+<mvc:View
+    controllerName="amalisov.cuibono.controller.TrancheDetail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout.form"
+>
+    <Page title="{= ${isEditMode} ? 'Edit Tranche' : 'Create Tranche'}">
+        <IconTabBar>
+            <items>
+                <IconTabFilter
+                    text="Details"
+                    key="details"
+                >
+                   
+
+                  
+
+                   
+                </IconTabFilter>
+            </items>
+        </IconTabBar>
+    </Page>
+</mvc:View>

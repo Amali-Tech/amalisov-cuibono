@@ -5,6 +5,8 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.f"
+      xmlns:m="sap.m"
+
     xmlns:fb="sap.ui.comp.filterbar"
 >
     <f:DynamicPage
@@ -110,9 +112,59 @@
                             </fb:FilterGroupItem>
                         </fb:filterGroupItems>
                     </fb:FilterBar>
+                 
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
-        <f:content />
+        <f:content>
+            <m:Table id="idTranchesTable" inset="false" items="{ path: 'tranche>/TrancheCollection', sorter: { path: 'Name' } }" class="sapFDynamicPageAlignContent" width="auto">
+                <m:headerToolbar>
+                    <m:OverflowToolbar>
+                        <m:Title text="Products" level="H2"/>
+                        <m:ToolbarSpacer/>
+                        <m:Button text="Create Tranche" type="Emphasized" press="onCreateTranche"/>
+                        <m:OverflowToolbarButton icon="sap-icon://sort" text="Sort" type="Transparent" press=".onSort"/>
+                    </m:OverflowToolbar>
+                </m:headerToolbar>
+                <m:columns>
+                    <m:Column width="12em"
+                   
+                    >
+                        <m:Text text="Status"/>
+                    </m:Column>
+                    <m:Column minScreenWidth="Tablet" demandPopin="true">
+                        <m:Text text="Name"/>
+                    </m:Column>
+                    <m:Column minScreenWidth="Tablet" demandPopin="true">
+                        <m:Text text="Locations"/>
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="Start Date"/>
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="End Date"/>
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text=""/>
+                    </m:Column>
+                </m:columns>
+                <m:items>
+                    <m:ColumnListItem>
+                        <m:cells>
+                            <m:ObjectIdentifier title="{tranche>Status}" text="{tranche>Status}"/>
+                            <m:Text text="{tranche>Name}"/>
+                            <m:Text text="{tranche>Location}"/>
+                            <m:Text text="{tranche>StartDate}"/>
+                            <m:Text text="{tranche>EndDate}"/>
+                            <m:HBox alignContent="SpaceBetween" alignItems="End">
+                                <m:Button icon="sap-icon://edit" press="onEditPress"/>
+                                <m:Button icon="sap-icon://duplicate" press="onCopyPress"/>
+                                <m:Button icon="sap-icon://delete" press="onDeletePress"/>
+                            </m:HBox>
+                        </m:cells>
+                    </m:ColumnListItem>
+                </m:items>
+            </m:Table>
+    </f:content >
     </f:DynamicPage>
 </mvc:View>

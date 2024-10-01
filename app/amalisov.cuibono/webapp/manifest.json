@@ -43,7 +43,6 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": true,
     "dependencies": {
       "minUI5Version": "1.128.1",
       "libs": {
@@ -74,6 +73,10 @@
           "autoExpandSelect": true,
           "earlyRequests": true
         }
+      },
+      "tranche": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "model/data.json"
       }
     },
     "resources": {
@@ -98,6 +101,16 @@
           "name": "RouteMain",
           "pattern": ":?query:",
           "target": ["TargetMain"]
+        },
+        {
+          "pattern": "createTranche",
+          "name": "createTranche",
+          "target": "trancheDetail"
+        },
+        {
+          "pattern": "editTranche/{trancheId}",
+          "name": "editTranche",
+          "target": "trancheDetail"
         }
       ],
       "targets": {
@@ -107,6 +120,18 @@
           "clearControlAggregation": false,
           "viewId": "Main",
           "viewName": "Main"
+        },
+        "trancheDetail": {
+          "viewName": "TrancheDetail",
+          "viewLevel": 1,
+          "viewPath": "amalisov.cuibono.view"
+        },
+        "editTranche": {
+          "viewName": "EditTranche",
+          "viewLevel": 2,
+          "viewPath": "amalisov.cuibono.view",
+          "controlAggregation": "pages",
+          "controlId": "bonusTrancheTab"
         }
       }
     },

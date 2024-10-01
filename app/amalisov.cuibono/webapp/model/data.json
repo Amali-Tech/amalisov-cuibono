@@ -1,0 +1,52 @@
+{
+    "TrancheCollection": [
+      {
+        "Id": "P001",
+        "Name": "John Doe",
+        "Status": "Running",
+        "StartDate": "2023-01-01",
+        "EndDate": "2023-12-31",
+        "Location": "Accra"
+      },
+      {
+        "Id": "P002",
+        "Name": "Jane Smith",
+        "Status": "Locked",
+        "StartDate": "2023-04-01",
+        "EndDate": "2023-12-31",
+        "Location": "Kumasi"
+      }
+    ],
+      "ParticipantCollection": [
+        {
+          "LocalId": "300123456",
+          "Status": "Active",
+          "Name": "Q1 Bonus",
+          "Department": "Sales",
+          "Tranche": "Tranche 1",
+          "StartDate": "2023-01-01",
+          "EndDate": "2023-03-31",
+          "Weight": 0.3,
+          "Amount": 10000,
+          "FinalAmount": 12000,
+          "Excluded": false,
+          "Justification": "N/A"
+        },
+        {
+          "LocalId": "300123456",
+          "Status": "Completed",
+          "Name": "Q2 Bonus",
+          "Department": "Marketing",
+          "Tranche": "Tranche 2",
+          "StartDate": "2023-04-01",
+          "EndDate": "2023-06-30",
+          "Weight": 0.4,
+          "Amount": 15000,
+          "FinalAmount": 14000,
+          "Excluded": true,
+          "Justification": "Performance Issue"
+        }
+      ]
+     
+    }
+    
