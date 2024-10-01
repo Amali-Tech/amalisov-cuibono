@@ -43,6 +43,7 @@
     }
   },
   "sap.ui5": {
+    "flexEnabled": false,
     "dependencies": {
       "minUI5Version": "1.128.1",
       "libs": {
@@ -125,14 +126,8 @@
           "viewName": "TrancheDetail",
           "viewLevel": 1,
           "viewPath": "amalisov.cuibono.view"
-        },
-        "editTranche": {
-          "viewName": "EditTranche",
-          "viewLevel": 2,
-          "viewPath": "amalisov.cuibono.view",
-          "controlAggregation": "pages",
-          "controlId": "bonusTrancheTab"
         }
+        
       }
     },
     "rootView": {

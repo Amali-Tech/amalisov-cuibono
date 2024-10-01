@@ -2,7 +2,7 @@
     controllerName="amalisov.cuibono.controller.Participants"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
-    xmlns="sap.m"
+    xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.f"
     xmlns:fb="sap.ui.comp.filterbar"

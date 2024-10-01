@@ -1,1 +1,18 @@
 /* Enter your custom styles here */
+
+
+.trancheButtonBox{
+    align-content: end;
+    align-content: space-between;
+    gap: 10px;
+
+}
+
+.editButton, .duplicateButton, .deleteButton{
+
+    background-color: white;
+    border: none;
+
+}
+
+

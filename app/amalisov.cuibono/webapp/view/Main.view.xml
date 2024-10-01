@@ -2,24 +2,24 @@
     controllerName="amalisov.cuibono.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
-    xmlns="sap.m"
+    xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
 >
-    <Page id="page">
-        <customHeader>
+    <m:Page id="page">
+        <m:customHeader>
             <core:Fragment
                 id="custombar"
                 fragmentName="amalisov.cuibono.view.CustomBar"
                 type="XML"
             />
-        </customHeader>
-        <IconTabBar
-            id="idIconTabBarNoIcons"
+        </m:customHeader>
+        <m:IconTabBar
+            id="idm:IconTabBarNoIcons"
             expanded="{device>/isNoPhone}"
             class="sapUiResponsiveContentPadding"
         >
-            <items>
-                <IconTabFilter
+            <m:items>
+                <m:IconTabFilter
                     id="bonusTrancheTab"
                     text="Bonus Tranches"
                     key="bonusTranche"
@@ -28,18 +28,18 @@
                         id="BonusTrancheContent"
                         viewName="amalisov.cuibono.view.BonusTranches"
                     />
-                </IconTabFilter>
-                <IconTabFilter
+                </m:IconTabFilter>
+                <m:IconTabFilter
                     id="participantsTab"
                     text="Partcipants"
                     key="participants"
                 >
                     <mvc:XMLView
                         id="ParticipantsContent"
-                        viewName="amalisov.cuibono.view.BonusTranches"
+                        viewName="amalisov.cuibono.view.Participants"
                     />
-                </IconTabFilter>
-            </items>
-        </IconTabBar>
-    </Page>
+                </m:IconTabFilter>
+            </m:items>
+        </m:IconTabBar>
+    </m:Page>
 </mvc:View>

@@ -156,10 +156,10 @@
                             <m:Text text="{tranche>Location}"/>
                             <m:Text text="{tranche>StartDate}"/>
                             <m:Text text="{tranche>EndDate}"/>
-                            <m:HBox alignContent="SpaceBetween" alignItems="End">
-                                <m:Button icon="sap-icon://edit" press="onEditPress"/>
-                                <m:Button icon="sap-icon://duplicate" press="onCopyPress"/>
-                                <m:Button icon="sap-icon://delete" press="onDeletePress"/>
+                            <m:HBox class="trancheButtonBox">
+                                <m:Button type="Unstyled"  icon="sap-icon://edit" press="onEditPress" class="editButton" />
+                                <m:Button type="Unstyled"  icon="sap-icon://duplicate" press="onCopyPress"  class="duplicateButton" />
+                                <m:Button type="Unstyled"  icon="sap-icon://delete" press="onDeletePress" class="deleteButton" />
                             </m:HBox>
                         </m:cells>
                     </m:ColumnListItem>
