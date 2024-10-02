@@ -1,0 +1,21 @@
+<core:FragmentDefinition 
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Dialog id="createTargetDialog" title="Create New Target" class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer">
+        <VBox>
+            <Label text="Name" />
+            <Input id="targetNameInput" />
+
+            <Label text="Weight"  />
+            <Input id="targetWeightInput" type="Number" />
+
+            <Label text="Achievement"  />
+            <Input id="targetAchievementInput" />
+        </VBox>
+        <buttons>
+           
+            <Button text="Save" type="Emphasized" press="onCreateTarget"/>
+            <Button text="Discard" press="onCancelCreateTarget"/>
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

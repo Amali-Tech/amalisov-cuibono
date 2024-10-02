@@ -1,18 +1,64 @@
 /* Enter your custom styles here */
 
+.tableBar{
+background-color: white !important;
+
+
+}
+
+.table{
+    margin-bottom: 20px;
+}
+
+
+
+
+.sapUiForm .sapUiFormLblColon .sapUiFormM .sapUiFormEdit .sapUiFormEdit-CTX{
+    background-color: transparent !important ;
+}
+
+
+
+.sapUiForm .sapUiFormLblColon .sapUiFormM{
+    background-color: transparent !important ;
+
+}
+
+.spaceAbove {
+    margin-top: 15px;
+}
+
+.spaceBetween {
+    margin-left: 15px;
+}
+
+
+
 
 .trancheButtonBox{
-    align-content: end;
+    display: flex;
+    justify-content: end; 
     align-content: space-between;
-    gap: 10px;
+    gap: 4px;
 
 }
 
 .editButton, .duplicateButton, .deleteButton{
-
     background-color: white;
     border: none;
 
+}
+
+
+
+.customInput {
+    width: 100%;
+    gap: 10px;
+}
+
+.customInputs {
+    width: 100%;
+    
 }
 
 

@@ -10,7 +10,7 @@ import Router from "sap/ui/core/routing/Router";
 export default class BonusTranches extends BaseController {
     private oRouter: Router;
     private initialOdata: InitializationHelper;
-    /*eslint-disable @typescript-eslint/no-empty-function*/
+  
     public onInit(): void {
         this.oRouter = this.getOwnerComponent().getRouter();
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
