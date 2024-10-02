@@ -4,9 +4,9 @@ using {managed} from '@sap/cds/common';
 
 entity BonusTranche: managed {
   key ID                   : UUID;
-      name                 : String(50) not null;
-      beginDate            : DateTime;
-      endDate              : DateTime;
+      name                 : String(50) not null @mandatory;
+      beginDate            : DateTime @mandatory;
+      endDate              : DateTime @mandatory;
       status               : String default 'Running';
       trancheWeight        : Decimal;
       Target               : Association to many Target
@@ -29,8 +29,8 @@ entity TrancheParticipation {
 
 entity Target {
   key ID           : UUID;
-      name         : String(50) not null;
-      weight       : Decimal;
+      name         : String(50) not null @mandatory;
+      weight       : Decimal @mandatory;
       achievement  : Decimal;
       BonusTranche : Association to BonusTranche
 }
