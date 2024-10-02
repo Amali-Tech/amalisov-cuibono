@@ -7,6 +7,7 @@
         "StartDate": "2023-01-01",
         "EndDate": "2023-12-31",
         "Location": "Accra"
+       
       },
       {
         "Id": "P002",
@@ -15,6 +16,7 @@
         "StartDate": "2023-04-01",
         "EndDate": "2023-12-31",
         "Location": "Kumasi"
+       
       }
     ],
       "ParticipantCollection": [
@@ -46,6 +48,20 @@
           "Excluded": true,
           "Justification": "Performance Issue"
         }
+      ],
+
+      "TargetCollection" :[
+        {
+          "Name": "Quarter1",
+          "Weight": 50,
+          "Achievement": "90"
+      },
+      {
+          "Name": "Quarter2",
+          "Weight": 50,
+          "Achievement": "80"
+      }
+       
       ]
      
     }
