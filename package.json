@@ -10,11 +10,15 @@
     "@sap/cds": "^8",
     "@sap/eslint-plugin-cds": "^3.0.5",
     "@sap/xssec": "^4",
+    "cds-routing-handlers": "^3.0.7",
     "express": "^4",
+    "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
+    "typedi": "^0.10.0",
     "typescript": "^5.6.2"
   },
   "devDependencies": {
+    "@cap-js/cds-typer": "^0.26.0",
     "@cap-js/cds-types": "^0.6",
     "@cap-js/sqlite": "^1",
     "@commitlint/cli": "^19.5.0",
@@ -36,7 +40,7 @@
     "undeploy": "cf undeploy cuibono --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-    "prepare": " cd .. && husky .husky",
+    "prepare": "husky .husky",
     "precommit": "eslint ."
   },
   "cds": {
@@ -49,6 +53,9 @@
     "sql": {
       "native_hana_associations": false
     }
+  },
+  "imports": {
+    "#cds-models": "./@cds-models/*/index.js"
   },
   "workspaces": [
     "app/*"
