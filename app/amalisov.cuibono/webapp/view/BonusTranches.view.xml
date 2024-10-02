@@ -2,16 +2,47 @@
     controllerName="amalisov.cuibono.controller.BonusTranches"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
-    xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.f"
-      xmlns:m="sap.m"
-
+    xmlns:m="sap.m"
     xmlns:fb="sap.ui.comp.filterbar"
 >
+    <m:VBox visible="{= ${currentView>/currentView}!=='default'?true:false}">
+        <m:Title
+            text="{= ${currentView>/currentView}==='edit'? 'Edit':'Create'} Bonus Tranche"
+        />
+        <m:IconTabBar
+            id="idIconTabBar"
+            class="sapUiResponsiveContentPadding"
+        >
+            <m:items>
+                <m:IconTabFilter
+                    id="detailsTrancheTab"
+                    text="Details"
+                    key="bonusTranche"
+                >
+                    <mvc:XMLView
+                        id="detailsTrancheContent"
+                        viewName="amalisov.cuibono.view.AddEditTranche"
+                    />
+                </m:IconTabFilter>
+                <m:IconTabFilter
+                    id="participantsListTab"
+                    text="Partcipants"
+                    key="participants"
+                >
+                    <mvc:XMLView
+                        id="ParticipantsListContent"
+                        viewName="amalisov.cuibono.view.ParticipationList"
+                    />
+                </m:IconTabFilter>
+            </m:items>
+        </m:IconTabBar>
+    </m:VBox>
     <f:DynamicPage
         id="dynamicPageId"
         headerExpanded="true"
+        visible="{= ${currentView>/currentView}==='default'?true:false}"
     >
         <f:header>
             <f:DynamicPageHeader
@@ -34,7 +65,7 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <SearchField
+                                    <m:SearchField
                                         id="searchHere"
                                         placeholder="Search"
                                         showSearchButton="true"
@@ -50,7 +81,7 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <MultiComboBox
+                                    <m:MultiComboBox
                                         id="statusMultiCombo"
                                         name="businessPartner"
                                         class="filtersStyle"
@@ -62,7 +93,7 @@
                                             key="{dropdownModel>key}"
                                             text="{dropdownModel>text}"
                                         />
-                                    </MultiComboBox>
+                                    </m:MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
                             <fb:FilterGroupItem
@@ -73,7 +104,7 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <MultiComboBox
+                                    <m:MultiComboBox
                                         id="locationMultiCombo"
                                         name="businessPartner"
                                         class="filtersStyle"
@@ -85,7 +116,7 @@
                                             key="{dropdownModel>key}"
                                             text="{dropdownModel>text}"
                                         />
-                                    </MultiComboBox>
+                                    </m:MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
                             <fb:FilterGroupItem
@@ -96,7 +127,7 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <MultiComboBox
+                                    <m:MultiComboBox
                                         id="fiscalMultiCombo"
                                         name="businessPartner"
                                         items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
@@ -107,64 +138,103 @@
                                             key="{dropdownModel>key}"
                                             text="{dropdownModel>text}"
                                         />
-                                    </MultiComboBox>
+                                    </m:MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
                         </fb:filterGroupItems>
                     </fb:FilterBar>
-                 
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-            <m:Table id="idTranchesTable" inset="false" items="{ path: 'tranche>/TrancheCollection', sorter: { path: 'Name' } }" class="sapFDynamicPageAlignContent" width="auto">
+            <m:Table
+                id="idTranchesTable"
+                inset="false"
+                items="{ path: 'tranche>/TrancheCollection', sorter: { path: 'Name' } }"
+                class="sapFDynamicPageAlignContent"
+                width="auto"
+            >
                 <m:headerToolbar>
                     <m:OverflowToolbar>
-                        <m:Title text="Products" level="H2"/>
-                        <m:ToolbarSpacer/>
-                        <m:Button text="Create Tranche" type="Emphasized" press="onCreateTranche"/>
-                        <m:OverflowToolbarButton icon="sap-icon://sort" text="Sort" type="Transparent" press=".onSort"/>
+                        <m:Title
+                            text="Products"
+                            level="H2"
+                        />
+                        <m:ToolbarSpacer />
+                        <m:Button
+                            text="Create Tranche"
+                            type="Emphasized"
+                            press="onCreateTranche"
+                        />
+                        <m:OverflowToolbarButton
+                            icon="sap-icon://sort"
+                            text="Sort"
+                            type="Transparent"
+                            press=".onSort"
+                        />
                     </m:OverflowToolbar>
                 </m:headerToolbar>
                 <m:columns>
-                    <m:Column width="12em"
-                   
+                    <m:Column width="12em">
+                        <m:Text text="Status" />
+                    </m:Column>
+                    <m:Column
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
                     >
-                        <m:Text text="Status"/>
+                        <m:Text text="Name" />
                     </m:Column>
-                    <m:Column minScreenWidth="Tablet" demandPopin="true">
-                        <m:Text text="Name"/>
-                    </m:Column>
-                    <m:Column minScreenWidth="Tablet" demandPopin="true">
-                        <m:Text text="Locations"/>
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="Start Date"/>
+                    <m:Column
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                    >
+                        <m:Text text="Locations" />
                     </m:Column>
                     <m:Column>
-                        <m:Text text="End Date"/>
+                        <m:Text text="Start Date" />
                     </m:Column>
                     <m:Column>
-                        <m:Text text=""/>
+                        <m:Text text="End Date" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="" />
                     </m:Column>
                 </m:columns>
                 <m:items>
                     <m:ColumnListItem>
                         <m:cells>
-                            <m:ObjectIdentifier title="{tranche>Status}" text="{tranche>Status}"/>
-                            <m:Text text="{tranche>Name}"/>
-                            <m:Text text="{tranche>Location}"/>
-                            <m:Text text="{tranche>StartDate}"/>
-                            <m:Text text="{tranche>EndDate}"/>
+                            <m:ObjectIdentifier
+                                title="{tranche>Status}"
+                                text="{tranche>Status}"
+                            />
+                            <m:Text text="{tranche>Name}" />
+                            <m:Text text="{tranche>Location}" />
+                            <m:Text text="{tranche>StartDate}" />
+                            <m:Text text="{tranche>EndDate}" />
                             <m:HBox class="trancheButtonBox">
-                                <m:Button type="Unstyled"  icon="sap-icon://edit" press="onEditPress" class="editButton" />
-                                <m:Button type="Unstyled"  icon="sap-icon://duplicate" press="onCopyPress"  class="duplicateButton" />
-                                <m:Button type="Unstyled"  icon="sap-icon://delete" press="onDeletePress" class="deleteButton" />
+                                <m:Button
+                                    type="Unstyled"
+                                    icon="sap-icon://edit"
+                                    press="onEditPress"
+                                    class="editButton"
+                                />
+                                <m:Button
+                                    type="Unstyled"
+                                    icon="sap-icon://duplicate"
+                                    press="onCopyPress"
+                                    class="duplicateButton"
+                                />
+                                <m:Button
+                                    type="Unstyled"
+                                    icon="sap-icon://delete"
+                                    press="onDeletePress"
+                                    class="deleteButton"
+                                />
                             </m:HBox>
                         </m:cells>
                     </m:ColumnListItem>
                 </m:items>
             </m:Table>
-    </f:content >
+        </f:content>
     </f:DynamicPage>
 </mvc:View>

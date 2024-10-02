@@ -90,19 +90,24 @@
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
+        "type": "View",
         "viewType": "XML",
-        "async": true,
-        "viewPath": "amalisov.cuibono.view",
-        "controlAggregation": "pages",
+        "path": "amalisov.cuibono.view",
         "controlId": "app",
-        "clearControlAggregation": false
+        "transition": "slide",
+        "async": true,
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": "notFound"
+        }
       },
       "routes": [
         {
           "name": "RouteMain",
           "pattern": ":?query:",
-          "target": ["TargetMain"]
+          "target": "TargetMain"
         },
+
         {
           "pattern": "createTranche",
           "name": "createTranche",
@@ -116,18 +121,35 @@
       ],
       "targets": {
         "TargetMain": {
-          "viewType": "XML",
+          "id": "TargetMain",
           "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "Main",
-          "viewName": "Main"
+          "name": "Main",
+          "level": 0
+        },
+        "BonusTranches": {
+          "id": "bonusTranches",
+          "parent": "TargetMain",
+          "name": "BonusTranches",
+          "controlId": "bonusTranchesTab",
+          "controlAggregation": "content"
+        },
+        "Participants": {
+          "id": "participants",
+          "parent": "TargetMain",
+          "name": "Participants",
+          "controlId": "participantsTab",
+          "controlAggregation": "content"
+        },
+        "notFound": {
+          "id": "notFound",
+          "name": "NotFound",
+          "transition": "show"
         },
         "trancheDetail": {
           "viewName": "TrancheDetail",
           "viewLevel": 1,
           "viewPath": "amalisov.cuibono.view"
         }
-        
       }
     },
     "rootView": {

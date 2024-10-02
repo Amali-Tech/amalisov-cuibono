@@ -15,30 +15,20 @@
         </m:customHeader>
         <m:IconTabBar
             id="idm:IconTabBarNoIcons"
-            expanded="{device>/isNoPhone}"
-            class="sapUiResponsiveContentPadding"
+            select="onTabSelect"
+            selectedKey="{view>/tab}"
         >
             <m:items>
                 <m:IconTabFilter
-                    id="bonusTrancheTab"
-                    text="Bonus Tranches"
-                    key="bonusTranche"
-                >
-                    <mvc:XMLView
-                        id="BonusTrancheContent"
-                        viewName="amalisov.cuibono.view.BonusTranches"
-                    />
-                </m:IconTabFilter>
+                    id="bonusTranchesTab"
+                    text="{i18n>bonusTranches}"
+                    key="bonusTranches"
+                />
                 <m:IconTabFilter
                     id="participantsTab"
-                    text="Partcipants"
+                    text="{i18n>participants}"
                     key="participants"
-                >
-                    <mvc:XMLView
-                        id="ParticipantsContent"
-                        viewName="amalisov.cuibono.view.Participants"
-                    />
-                </m:IconTabFilter>
+                />
             </m:items>
         </m:IconTabBar>
     </m:Page>

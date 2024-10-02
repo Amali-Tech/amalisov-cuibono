@@ -1,3 +1,7 @@
+export interface CurrentView { currentView: "default" | "edit" | "create" }
+export interface RouterArguments {
+    "?query"?: { tab?: string, operation?: "default" | "edit" | "create" };
+}
 export class InitializationHelper {
     constructor(private getI18nText: (textPath: string) => string) { }
     /**
