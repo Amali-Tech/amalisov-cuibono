@@ -1,11 +1,151 @@
 <mvc:View
     controllerName="amalisov.cuibono.controller.AddEditTranche"
     xmlns:mvc="sap.ui.core.mvc"
-    displayBlock="true"
+    xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.f"
-    xmlns:m="sap.m"
-    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:layout="sap.ui.layout.form"
 >
-    <m:Text text="Add and edit tracnhe" />
+    <layout:SimpleForm
+        class="table"
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanL="12"
+        labelSpanM="12"
+        labelSpanS="12"
+        columnsL="2"
+        columnsM="2"
+        width="33%"
+    >
+        <layout:content>
+            <VBox>
+                <HBox class="spaceAbove">
+                    <!-- Name and Location on the same line -->
+                    <VBox>
+                        <Label text="Name" />
+                        <Input
+                            value="{tranche>/Name}"
+                            class="customInputs "
+                        />
+                    </VBox>
+
+                    <VBox class="spaceBetween">
+                        <Label text="Location" />
+                        <ComboBox
+                            items="{
+                                    path: ''
+                                   
+                                }"
+                            class="customInputs"
+                        >
+                            <core:Item
+                                key="{key}"
+                                text="{text}"
+                            />
+                        </ComboBox>
+                        <!-- <Input value="{tranche>/Location}" /> -->
+                    </VBox>
+                </HBox>
+
+                <!-- Description below Name and Location -->
+                <VBox class="spaceAbove">
+                    <Label text="Description" />
+                    <TextArea
+                        value="{tranche>/Description}"
+                        rows="4"
+                        class="customInput"
+                    />
+                </VBox>
+
+                <!-- Start Date and End Date on the same line -->
+                <HBox class="spaceAbove">
+                    <VBox>
+                        <Label text="Start Date" />
+                        <DatePicker
+                            value="{tranche>/StartDate}"
+                            class="customInput"
+                        />
+                    </VBox>
+                    <VBox class="spaceBetween">
+                        <Label text="End Date" />
+                        <DatePicker
+                            value="{tranche>/EndDate}"
+                            class="customInput"
+                        />
+                    </VBox>
+                </HBox>
+
+                <!-- Tranche Weight on its own row -->
+                <HBox class="spaceAbove">
+                    <VBox>
+                        <Label text="Tranche Weight" />
+                        <Input
+                            value="{tranche>/Weight}"
+                            class="customInput"
+                        />
+                    </VBox>
+                </HBox>
+            </VBox>
+        </layout:content>
+    </layout:SimpleForm>
+
+    <Table
+        id="targetTable"
+        items="{path: 'tranche>/TargetCollection'}"
+        width="33%"
+    >
+        <headerToolbar>
+            <OverflowToolbar class="tableBar">
+                <Title
+                    text="Target Weights"
+                    level="H2"
+                />
+                <ToolbarSpacer />
+                <Button
+                    type="Emphasized"
+                    text="Add new  Target"
+                    press="onAddTarget"
+                />
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column>
+                <Text text="Name" />
+            </Column>
+            <Column>
+                <Text text="Target Weight" />
+            </Column>
+            <Column>
+                <Text text="Achievement" />
+            </Column>
+            <Column>
+                <Text text="" />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{tranche>Name}" />
+                    <Text text="{tranche>Weight}" />
+                    <Text text="{tranche>Achievement}" />
+
+                    <HBox class="trancheButtonBox">
+                        <Button
+                            type="Unstyled"
+                            icon="sap-icon://edit"
+                            press="onEditTargetPress"
+                            class="editButton"
+                        />
+
+                        <Button
+                            type="Unstyled"
+                            icon="sap-icon://delete"
+                            press="onDeleteTargetPress"
+                            class="deleteButton"
+                        />
+                    </HBox>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
 </mvc:View>
