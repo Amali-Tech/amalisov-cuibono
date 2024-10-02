@@ -1,16 +1,18 @@
 namespace cuibono;
 
-entity BonusTranche {
+using {managed} from '@sap/cds/common';
+
+entity BonusTranche: managed {
   key ID                   : UUID;
       name                 : String(50) not null;
-      beginDate            : Date;
-      endDate              : Date;
-      status               : String;
+      beginDate            : DateTime;
+      endDate              : DateTime;
+      status               : String default 'Running';
       trancheWeight        : Decimal;
       Target               : Association to many Target
-                               on Target.BonusTranche = $self;
+                              on Target.BonusTranche = $self;
       trancheParticipation : Association to many TrancheParticipation
-                               on trancheParticipation.bonusTranche = $self;
+                              on trancheParticipation.bonusTranche = $self;
       Location             : Association to Location;
 }
 
