@@ -1,8 +1,9 @@
 import cds, { Request } from "@sap/cds";
-import { BeforeCreate, BeforeUpdate, Handler, Req } from "cds-routing-handlers";
+import { AfterDelete, BeforeCreate, BeforeUpdate, Handler, ParamObj, Req } from "cds-routing-handlers";
 import { Service } from "typedi";
 import { BonusTranche, Target } from "../../@cds-models/BonusTrancheService";
 import validateTarget from "../utils/validateTarget";
+import {DeleteParam} from '../utils/types/delete-bonus-tranche';
 
 const logger = cds.log("Bonus Tranche handler.");
 
@@ -77,5 +78,14 @@ export class BonusTrancheHandler {
 
       await UPDATE.entity(Target).set(target).where({ ID: target.ID })
     }
+  }
+
+  @AfterDelete()
+  public async afterDelete(@ParamObj() deleteParams: DeleteParam) {
+    logger.info("Bonus Tranche on Delete handler!");
+
+    const { ID:trancheToBeDeletedId } = deleteParams;
+
+    await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId })
   }
 }
