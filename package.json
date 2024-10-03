@@ -45,7 +45,14 @@
   },
   "cds": {
     "requires": {
-      "auth": "basic",
+      "auth": {
+        "kind": "basic-auth",
+        "users": {
+          "ADMIN": {
+            "password": "ADMIN1234"
+          }
+        }
+      },
       "connectivity": true,
       "destinations": true,
       "html5-repo": true

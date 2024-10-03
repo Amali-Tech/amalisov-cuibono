@@ -1,6 +1,6 @@
 using cuibono as db from '../../db/schema';
 
-service BonusTrancheService {
+service BonusTrancheService @(requires: 'authenticated-user') {
     entity BonusTranche         as projection on db.BonusTranche;
     entity TrancheParticipation as projection on db.TrancheParticipation;
     entity Target               as projection on db.Target;
