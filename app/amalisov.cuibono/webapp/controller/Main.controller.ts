@@ -26,9 +26,7 @@ export default class Main extends BaseController {
         // save the current query state
         this._oRouterArgs = event.getParameter("arguments" as never);
         this._oRouterArgs["?query"] = this._oRouterArgs["?query"] ?? {};
-
-
-        const oQuery = this._oRouterArgs["?query"];
+        const oQuery: RouterArguments["?query"] = this._oRouterArgs["?query"];
 
         if (oQuery && this._validTabKeys.indexOf(oQuery.tab ?? "") > -1) {
             this.updateModelData("view", { tab: oQuery.tab })
@@ -37,15 +35,7 @@ export default class Main extends BaseController {
                 this.getRouter()?.getTargets()?.display("Participants");
             } else {
                 this.getRouter()?.getTargets()?.display("BonusTranches");
-                if (oQuery.operation) {
-                    this.currentView.currentView = oQuery.operation
-                    this.updateModelData("currentView", this.currentView)
-
-                }
-                else {
-                    this.currentView.currentView = "default"
-                    this.updateModelData("currentView", this.currentView)
-                }
+                this.setCurrentPage(oQuery)
             }
         } else {
 
@@ -55,6 +45,17 @@ export default class Main extends BaseController {
                     tab: this._validTabKeys[0]
                 }
             }, true /*no history*/);
+        }
+    }
+    private setCurrentPage = (oQuery: RouterArguments["?query"]) => {
+        if (oQuery?.operation) {
+            this.currentView.currentView = oQuery.operation
+            this.updateModelData("currentView", this.currentView)
+
+        }
+        else {
+            this.currentView.currentView = "default"
+            this.updateModelData("currentView", this.currentView)
         }
     }
     private updateModelData(
