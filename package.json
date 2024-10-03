@@ -45,15 +45,17 @@
   },
   "cds": {
     "requires": {
-      "auth": "basic",
+      "auth": {
+        "kind": "basic-auth",
+        "users": {
+          "ADMIN": {
+            "password": "ADMIN1234"
+          }
+        }
+      },
       "connectivity": true,
       "destinations": true,
-      "html5-repo": true,
-      "users": {
-        "ADMIN": {
-          "password": "ADMIN1234"
-        }
-      }
+      "html5-repo": true
     },
     "sql": {
       "native_hana_associations": false
