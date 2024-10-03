@@ -1,8 +1,7 @@
 import cds, { Request } from "@sap/cds";
-import { AfterDelete, BeforeCreate, BeforeUpdate, Handler, ParamObj, Req } from "cds-routing-handlers";
+import { BeforeCreate, BeforeDelete, BeforeUpdate, Handler, ParamObj, Req } from "cds-routing-handlers";
 import { Service } from "typedi";
 import { BonusTranche, Target } from "../../@cds-models/BonusTrancheService";
-import validateInputTarget from "../utils/validateTarget";
 import {DeleteParam} from '../utils/types/delete-bonus-tranche';
 
 const logger = cds.log("Bonus Tranche handler.");
@@ -13,87 +12,59 @@ export class BonusTrancheHandler {
 
   @BeforeCreate()
   public async beforeCreate(@Req() req: Request) {
-    logger.info("Bonus Tranche before Create handler!");
+    try {
+      logger.info("Bonus Tranche before Create handler!");
 
-    let targets: Target[] = req.data.Target
-    const { beginDate, endDate, ID: bonusTrancheId } = req.data
-    const currentDate = new Date();
-    const formattedBeginDate = new Date(beginDate);
-    const formattedEndDate = new Date(endDate);
-    
-    if (formattedBeginDate <= currentDate) {
-      return req.error(400, "Begin Date must be in the future");
-    }
+      const targets: Target[] = req.data.Target;
+      const { ID: bonusTrancheId } = req.data;
 
-    if (formattedEndDate <= formattedBeginDate) {
-      return req.error(400, "End Date must be after begin date");
-    }
-
-    if (!targets) {
-      return;
-    }
-
-    if (typeof targets === "object") {
-      targets = Array.isArray(targets) ? targets : [targets];
-    }
-
-    if (!validateInputTarget(targets)) {
-      return req.error(400, "Target must have name and weight");
-    }
-
-    for (const target of targets) {
-      target.BonusTranche_ID = bonusTrancheId
-      await INSERT.into(Target).entries(target)
+      for (const target of targets) {
+        target.BonusTranche_ID = bonusTrancheId;
+        await INSERT.into(Target).entries(target);
+      }
+        
+    } catch (error: unknown) {
+      throw new Error(`Error in beforeCreate handler: ${error}`);
     }
   }
 
   @BeforeUpdate()
   public async beforeUpdate(@Req() req: Request) {
-    logger.info("Bonus Tranche on Update handler!");
+    try {
+      logger.info("Bonus Tranche on Update handler!");
 
-    let targets: Target[] = req.data.Target
-    const { beginDate, endDate, ID: bonusTrancheId } = req.data
-    const currentDate = new Date();
-    const formattedBeginDate = new Date(beginDate);
-    const formattedEndDate = new Date(endDate);
-    
-    if (formattedBeginDate <= currentDate) {
-      return req.error(400, "Begin Date must be in the future");
-    }
+      const targets: Target[] = req.data.Target;
+      const { ID: bonusTrancheId } = req.data;
 
-    if (formattedEndDate <= formattedBeginDate) {
-      return req.error(400, "End Date must be after begin date");
-    }
+      // Delete all targets before updating them
+      await DELETE.from(Target.name).where({ BonusTranche_ID: bonusTrancheId });
 
-    if (!targets) {
-      return;
-    }
-
-    if (typeof targets === "object") {
-      targets = Array.isArray(targets) ? targets : [targets];
-    }
-
-    if (!validateInputTarget(targets)) {
-      return req.error(400, "Target must have name and weight");
-    }
-
-    for (const target of targets) {
-      if (!target.ID) {
-        target.BonusTranche_ID = bonusTrancheId
-        await INSERT.into(Target).entries(target)
-        continue
+      for (const target of targets) {
+        if (!target.ID) {
+          target.BonusTranche_ID = bonusTrancheId;
+          await INSERT.into(Target).entries(target);
+        } else {
+          await UPDATE.entity(Target).set(target).where({ ID: target.ID });
+        }
       }
 
-      await UPDATE.entity(Target).set(target).where({ ID: target.ID })
+    } catch (error: unknown) {
+      throw new Error(`Error in beforeUpdate handler: ${error}`);
     }
   }
 
-  @AfterDelete()
-  public async afterDelete(@ParamObj() deleteParams: DeleteParam) {
-    logger.info("Bonus Tranche on Delete handler!");
 
-    const { ID:trancheToBeDeletedId } = deleteParams;
+  @BeforeDelete()
+  public async beforeDelete(@ParamObj() deleteParams: DeleteParam) {
+    try {
+      logger.info("Bonus Tranche on Delete handler!");
 
-    await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId })
+      const { ID: trancheToBeDeletedId } = deleteParams;
+
+      await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId });
+
+    } catch (error: unknown) {
+      throw new Error(`Error in AfterDelete handler: ${error}`);
+    }
   }
 }
