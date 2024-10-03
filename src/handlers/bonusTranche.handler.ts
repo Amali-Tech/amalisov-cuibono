@@ -40,14 +40,9 @@ export class BonusTrancheHandler {
       await DELETE.from(Target.name).where({ BonusTranche_ID: bonusTrancheId });
 
       for (const target of targets) {
-        if (!target.ID) {
           target.BonusTranche_ID = bonusTrancheId;
           await INSERT.into(Target).entries(target);
-        } else {
-          await UPDATE.entity(Target).set(target).where({ ID: target.ID });
-        }
       }
-
     } catch (error: unknown) {
       throw new Error(`Error in beforeUpdate handler: ${error}`);
     }
