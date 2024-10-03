@@ -48,7 +48,12 @@
       "auth": "basic",
       "connectivity": true,
       "destinations": true,
-      "html5-repo": true
+      "html5-repo": true,
+      "users": {
+        "ADMIN": {
+          "password": "ADMIN1234"
+        }
+      }
     },
     "sql": {
       "native_hana_associations": false
