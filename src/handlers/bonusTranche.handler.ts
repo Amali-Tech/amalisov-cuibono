@@ -2,7 +2,7 @@ import cds, { Request } from "@sap/cds";
 import { AfterDelete, BeforeCreate, BeforeUpdate, Handler, ParamObj, Req } from "cds-routing-handlers";
 import { Service } from "typedi";
 import { BonusTranche, Target } from "../../@cds-models/BonusTrancheService";
-import validateTarget from "../utils/validateTarget";
+import validateInputTarget from "../utils/validateTarget";
 import {DeleteParam} from '../utils/types/delete-bonus-tranche';
 
 const logger = cds.log("Bonus Tranche handler.");
@@ -13,27 +13,31 @@ export class BonusTrancheHandler {
 
   @BeforeCreate()
   public async beforeCreate(@Req() req: Request) {
-    logger.info("Bonus Tranche on Create handler!");
+    logger.info("Bonus Tranche before Create handler!");
 
-    const targets: Target[] = req.data.Target
+    let targets: Target[] = req.data.Target
     const { beginDate, endDate, ID: bonusTrancheId } = req.data
     const currentDate = new Date();
     const formattedBeginDate = new Date(beginDate);
     const formattedEndDate = new Date(endDate);
     
-    if (!(formattedBeginDate > currentDate)) {
+    if (formattedBeginDate <= currentDate) {
       return req.error(400, "Begin Date must be in the future");
     }
 
-    if (!(formattedEndDate > formattedBeginDate)) {
+    if (formattedEndDate <= formattedBeginDate) {
       return req.error(400, "End Date must be after begin date");
     }
 
     if (!targets) {
-      return 0;
+      return;
     }
 
-    if (!validateTarget(targets)) {
+    if (typeof targets === "object") {
+      targets = Array.isArray(targets) ? targets : [targets];
+    }
+
+    if (!validateInputTarget(targets)) {
       return req.error(400, "Target must have name and weight");
     }
 
@@ -47,25 +51,29 @@ export class BonusTrancheHandler {
   public async beforeUpdate(@Req() req: Request) {
     logger.info("Bonus Tranche on Update handler!");
 
-    const targets: Target[] = req.data.Target
+    let targets: Target[] = req.data.Target
     const { beginDate, endDate, ID: bonusTrancheId } = req.data
     const currentDate = new Date();
     const formattedBeginDate = new Date(beginDate);
     const formattedEndDate = new Date(endDate);
     
-    if (!(formattedBeginDate > currentDate)) {
+    if (formattedBeginDate <= currentDate) {
       return req.error(400, "Begin Date must be in the future");
     }
 
-    if (!(formattedEndDate > formattedBeginDate)) {
+    if (formattedEndDate <= formattedBeginDate) {
       return req.error(400, "End Date must be after begin date");
     }
 
     if (!targets) {
-      return 0;
+      return;
     }
 
-    if (!validateTarget(targets)) {
+    if (typeof targets === "object") {
+      targets = Array.isArray(targets) ? targets : [targets];
+    }
+
+    if (!validateInputTarget(targets)) {
       return req.error(400, "Target must have name and weight");
     }
 
