@@ -6,6 +6,14 @@
     xmlns:f="sap.f"
     xmlns:layout="sap.ui.layout.form"
 >
+    <HBox class="horizontalAlign">
+        <Switch
+            state="{tranche>/Active}"
+            change="onSwitchChange"
+        />
+        <Label text="{i18n>locked}" />
+    </HBox>
+
     <layout:SimpleForm
         class="table"
         editable="true"
@@ -20,9 +28,8 @@
         <layout:content>
             <VBox>
                 <HBox class="spaceAbove">
-                    <!-- Name and Location on the same line -->
                     <VBox>
-                        <Label text="Name" />
+                        <Label text="{i18n>name}" />
                         <Input
                             value="{tranche>/Name}"
                             class="customInputs "
@@ -30,7 +37,7 @@
                     </VBox>
 
                     <VBox class="spaceBetween">
-                        <Label text="Location" />
+                        <Label text="{i18n>location}" />
                         <ComboBox
                             items="{
                                     path: ''
@@ -43,13 +50,11 @@
                                 text="{text}"
                             />
                         </ComboBox>
-                        <!-- <Input value="{tranche>/Location}" /> -->
                     </VBox>
                 </HBox>
 
-                <!-- Description below Name and Location -->
                 <VBox class="spaceAbove">
-                    <Label text="Description" />
+                    <Label text="{i18n>description}" />
                     <TextArea
                         value="{tranche>/Description}"
                         rows="4"
@@ -57,17 +62,16 @@
                     />
                 </VBox>
 
-                <!-- Start Date and End Date on the same line -->
                 <HBox class="spaceAbove">
                     <VBox>
-                        <Label text="Start Date" />
+                        <Label text="{i18n>startDate}" />
                         <DatePicker
                             value="{tranche>/StartDate}"
                             class="customInput"
                         />
                     </VBox>
                     <VBox class="spaceBetween">
-                        <Label text="End Date" />
+                        <Label text="{endDate}" />
                         <DatePicker
                             value="{tranche>/EndDate}"
                             class="customInput"
@@ -75,10 +79,10 @@
                     </VBox>
                 </HBox>
 
-                <!-- Tranche Weight on its own row -->
+               
                 <HBox class="spaceAbove">
                     <VBox>
-                        <Label text="Tranche Weight" />
+                        <Label text="{i18n>trancheWeight}" />
                         <Input
                             value="{tranche>/Weight}"
                             class="customInput"
@@ -97,26 +101,26 @@
         <headerToolbar>
             <OverflowToolbar class="tableBar">
                 <Title
-                    text="Target Weights"
+                    text="{i18n>targetWeight}"
                     level="H2"
                 />
                 <ToolbarSpacer />
                 <Button
                     type="Emphasized"
-                    text="Add new  Target"
+                    text="{i18n>addNewTarget}"
                     press="onAddTarget"
                 />
             </OverflowToolbar>
         </headerToolbar>
         <columns>
             <Column>
-                <Text text="Name" />
+                <Text text="{i18n>name}" />
             </Column>
-            <Column>
-                <Text text="Target Weight" />
+            <Column hAlign="End">
+                <Text text="{i18n>targetWeight}" />
             </Column>
-            <Column>
-                <Text text="Achievement" />
+            <Column hAlign="End">
+                <Text text="{i18n>achievement}" />
             </Column>
             <Column>
                 <Text text="" />
@@ -148,4 +152,22 @@
             </ColumnListItem>
         </items>
     </Table>
+
+    <VBox class="totalTrancheWeight">
+        <HBox class="totalBox">
+            <Title
+                text="{i18n>total}"
+                class="totalTitle"
+            />
+
+            <ToolbarSpacer />
+
+            <Text
+                text="{i18n>percent}"
+                class="totalTrancheWeightText"
+            />
+
+            <ToolbarSpacer />
+        </HBox>
+    </VBox>
 </mvc:View>

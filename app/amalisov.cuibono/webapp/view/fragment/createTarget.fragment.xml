@@ -3,19 +3,19 @@
     xmlns:core="sap.ui.core">
     <Dialog id="createTargetDialog" title="Create New Target" class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer">
         <VBox>
-            <Label text="Name" />
+            <Label text="{i18n>name}" />
             <Input id="targetNameInput" />
 
-            <Label text="Weight"  />
+            <Label text="{i18n>weight}"  />
             <Input id="targetWeightInput" type="Number" />
 
-            <Label text="Achievement"  />
+            <Label text="{i18n>achievement}"  />
             <Input id="targetAchievementInput" />
         </VBox>
         <buttons>
            
-            <Button text="Save" type="Emphasized" press="onCreateTarget"/>
-            <Button text="Discard" press="onCancelCreateTarget"/>
+            <Button text="{i18n>save}" type="Emphasized" press="onCreateTarget"/>
+            <Button text="{i18n>discard}" press="onCancelCreateTarget"/>
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

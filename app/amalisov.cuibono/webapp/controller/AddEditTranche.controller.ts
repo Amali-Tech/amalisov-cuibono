@@ -30,8 +30,8 @@ export default class AddEditTranche extends BaseController {
                 if (!Array.isArray(oDialog) && oDialog instanceof Dialog) {
                     oView.addDependent(oDialog);
                     return oDialog;
-                } else {
-                    throw new Error("Dialog fragment is not loaded correctly");
+                } else {    
+                    throw new Error(this.getI18nText("dialogNotLoaded"));
                 }
             });
         }
@@ -39,7 +39,8 @@ export default class AddEditTranche extends BaseController {
         this._pDialog.then((oDialog) => {
             oDialog.open();
         }).catch(() => {
-            MessageToast.show("Error opening the dialog")
+            
+            MessageToast.show(this.getI18nText("errorDialog"))
 
         });
     }
@@ -49,18 +50,20 @@ export default class AddEditTranche extends BaseController {
         if (oDialog) {
             oDialog.close();
         } else {
-            MessageToast.show("Dialog not found")
+            //
+            MessageToast.show(this.getI18nText("dialogNotFound"))
 
         }
     }
 
     public onCreateTarget(): void {
-        // Add your logic to handle creating the target here
+   
         const oDialog = this.byId("createTargetDialog") as Dialog;
         if (oDialog) {
             oDialog.close();
         } else {
-            MessageToast.show("Dialog not found")
+            MessageToast.show(this.getI18nText("dialogNotFound"))
+         
 
         }
     }

@@ -7,5 +7,5 @@
     xmlns:m="sap.m"
     xmlns:fb="sap.ui.comp.filterbar"
 >
-    <m:Text text="Participation list" />
+    <m:Text text="{18n>participation}" />
 </mvc:View>

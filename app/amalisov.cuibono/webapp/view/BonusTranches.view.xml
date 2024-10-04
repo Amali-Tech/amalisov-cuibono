@@ -18,7 +18,7 @@
             <m:items>
                 <m:IconTabFilter
                     id="detailsTrancheTab"
-                    text="Details"
+                    text="{i18n>details}"
                     key="bonusTranche"
                 >
                     <mvc:XMLView
@@ -28,7 +28,7 @@
                 </m:IconTabFilter>
                 <m:IconTabFilter
                     id="participantsListTab"
-                    text="Partcipants"
+                    text="{i18n>participation}"
                     key="participants"
                 >
                     <mvc:XMLView
@@ -83,7 +83,7 @@
                                 <fb:control>
                                     <m:MultiComboBox
                                         id="statusMultiCombo"
-                                        name="businessPartner"
+                                        name="bonusTrancheFilter"
                                         class="filtersStyle"
                                         items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
                                         selectionChange=".onFilterFieldChange"
@@ -106,7 +106,7 @@
                                 <fb:control>
                                     <m:MultiComboBox
                                         id="locationMultiCombo"
-                                        name="businessPartner"
+                                        name="bonusTrancheFilter"
                                         class="filtersStyle"
                                         items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
                                         selectionChange=".onFilterFieldChange"
@@ -129,7 +129,7 @@
                                 <fb:control>
                                     <m:MultiComboBox
                                         id="fiscalMultiCombo"
-                                        name="businessPartner"
+                                        name="bonusTrancheFilter"
                                         items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                         selectionChange=".onFilterFieldChange"
                                     >
@@ -157,18 +157,18 @@
                 <m:headerToolbar>
                     <m:OverflowToolbar class="tableBar">
                         <m:Title
-                            text="Bonus Tranches"
+                            text="{i18n>bonusTranches}"
                             level="H2"
                         />
                         <m:ToolbarSpacer />
                         <m:Button
-                            text="Create Tranche"
+                            text="{i18n>createTranche}"
                             type="Emphasized"
                             press="onCreateTranche"
                         />
                         <m:OverflowToolbarButton
                             icon="sap-icon://sort"
-                            text="Sort"
+                            text="{i18n>sort}"
                             type="Transparent"
                             press=".onSort"
                         />
@@ -176,25 +176,25 @@
                 </m:headerToolbar>
                 <m:columns>
                     <m:Column width="12em">
-                        <m:Text text="Status" />
+                        <m:Text text="{i18n>status}" />
                     </m:Column>
                     <m:Column
                         minScreenWidth="Tablet"
                         demandPopin="true"
                     >
-                        <m:Text text="Name" />
+                        <m:Text text="{i18n>name}" />
                     </m:Column>
                     <m:Column
                         minScreenWidth="Tablet"
                         demandPopin="true"
                     >
-                        <m:Text text="Locations" />
+                        <m:Text text="{i18n>location}" />
                     </m:Column>
                     <m:Column>
-                        <m:Text text="Start Date" />
+                        <m:Text text="{i18n>startDate}" />
                     </m:Column>
                     <m:Column>
-                        <m:Text text="End Date" />
+                        <m:Text text="{i18n>endDate}" />
                     </m:Column>
                     <m:Column hAlign="End">
                         <m:Text text="" />

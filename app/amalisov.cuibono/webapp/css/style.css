@@ -12,17 +12,23 @@ background-color: white !important;
 
 
 
-
-.sapUiForm .sapUiFormLblColon .sapUiFormM .sapUiFormEdit .sapUiFormEdit-CTX{
-    background-color: transparent !important ;
-}
-
-
-
-.sapUiForm .sapUiFormLblColon .sapUiFormM{
-    background-color: transparent !important ;
+.sapUiRespGrid{
+    background-color: #f5f6f7;
 
 }
+
+.sapMInputBaseIcon{
+    background-color: #e7e8e8;
+
+}
+
+.sapMInputBaseInner {
+    background: #e7e8e8;
+    border-bottom: 1px solid rgb(71, 71, 71);
+    font-style: normal;
+
+}
+
 
 .spaceAbove {
     margin-top: 15px;
@@ -60,5 +66,44 @@ background-color: white !important;
     width: 100%;
     
 }
+
+
+.totalTrancheWeight {
+    background-color: white !important;
+    width: 33%;
+    height: 30px;
+    border-bottom-left-radius: 15px;  
+    border-bottom-right-radius: 15px;
+}
+
+.totalTrancheWeightText {
+   
+    text-align: right;
+    
+    font-weight: bold;
+}
+
+.totalBox {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px; 
+   
+}
+
+.totalTitle {
+    margin-left: 15px; 
+}
+
+.ToolbarSpacer {
+    min-width: 0;
+}
+
+.horizontalAlign {
+    align-items: center; 
+}
+
+
+
 
 
