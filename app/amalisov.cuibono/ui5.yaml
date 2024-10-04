@@ -22,9 +22,9 @@ server:
         ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
         ui5:
           path:
-            - /resources
+            - /odata
             - /test-resources
-          url: https://sapui5.hana.ondemand.com
+          url: http://localhost:49217/odata
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

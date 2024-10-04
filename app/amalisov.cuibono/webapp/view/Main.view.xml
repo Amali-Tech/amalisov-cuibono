@@ -4,10 +4,14 @@
     displayBlock="true"
     xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
+    height="100%"
+    
    
    
 >
-    <m:Page id="page">
+    <m:Page id="page"
+    
+    >
         <m:customHeader>
             <core:Fragment
                 id="custombar"

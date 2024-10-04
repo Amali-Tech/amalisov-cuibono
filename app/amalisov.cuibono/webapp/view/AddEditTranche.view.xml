@@ -71,7 +71,7 @@
                         />
                     </VBox>
                     <VBox class="spaceBetween">
-                        <Label text="{endDate}" />
+                        <Label text="{i18n>endDate}" />
                         <DatePicker
                             value="{tranche>/EndDate}"
                             class="customInput"

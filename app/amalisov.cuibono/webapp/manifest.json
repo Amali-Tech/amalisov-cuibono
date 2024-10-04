@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/catalog/",
+        "uri": "/odata/v4/bonus-tranche/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -66,13 +66,19 @@
           "bundleName": "amalisov.cuibono.i18n.i18n"
         }
       },
-      "": {
+      "trancheModel": {
+        "type": "sap.ui.model.odata.v4.ODataModel",
         "dataSource": "mainService",
         "preload": true,
         "settings": {
+          "synchronizationMode": "None",
           "operationMode": "Server",
           "autoExpandSelect": true,
-          "earlyRequests": true
+          "earlyRequests": true,
+          "groupId": "$direct",
+					"metadataUrlParams": {
+						"sap-documentation": "heading"
+					}
         }
       },
       "tranche": {

@@ -10,6 +10,7 @@
     <m:VBox visible="{= ${currentView>/currentView}!=='default'?true:false}">
         <m:Title
             text="{= ${currentView>/currentView}==='edit'? 'Edit':'Create'} Bonus Tranche"
+            class="bonusTitle"
         />
         <m:IconTabBar
             id="idIconTabBar"
@@ -150,7 +151,7 @@
             <m:Table
                 id="idTranchesTable"
                 inset="false"
-                items="{ path: 'tranche>/TrancheCollection', sorter: { path: 'Name' } }"
+                items="{ path: 'trancheModel>/BonusTranche', sorter: { path: 'Name' } }"
                 class="sapFDynamicPageAlignContent"
                 width="auto"
             >
@@ -203,11 +204,11 @@
                 <m:items>
                     <m:ColumnListItem>
                         <m:cells>
-                            <m:ObjectIdentifier text="{tranche>Status}" />
-                            <m:Text text="{tranche>Name}" />
-                            <m:Text text="{tranche>Location}" />
-                            <m:Text text="{tranche>StartDate}" />
-                            <m:Text text="{tranche>EndDate}" />
+                            <m:ObjectIdentifier text="{trancheModel>status}" />
+                            <m:Text text="{trancheModel>name}" />
+                            <m:Text text="{trancheModel>location}" />
+                            <m:Text text="{trancheModel>beginDate}" />
+                            <m:Text text="{trancheModel>endDate}" />
                             <m:HBox class="trancheButtonBox">
                                 <m:Button
                                     type="Unstyled"
