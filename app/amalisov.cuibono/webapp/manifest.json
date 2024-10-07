@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/catalog/",
+        "uri": "/odata/v4/bonus-tranche/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -43,12 +43,16 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": true,
+    "flexEnabled": false,
     "dependencies": {
       "minUI5Version": "1.128.1",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {}
+        "sap.f": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.ui.comp": {},
+        "sap.ui.fl": {}
       }
     },
     "contentDensities": {
@@ -62,14 +66,24 @@
           "bundleName": "amalisov.cuibono.i18n.i18n"
         }
       },
-      "": {
+      "trancheModel": {
+        "type": "sap.ui.model.odata.v4.ODataModel",
         "dataSource": "mainService",
         "preload": true,
         "settings": {
+          "synchronizationMode": "None",
           "operationMode": "Server",
           "autoExpandSelect": true,
-          "earlyRequests": true
+          "earlyRequests": true,
+          "groupId": "$direct",
+					"metadataUrlParams": {
+						"sap-documentation": "heading"
+					}
         }
+      },
+      "tranche": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "model/data.json"
       }
     },
     "resources": {
@@ -82,29 +96,65 @@
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
+        "type": "View",
         "viewType": "XML",
-        "async": true,
-        "viewPath": "amalisov.cuibono.view",
-        "controlAggregation": "pages",
+        "path": "amalisov.cuibono.view",
         "controlId": "app",
-        "clearControlAggregation": false
+        "transition": "slide",
+        "async": true,
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": "notFound"
+        }
       },
       "routes": [
         {
           "name": "RouteMain",
           "pattern": ":?query:",
-          "target": [
-            "TargetMain"
-          ]
+          "target": "TargetMain"
+        },
+
+        {
+          "pattern": "createTranche",
+          "name": "createTranche",
+          "target": "trancheDetail"
+        },
+        {
+          "pattern": "editTranche/{trancheId}",
+          "name": "editTranche",
+          "target": "trancheDetail"
         }
       ],
       "targets": {
         "TargetMain": {
-          "viewType": "XML",
+          "id": "TargetMain",
           "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "Main",
-          "viewName": "Main"
+          "name": "Main",
+          "level": 0
+        },
+        "BonusTranches": {
+          "id": "bonusTranches",
+          "parent": "TargetMain",
+          "name": "BonusTranches",
+          "controlId": "bonusTranchesTab",
+          "controlAggregation": "content"
+        },
+        "Participants": {
+          "id": "participants",
+          "parent": "TargetMain",
+          "name": "Participants",
+          "controlId": "participantsTab",
+          "controlAggregation": "content"
+        },
+        "notFound": {
+          "id": "notFound",
+          "name": "NotFound",
+          "transition": "show"
+        },
+        "trancheDetail": {
+          "viewName": "TrancheDetail",
+          "viewLevel": 1,
+          "viewPath": "amalisov.cuibono.view"
         }
       }
     },

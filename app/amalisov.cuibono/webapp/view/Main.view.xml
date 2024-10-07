@@ -1,8 +1,57 @@
-<mvc:View controllerName="amalisov.cuibono.controller.Main"
-    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
-    xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
-        <content>
-        </content>
-    </Page>
+<mvc:View
+    controllerName="amalisov.cuibono.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    height="100%"
+    
+   
+   
+>
+    <m:Page id="page"
+    
+    >
+        <m:customHeader>
+            <core:Fragment
+                id="custombar"
+                fragmentName="amalisov.cuibono.view.CustomBar"
+                type="XML"
+            />
+        </m:customHeader>
+        <m:IconTabBar
+            id="idm:IconTabBarNoIcons"
+            select="onTabSelect"
+            selectedKey="{view>/tab}"
+        >
+            <m:items>
+                <m:IconTabFilter
+                    id="bonusTranchesTab"
+                    text="{i18n>bonusTranches}"
+                    key="bonusTranches"
+                />
+                <m:IconTabFilter
+                    id="participantsTab"
+                    text="{i18n>participants}"
+                    key="participants"
+                />
+            </m:items>
+        </m:IconTabBar>
+        
+        <m:footer>
+            <m:OverflowToolbar>
+                <m:ToolbarSpacer />
+                <m:Button
+                    type="Emphasized"
+                    text="{i18n>save}"
+                    visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
+                />
+                <m:Button
+                    type="Default"
+                    text="{i18n>discard}"
+                    visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
+                />
+            </m:OverflowToolbar>
+        </m:footer>
+    </m:Page>
 </mvc:View>

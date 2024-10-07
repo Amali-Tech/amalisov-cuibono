@@ -4,6 +4,16 @@ specVersion: "3.1"
 metadata:
   name: amalisov.cuibono
 type: application
+framework:
+  name: SAPUI5
+  version: "1.128.1"
+  libraries:
+    - name: sap.f
+    - name: sap.m
+    - name: sap.ui.layout
+    - name: sap.ui.core
+    - name: sap.ui.comp
+    - name: sap.ui.fl
 server:
   customMiddleware:
     - name: fiori-tools-proxy
@@ -12,9 +22,9 @@ server:
         ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
         ui5:
           path:
-            - /resources
+            - /odata
             - /test-resources
-          url: https://sapui5.hana.ondemand.com
+          url: http://localhost:49217/odata
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
