@@ -7,6 +7,7 @@ entity BonusTranche: managed {
       name                 : String(50) @mandatory;
       beginDate            : DateTime @mandatory;
       endDate              : DateTime @mandatory;
+      dataOfOrigin         : DateTime @mandatory;
       status               : String default 'Running';
       trancheWeight        : Decimal;
       Target               : Association to many Target
@@ -30,6 +31,7 @@ entity TrancheParticipation {
 entity Target {
   key ID           : UUID;
       name         : String(50) @mandatory;
+      description  : String;
       weight       : Decimal @mandatory;
       achievement  : Decimal;
       BonusTranche : Association to BonusTranche
