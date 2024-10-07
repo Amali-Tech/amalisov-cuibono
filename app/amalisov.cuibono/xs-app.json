@@ -1,5 +1,4 @@
 {
-  "welcomeFile": "/index.html",
   "authenticationMethod": "route",
   "routes": [
     {
@@ -10,16 +9,10 @@
       "csrfProtection": false
     },
     {
-      "source": "^(.*)$",
-      "target": "$1",
-      "service": "html5-apps-repo-rt",
-      "authenticationType": "xsuaa"
-    },
-    {
       "source": "^/odata/(.*)$",
       "target": "/odata/$1",
-      "destination": "cuibono-srv-api",
-      "authenticationType": "Basic",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa",
       "csrfProtection": false
     },
     {
@@ -38,7 +31,7 @@
       "source": "^(.*)$",
       "target": "$1",
       "service": "html5-apps-repo-rt",
-      "authenticationType": "none"
+      "authenticationType": "xsuaa"
     }
   ]
 }
