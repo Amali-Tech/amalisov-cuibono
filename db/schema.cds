@@ -7,7 +7,7 @@ entity BonusTranche: managed {
       name                 : String(50) @mandatory;
       beginDate            : DateTime @mandatory;
       endDate              : DateTime @mandatory;
-      dataOfOrigin         : DateTime @mandatory;
+      dateOfOrigin         : DateTime @mandatory;
       status               : String default 'Running';
       trancheWeight        : Decimal;
       Target               : Association to many Target

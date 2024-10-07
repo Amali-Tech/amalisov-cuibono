@@ -18,11 +18,18 @@ export class BonusTrancheHandler {
       const targets: Target[] = req.data.Target;
       const { ID: bonusTrancheId } = req.data;
 
+      const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
+
+      if (totalTargetsWeight > 100) { 
+        return req.error(400, "Total weight of targets must not exceed 100%");
+      }
+
+      req.data.trancheWeight = totalTargetsWeight;
+
       for (const target of targets) {
         target.BonusTranche_ID = bonusTrancheId;
         await INSERT.into(Target).entries(target);
-      }
-        
+      } 
     } catch (error: unknown) {
       throw new Error(`Error in beforeCreate handler: ${error}`);
     }
