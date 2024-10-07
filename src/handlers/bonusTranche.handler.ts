@@ -46,6 +46,14 @@ export class BonusTrancheHandler {
       // Delete all targets before updating them
       await DELETE.from(Target.name).where({ BonusTranche_ID: bonusTrancheId });
 
+      const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
+
+      if (totalTargetsWeight > 100) { 
+        return req.error(400, "Total weight of targets must not exceed 100%");
+      }
+
+      req.data.trancheWeight = totalTargetsWeight;
+
       for (const target of targets) {
           target.BonusTranche_ID = bonusTrancheId;
           await INSERT.into(Target).entries(target);
