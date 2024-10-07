@@ -116,7 +116,7 @@
             <Column>
                 <Text text="{i18n>name}" />
             </Column>
-            <Column hAlign="End">
+            <Column >
                 <Text text="{i18n>targetWeight}" />
             </Column>
             <Column hAlign="End">
@@ -163,7 +163,7 @@
             <ToolbarSpacer />
 
             <Text
-                text="{i18n>percent}"
+                text="{}"
                 class="totalTrancheWeightText"
             />
 

@@ -39,8 +39,13 @@
         </m:IconTabBar>
         
         <m:footer>
-            <m:OverflowToolbar>
-                <m:ToolbarSpacer />
+            <m:OverflowToolbar
+            class="overflowFooter"
+             visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
+            >
+                <m:ToolbarSpacer 
+                 visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
+                />
                 <m:Button
                     type="Emphasized"
                     text="{i18n>save}"

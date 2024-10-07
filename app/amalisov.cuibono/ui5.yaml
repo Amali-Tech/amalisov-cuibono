@@ -24,7 +24,7 @@ server:
           path:
             - /odata
             - /test-resources
-          url: http://localhost:49217/odata
+          url: http://localhost:4004/odata
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
