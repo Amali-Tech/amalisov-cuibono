@@ -31,6 +31,7 @@ export class BonusTrancheHandler {
         await INSERT.into(Target).entries(target);
       } 
     } catch (error: unknown) {
+      logger.error(error)
       throw new Error(`Error in beforeCreate handler: ${error}`);
     }
   }
@@ -43,7 +44,6 @@ export class BonusTrancheHandler {
       const targets: Target[] = req.data.Target;
       const { ID: bonusTrancheId } = req.data;
 
-      // Delete all targets before updating them
       await DELETE.from(Target.name).where({ BonusTranche_ID: bonusTrancheId });
 
       const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
@@ -59,6 +59,7 @@ export class BonusTrancheHandler {
           await INSERT.into(Target).entries(target);
       }
     } catch (error: unknown) {
+      logger.error(error)
       throw new Error(`Error in beforeUpdate handler: ${error}`);
     }
   }
@@ -74,6 +75,7 @@ export class BonusTrancheHandler {
       await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId });
 
     } catch (error: unknown) {
+      logger.error(error)
       throw new Error(`Error in AfterDelete handler: ${error}`);
     }
   }
