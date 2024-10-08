@@ -151,7 +151,7 @@
             <m:Table
                 id="idTranchesTable"
                 inset="false"
-                items="{ path: 'trancheModel>/BonusTranche', sorter: { path: 'Name' } }"
+                items="{ path: 'trancheModel>/BonusTranche', parameters: {$expand: 'Location'}}"
                 class="sapFDynamicPageAlignContent"
                 width="auto"
             >
@@ -206,7 +206,7 @@
                         <m:cells>
                             <m:ObjectIdentifier text="{trancheModel>status}" />
                             <m:Text text="{trancheModel>name}" />
-                            <m:Text text="{trancheModel>location}" />
+                            <m:Text text="{trancheModel>Location/name}" />
                             <m:Text text="{trancheModel>beginDate}" />
                             <m:Text text="{trancheModel>endDate}" />
                             <m:HBox class="trancheButtonBox">

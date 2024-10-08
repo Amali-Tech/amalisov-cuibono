@@ -6,13 +6,7 @@
     xmlns:f="sap.f"
     xmlns:layout="sap.ui.layout.form"
 >
-    <HBox class="horizontalAlign">
-        <Switch
-            state="{tranche>/Active}"
-            change="onSwitchChange"
-        />
-        <Label text="{i18n>locked}" />
-    </HBox>
+   
 
     <layout:SimpleForm
         class="table"
@@ -31,7 +25,7 @@
                     <VBox>
                         <Label text="{i18n>name}" />
                         <Input
-                            value="{tranche>/Name}"
+                            value="{trancheModel>name}"
                             class="customInputs "
                         />
                     </VBox>
@@ -66,14 +60,14 @@
                     <VBox>
                         <Label text="{i18n>startDate}" />
                         <DatePicker
-                            value="{tranche>/StartDate}"
+                            value="{trancheModel>beginDate}"
                             class="customInput"
                         />
                     </VBox>
                     <VBox class="spaceBetween">
                         <Label text="{i18n>endDate}" />
                         <DatePicker
-                            value="{tranche>/EndDate}"
+                            value="{trancheModel>endDate}"
                             class="customInput"
                         />
                     </VBox>
@@ -84,7 +78,14 @@
                     <VBox>
                         <Label text="{i18n>trancheWeight}" />
                         <Input
-                            value="{tranche>/Weight}"
+                            value="{trancheModel>trancheWeight}"
+                            class="customInput"
+                        />
+                    </VBox>
+                    <VBox class="spaceBetween">
+                        <Label text="{i18n>originDate}" />
+                        <DatePicker
+                            value="{trancheModel>endDate}"
                             class="customInput"
                         />
                     </VBox>
@@ -95,7 +96,8 @@
 
     <Table
         id="targetTable"
-        items="{path: 'tranche>/TargetCollection'}"
+        items="{path: 'trancheModel>Target'}"
+     
         width="33%"
     >
         <headerToolbar>
@@ -120,7 +122,7 @@
                 <Text text="{i18n>targetWeight}" />
             </Column>
             <Column hAlign="End">
-                <Text text="{i18n>achievement}" />
+                <Text text="{i18n>achievements}" />
             </Column>
             <Column>
                 <Text text="" />
@@ -129,9 +131,9 @@
         <items>
             <ColumnListItem>
                 <cells>
-                    <Text text="{tranche>Name}" />
-                    <Text text="{tranche>Weight}" />
-                    <Text text="{tranche>Achievement}" />
+                    <Text text="{trancheModel>name}" />
+                    <Text text="{trancheModel>weight}" />
+                    <Text text="{trancheModel>achievement}" />
 
                     <HBox class="trancheButtonBox">
                         <Button

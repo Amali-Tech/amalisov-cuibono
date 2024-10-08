@@ -4,6 +4,8 @@ import Fragment from "sap/ui/core/Fragment";
 import View from "sap/ui/core/mvc/View";
 import Dialog from "sap/m/Dialog";
 import MessageToast from "sap/m/MessageToast";
+import UIComponent from "sap/ui/core/UIComponent";
+import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
 
 /**
  * @namespace amalisov.cuibono.controller
@@ -13,8 +15,38 @@ export default class AddEditTranche extends BaseController {
     private _pDialog: Promise<Dialog> | undefined;
 
     public onInit(): void {
+        const oRouter = (this.getOwnerComponent() as UIComponent).getRouter();
+		oRouter.getRoute("RouteMain")?.attachMatched(this.onRouteMatched, this);
 
     }
+
+    private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
+        const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
+      
+   
+        const oQuery = oArgs["?query"];
+      
+        if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
+            this._loadTrancheDetails(oQuery.trancheId);
+        }
+    };
+
+    private _loadTrancheDetails(trancheId: string): void {
+        
+        const oView = this.getView()
+
+        if(oView) {
+            const sBindingPath = `/BonusTranche('${trancheId}')`
+            oView.bindElement({
+				path: sBindingPath,
+				model: "trancheModel",
+                parameters: {
+                    expand: "Target" 
+                }
+			});
+        }
+    }
+    
 
     public onAddTarget(): void {
         const oView = this.getView() as View;
