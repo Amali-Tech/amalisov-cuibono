@@ -31,7 +31,8 @@
                     <VBox>
                         <Label text="{i18n>name}" />
                         <Input
-                            value="{tranche>/Name}"
+                            id="trancheName"
+                            value="{tranche>/name}"
                             class="customInputs "
                         />
                     </VBox>
@@ -39,15 +40,16 @@
                     <VBox class="spaceBetween">
                         <Label text="{i18n>location}" />
                         <ComboBox
+                            id="trancheLocation"
                             items="{
-                                    path: ''
+                                    path: 'trancheModel>/Location'
                                    
                                 }"
                             class="customInputs"
                         >
                             <core:Item
-                                key="{key}"
-                                text="{text}"
+                                key="{trancheModel>ID}"
+                                text="{trancheModel>name}"
                             />
                         </ComboBox>
                     </VBox>
@@ -56,6 +58,7 @@
                 <VBox class="spaceAbove">
                     <Label text="{i18n>description}" />
                     <TextArea
+                        id="trancheDescription"
                         value="{tranche>/Description}"
                         rows="4"
                         class="customInput"
@@ -66,6 +69,7 @@
                     <VBox>
                         <Label text="{i18n>startDate}" />
                         <DatePicker
+                            id="beginDate"
                             value="{tranche>/StartDate}"
                             class="customInput"
                         />
@@ -73,17 +77,18 @@
                     <VBox class="spaceBetween">
                         <Label text="{i18n>endDate}" />
                         <DatePicker
+                            id="endDate"
                             value="{tranche>/EndDate}"
                             class="customInput"
                         />
                     </VBox>
                 </HBox>
 
-               
                 <HBox class="spaceAbove">
                     <VBox>
                         <Label text="{i18n>trancheWeight}" />
                         <Input
+                            id="trancheWeight"
                             value="{tranche>/Weight}"
                             class="customInput"
                         />
@@ -91,6 +96,10 @@
                 </HBox>
             </VBox>
         </layout:content>
+        <Button
+            text="save form"
+            press="onCreatePress"
+        />
     </layout:SimpleForm>
 
     <Table
@@ -116,7 +125,7 @@
             <Column>
                 <Text text="{i18n>name}" />
             </Column>
-            <Column >
+            <Column>
                 <Text text="{i18n>targetWeight}" />
             </Column>
             <Column hAlign="End">

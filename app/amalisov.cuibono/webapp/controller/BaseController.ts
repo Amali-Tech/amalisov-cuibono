@@ -8,7 +8,7 @@ import Router from "sap/ui/core/routing/Router";
 import History from "sap/ui/core/routing/History";
 
 /**
- * @namespace com.sap.aldi.supplierPortalApAr.controller
+ * @namespace amalisov.cuibono.controller
  */
 export default abstract class BaseController extends Controller {
     /**

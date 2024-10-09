@@ -2,6 +2,15 @@ export interface CurrentView { currentView: "default" | "edit" | "create" }
 export interface RouterArguments {
     "?query"?: { tab?: string, operation?: "default" | "edit" | "create" };
 }
+export interface Tranche {
+    name: string
+    Location_ID: string
+    description?: string
+    beginDate: string
+    endDate: string
+    trancheWeight: string
+    Target: []
+}
 export class InitializationHelper {
     constructor(private getI18nText: (textPath: string) => string) { }
     /**
