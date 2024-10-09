@@ -7,7 +7,7 @@ import MessageToast from "sap/m/MessageToast";
 import Input from "sap/m/Input";
 import ComboBox from "sap/m/ComboBox";
 import DatePicker from "sap/m/DatePicker";
-import { InitializationHelper, Tranche } from "../model/initialData";
+import { CurrentView, InitializationHelper, Tranche } from "../model/initialData";
 import ODataModel from "sap/ui/model/odata/v4/ODataModel";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import JSONModel from "sap/ui/model/json/JSONModel";
@@ -23,6 +23,15 @@ export default class AddEditTranche extends BaseController {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
+    }
+    public onSavePress() {
+        const viewData: CurrentView = (this.getView()?.getModel("currentView") as JSONModel).getData()
+        console.log((this.getView()?.getModel("currentView") as JSONModel).getData())
+        if (viewData.currentView && viewData.currentView === "create") {
+            this.onCreatePress()
+        } else if (viewData.currentView && viewData.currentView === "edit") {
+            this.onEditTranche()
+        }
     }
     public async onCreatePress(): Promise<void> {
         try {
@@ -96,7 +105,7 @@ export default class AddEditTranche extends BaseController {
         }
 
         oModel
-            .bindContext("/updateAnswer(...)")
+            .bindContext("/BonusTranche(...)")
             .setParameter("ID", this.trancheId)
             .setParameter("content", newContent)
             .invoke()

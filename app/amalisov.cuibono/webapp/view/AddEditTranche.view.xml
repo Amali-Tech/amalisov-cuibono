@@ -98,7 +98,7 @@
         </layout:content>
         <Button
             text="save form"
-            press="onCreatePress"
+            press="onSavePress"
         />
     </layout:SimpleForm>
 
