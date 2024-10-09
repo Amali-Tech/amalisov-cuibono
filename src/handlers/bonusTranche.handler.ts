@@ -23,14 +23,12 @@ export class BonusTrancheHandler {
       if (totalTargetsWeight > 100) { 
         return req.error(400, "Total weight of targets must not exceed 100%");
       }
-
-      req.data.trancheWeight = totalTargetsWeight;
-
+      
       for (const target of targets) {
         target.BonusTranche_ID = bonusTrancheId;
         await INSERT.into(Target).entries(target);
       } 
-    } catch (error: unknown) {
+    } catch (error) {
       logger.error(error)
       throw new Error(`Error in beforeCreate handler: ${error}`);
     }
@@ -52,13 +50,11 @@ export class BonusTrancheHandler {
         return req.error(400, "Total weight of targets must not exceed 100%");
       }
 
-      req.data.trancheWeight = totalTargetsWeight;
-
       for (const target of targets) {
           target.BonusTranche_ID = bonusTrancheId;
           await INSERT.into(Target).entries(target);
       }
-    } catch (error: unknown) {
+    } catch (error) {
       logger.error(error)
       throw new Error(`Error in beforeUpdate handler: ${error}`);
     }
@@ -74,7 +70,7 @@ export class BonusTrancheHandler {
 
       await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId });
 
-    } catch (error: unknown) {
+    } catch (error) {
       logger.error(error)
       throw new Error(`Error in AfterDelete handler: ${error}`);
     }
