@@ -18,12 +18,18 @@ export class BonusTrancheHandler {
       const targets: Target[] = req.data.Target;
       const { ID: bonusTrancheId } = req.data;
 
+      const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
+
+      if (totalTargetsWeight > 100) { 
+        return req.error(400, "Total weight of targets must not exceed 100%");
+      }
+      
       for (const target of targets) {
         target.BonusTranche_ID = bonusTrancheId;
         await INSERT.into(Target).entries(target);
-      }
-        
-    } catch (error: unknown) {
+      } 
+    } catch (error) {
+      logger.error(error)
       throw new Error(`Error in beforeCreate handler: ${error}`);
     }
   }
@@ -36,14 +42,20 @@ export class BonusTrancheHandler {
       const targets: Target[] = req.data.Target;
       const { ID: bonusTrancheId } = req.data;
 
-      // Delete all targets before updating them
       await DELETE.from(Target.name).where({ BonusTranche_ID: bonusTrancheId });
+
+      const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
+
+      if (totalTargetsWeight > 100) { 
+        return req.error(400, "Total weight of targets must not exceed 100%");
+      }
 
       for (const target of targets) {
           target.BonusTranche_ID = bonusTrancheId;
           await INSERT.into(Target).entries(target);
       }
-    } catch (error: unknown) {
+    } catch (error) {
+      logger.error(error)
       throw new Error(`Error in beforeUpdate handler: ${error}`);
     }
   }
@@ -58,7 +70,8 @@ export class BonusTrancheHandler {
 
       await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId });
 
-    } catch (error: unknown) {
+    } catch (error) {
+      logger.error(error)
       throw new Error(`Error in AfterDelete handler: ${error}`);
     }
   }
