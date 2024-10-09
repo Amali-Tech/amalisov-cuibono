@@ -24,7 +24,7 @@ entity TrancheParticipation {
       finalPayoutAmount      : Decimal;
       justification          : String;
       overRuled              : Boolean;
-      participant            : Association to Person;
+      participant            : Association to Participant;
       bonusTranche           : Association to BonusTranche
 }
 
@@ -37,10 +37,12 @@ entity Target {
       BonusTranche : Association to BonusTranche
 }
 
-entity Person {
-  key ID         : UUID;
-      name       : String(50) not null;
-      department : String
+entity Participant {
+  key ID                   : UUID;
+      name                 : String(50) not null;
+      department           : String;
+      trancheParticipattion : Association to many TrancheParticipation
+                                on trancheParticipattion.participant = $self;
 }
 
 entity Location {
