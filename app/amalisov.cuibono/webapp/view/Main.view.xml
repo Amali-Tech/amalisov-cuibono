@@ -44,18 +44,37 @@
              visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
             >
                 <m:ToolbarSpacer 
-                 visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
+               
                 />
                 <m:Button
                     type="Emphasized"
                     text="{i18n>save}"
-                    visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
-                />
+                    />
                 <m:Button
                     type="Default"
                     text="{i18n>discard}"
-                    visible="{= ${currentView>/currentView}==='edit' || ${currentView>/currentView}==='create'?true:false}"
+                   
                 />
+                
+                <m:Button
+                    type="Ghost"
+                    text="{i18n>lock}"
+                    icon="sap-icon://locked"
+                
+                />
+                <m:Button
+                    type="Accept"
+                    text="{i18n>completed}"
+                    icon="sap-icon://complete"
+                    press=".onCompleteTranche"
+                   
+                />
+                <m:Button
+                    type="Ghost"
+                    text="{i18n>reopen}"
+                    icon="sap-icon://unlocked"
+                    press=".onReOpenTranche"
+                   />
             </m:OverflowToolbar>
         </m:footer>
     </m:Page>

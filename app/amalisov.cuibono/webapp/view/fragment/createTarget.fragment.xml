@@ -11,6 +11,12 @@
 
             <Label text="{i18n>achievement}"  />
             <Input id="targetAchievementInput" />
+            <Label text="{i18n>description}"  />
+            <!-- <TextArea
+            value="{tranche>/Description}"
+            rows="4"
+            class="customInput"
+        /> -->
         </VBox>
         <buttons>
            
