@@ -1,0 +1,20 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Dialog id="editTargetDialog" title="{i18n>editTarget}" class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer">
+        <VBox>
+            <Label text="{i18n>name}" />
+            <Input id="editTargetNameInput" />
+
+            <Label text="{i18n>weight}" />
+            <Input id="editTargetWeightInput" type="Number" />
+
+            <Label text="{i18n>achievement}" />
+            <Input id="editTargetAchievementInput" />
+        </VBox>
+        <buttons>
+            <Button text="{i18n>save}" type="Emphasized" press="onSaveEditTarget" />
+            <Button text="{i18n>cancel}" press="onCancelEditTarget" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

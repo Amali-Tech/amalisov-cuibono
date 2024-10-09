@@ -163,11 +163,10 @@
             />
 
             <ToolbarSpacer />
-
             <Text
-                text="{}"
-                class="totalTrancheWeightText"
-            />
+            text="100"
+            class="totalTrancheWeightText"
+        />
 
             <ToolbarSpacer />
         </HBox>
