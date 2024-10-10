@@ -7,11 +7,11 @@ service BonusTrancheService @(requires: 'authenticated-user') {
     @readonly
     entity Employee         as projection on db.Employee;
 
-    // @readonly
-    // entity Department         as projection on db.Department;
+    @readonly
+    entity Department         as projection on db.Department;
 
-    // @readonly
-    // entity Attendance         as projection on db.Attendance;
+    @readonly
+    entity Attendance         as projection on db.Attendance;
 
     @readonly
     entity Location             as projection on db.Location;
