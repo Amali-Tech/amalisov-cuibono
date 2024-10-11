@@ -1,7 +1,7 @@
 import cds, { Request } from "@sap/cds";
 import { AfterCreate, BeforeCreate, BeforeDelete, BeforeUpdate, Handler, ParamObj, Req } from "cds-routing-handlers";
 import { Service } from "typedi";
-import { BonusTranche, Employee, Target, TrancheParticipation } from "../../@cds-models/BonusTrancheService";
+import { BonusTranche, Employee, Target, TrancheParticipation } from "../../@cds-models/cuibono";
 import {DeleteParam} from '../utils/types/delete-bonus-tranche';
 
 const logger = cds.log("Bonus Tranche handler.");
@@ -30,11 +30,16 @@ export class BonusTrancheHandler {
       } 
     } catch (error) {
       logger.error(error)
-      throw new Error(`Error in beforeCreate handler: ${error}`);
+      throw error;
     }
   }
 
   @AfterCreate()
+  /**
+   * Creates a TrancheParticipation for each Employee in the system.
+   * Automatically triggered after a new BonusTranche is created.
+   * @param {Request} req - The request containing the newly created BonusTranche.
+   */
   public async afterCreate( @Req() req: Request) {
     try {
       logger.info("Bonus Tranche on After Create handler!");
@@ -58,7 +63,7 @@ export class BonusTrancheHandler {
   @BeforeUpdate()
   public async beforeUpdate(@Req() req: Request) {
     try {
-      logger.info("Bonus Tranche on Update handler!");
+      logger.info("Bonus Tranche before Update handler!");
 
       const targets: Target[] = req.data.Target;
       const { ID: bonusTrancheId } = req.data;
@@ -76,7 +81,7 @@ export class BonusTrancheHandler {
           await INSERT.into(Target).entries(target);
       }
     } catch (error) {
-      logger.error(`Error in beforeUpdate handler: ${error}`)
+      logger.error(error)
       throw error;
     }
   }
@@ -85,14 +90,14 @@ export class BonusTrancheHandler {
   @BeforeDelete()
   public async beforeDelete(@ParamObj() deleteParams: DeleteParam) {
     try {
-      logger.info("Bonus Tranche on Delete handler!");
+      logger.info("Bonus Tranche before delete handler!");
 
       const { ID: trancheToBeDeletedId } = deleteParams;
 
       await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId });
 
     } catch (error) {
-      logger.error(`Error in AfterDelete handler: ${error}`)
+      logger.error(error)
       throw error;
     }
   }
