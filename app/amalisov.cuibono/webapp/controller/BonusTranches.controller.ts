@@ -7,12 +7,14 @@ import ColumnListItem from "sap/m/ColumnListItem";
 import MessageToast from "sap/m/MessageToast";
 import Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
+import Formatter from "../model/formatter";
 
 
 /**
  * @namespace amalisov.cuibono.controller
  */
 export default class BonusTranches extends BaseController {
+    public formatter = Formatter;
 
     private initialOdata: InitializationHelper;
     public onInit(): void {
@@ -72,15 +74,6 @@ export default class BonusTranches extends BaseController {
     }
     
 
-    private extractID = (input: string): string | null => {
-		const regex = /\([^()]*\)/; // Non-greedy match inside parentheses without nested parentheses
-		const match = input.match(regex);
-	
-		if (match) {
-			return match[0].slice(1, -1); // Remove the surrounding parentheses
-		} else {
-			return null;
-		}
-	};
+   
 }
 
