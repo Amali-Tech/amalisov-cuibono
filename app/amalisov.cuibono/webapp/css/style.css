@@ -54,6 +54,7 @@
 .deleteButton {
     background-color: white;
     border: none;
+    cursor: pointer;
 
 }
 
@@ -121,12 +122,26 @@
 }
 
 .overflowFooter {
-    /* background-color: #fff;
-    border-top: 1px solid #d9d9d9; */
+
     border-radius: 10px;
     margin: 10px;
 }
 
 #__data15 {
     width: 100%;
+}
+
+.sapUiIcon:disabled {
+    background-color: #b6cee2;
+    cursor: not-allowed;
+}
+
+
+.customButton:disabled {
+    color: white !important;
+}
+
+.deleteButton.customButton:disabled,
+.editButton.customButton:disabled {
+    opacity: 0.5;
 }
