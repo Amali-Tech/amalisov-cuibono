@@ -7,9 +7,16 @@ export interface Tranche {
     Location_ID: string
     description?: string
     beginDate: string
+    dateOfOrigin: string
     endDate: string
     trancheWeight: string
-    Target: []
+    Target: Target[]
+}
+export interface Target {
+    name: string
+    achievement: string
+    weight: number
+    description?: string
 }
 export class InitializationHelper {
     constructor(private getI18nText: (textPath: string) => string) { }
@@ -18,6 +25,17 @@ export class InitializationHelper {
          * @public
          * @returns {object} An object containing the dropdown data.
          */
+    public getdefaulTrancheData(): Tranche {
+        return {
+            name: "",
+            beginDate: "",
+            endDate: "",
+            dateOfOrigin: "",
+            Location_ID: "",
+            Target: [],
+            trancheWeight: ""
+        }
+    }
     public getDropdownData(): object {
         return {
             trancheStatus: [

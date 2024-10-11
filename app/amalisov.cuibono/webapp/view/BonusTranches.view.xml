@@ -27,132 +27,119 @@
                         viewName="amalisov.cuibono.view.AddEditTranche"
                     />
                 </m:IconTabFilter>
-                <m:IconTabFilter
-                    id="participantsListTab"
-                    text="{i18n>participation}"
-                    key="participants"
-                >
-                    <mvc:XMLView
-                        id="ParticipantsListContent"
-                        viewName="amalisov.cuibono.view.ParticipationList"
-                    />
-                </m:IconTabFilter>
             </m:items>
         </m:IconTabBar>
     </m:VBox>
-    <f:DynamicPage
-        id="dynamicPageId"
-        headerExpanded="true"
+    <m:VBox
+        height="100%"
+        class="timeToCheck"
         visible="{= ${currentView>/currentView}==='default'?true:false}"
     >
-        <f:header>
-            <f:DynamicPageHeader
-                id="filterHeader"
-                pinnable="true"
+        <m:HBox width="100%">
+            <fb:FilterBar
+                id="filterbar2"
+                persistencyKey="myPersKey"
+                useToolbar="false"
+                search=""
+                dragDropConfig="move"
+                class="_filterBarClass"
             >
-                <f:content>
-                    <fb:FilterBar
-                        id="filterbar2"
-                        persistencyKey="myPersKey"
-                        useToolbar="false"
-                        search=""
-                        dragDropConfig="move"
+                <fb:filterGroupItems>
+                    <fb:FilterGroupItem
+                        id="SearchItem2"
+                        name="search"
+                        groupName="group1"
+                        visibleInFilterBar="true"
                     >
-                        <fb:filterGroupItems>
-                            <fb:FilterGroupItem
-                                id="SearchItem2"
-                                name="search"
-                                groupName="group1"
-                                visibleInFilterBar="true"
+                        <fb:control>
+                            <m:SearchField
+                                id="searchHere"
+                                placeholder="Search"
+                                showSearchButton="true"
+                                search="onSearch"
+                            />
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem
+                        id="statusID"
+                        name="status"
+                        label="{i18n>status}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiComboBox
+                                id="statusMultiCombo"
+                                name="bonusTrancheFilter"
+                                class="filtersStyle"
+                                items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
+                                selectionChange=".onFilterFieldChange"
                             >
-                                <fb:control>
-                                    <m:SearchField
-                                        id="searchHere"
-                                        placeholder="Search"
-                                        showSearchButton="true"
-                                        search="onSearch"
-                                    />
-                                </fb:control>
-                            </fb:FilterGroupItem>
-                            <fb:FilterGroupItem
-                                id="statusID"
-                                name="status"
-                                label="{i18n>status}"
-                                groupName="Group1"
-                                visibleInFilterBar="true"
+                                <core:Item
+                                    id="statusItems"
+                                    key="{dropdownModel>key}"
+                                    text="{dropdownModel>text}"
+                                />
+                            </m:MultiComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem
+                        id="locationID"
+                        name="location"
+                        label="{i18n>location}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiComboBox
+                                id="locationMultiCombo"
+                                name="bonusTrancheFilter"
+                                class="filtersStyle"
+                                items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
+                                selectionChange=".onFilterFieldChange"
                             >
-                                <fb:control>
-                                    <m:MultiComboBox
-                                        id="statusMultiCombo"
-                                        name="bonusTrancheFilter"
-                                        class="filtersStyle"
-                                        items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
-                                        selectionChange=".onFilterFieldChange"
-                                    >
-                                        <core:Item
-                                            id="statusItems"
-                                            key="{dropdownModel>key}"
-                                            text="{dropdownModel>text}"
-                                        />
-                                    </m:MultiComboBox>
-                                </fb:control>
-                            </fb:FilterGroupItem>
-                            <fb:FilterGroupItem
-                                id="locationID"
-                                name="location"
-                                label="{i18n>location}"
-                                groupName="Group1"
-                                visibleInFilterBar="true"
+                                <core:Item
+                                    id="locationItems"
+                                    key="{dropdownModel>key}"
+                                    text="{dropdownModel>text}"
+                                />
+                            </m:MultiComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem
+                        id="fiscalYearID"
+                        name="fiscal"
+                        label="{i18n>fiscal}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiComboBox
+                                id="fiscalMultiCombo"
+                                name="bonusTrancheFilter"
+                                items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
+                                selectionChange=".onFilterFieldChange"
                             >
-                                <fb:control>
-                                    <m:MultiComboBox
-                                        id="locationMultiCombo"
-                                        name="bonusTrancheFilter"
-                                        class="filtersStyle"
-                                        items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
-                                        selectionChange=".onFilterFieldChange"
-                                    >
-                                        <core:Item
-                                            id="locationItems"
-                                            key="{dropdownModel>key}"
-                                            text="{dropdownModel>text}"
-                                        />
-                                    </m:MultiComboBox>
-                                </fb:control>
-                            </fb:FilterGroupItem>
-                            <fb:FilterGroupItem
-                                id="fiscalYearID"
-                                name="fiscal"
-                                label="{i18n>fiscal}"
-                                groupName="Group1"
-                                visibleInFilterBar="true"
-                            >
-                                <fb:control>
-                                    <m:MultiComboBox
-                                        id="fiscalMultiCombo"
-                                        name="bonusTrancheFilter"
-                                        items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
-                                        selectionChange=".onFilterFieldChange"
-                                    >
-                                        <core:Item
-                                            id="filterItems"
-                                            key="{dropdownModel>key}"
-                                            text="{dropdownModel>text}"
-                                        />
-                                    </m:MultiComboBox>
-                                </fb:control>
-                            </fb:FilterGroupItem>
-                        </fb:filterGroupItems>
-                    </fb:FilterBar>
-                </f:content>
-            </f:DynamicPageHeader>
-        </f:header>
-        <f:content>
+                                <core:Item
+                                    id="filterItems"
+                                    key="{dropdownModel>key}"
+                                    text="{dropdownModel>text}"
+                                />
+                            </m:MultiComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                </fb:filterGroupItems>
+            </fb:FilterBar>
+        </m:HBox>
+        <m:ScrollContainer
+            height="100%"
+            vertical="true"
+        >
             <m:Table
                 id="idTranchesTable"
                 inset="false"
                 items="{ path: 'trancheModel>/BonusTranche' ,parameters: {$expand: 'Location'}}"
-                class="sapFDynamicPageAlignContent"
+                class="sapFDynamicPageAlignContent sapUiMediumMarginTop sapUiTinyMarginBeginEnd"
                 width="auto"
             >
                 <m:headerToolbar>
@@ -233,6 +220,6 @@
                     </m:ColumnListItem>
                 </m:items>
             </m:Table>
-        </f:content>
-    </f:DynamicPage>
+        </m:ScrollContainer>
+    </m:VBox>
 </mvc:View>

@@ -1,27 +1,41 @@
-<core:FragmentDefinition 
+<core:FragmentDefinition
     xmlns="sap.m"
-    xmlns:core="sap.ui.core">
-    <Dialog id="createTargetDialog" title="{i18n>addNewTarget}" class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer">
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="createTargetDialog"
+        title="{i18n>addNewTarget}"
+        class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer"
+    >
         <VBox>
             <Label text="{i18n>name}" />
             <Input id="targetNameInput" />
 
-            <Label text="{i18n>weight}"  />
-            <Input id="targetWeightInput" type="Number" />
+            <Label text="{i18n>weight}" />
+            <Input
+                id="targetWeightInput"
+                type="Number"
+            />
 
-            <Label text="{i18n>achievement}"  />
+            <Label text="{i18n>achievement}" />
             <Input id="targetAchievementInput" />
-            <Label text="{i18n>description}"  />
-            <!-- <TextArea
-            value="{tranche>/Description}"
-            rows="4"
-            class="customInput"
-        /> -->
+            <Label text="{i18n>description}" />
+            <TextArea
+                id="targetDescriptionInput"
+                rows="4"
+                class="customInput"
+            />
         </VBox>
         <buttons>
-           
-            <Button text="{i18n>save}" type="Emphasized" press="onCreateTarget"/>
-            <Button text="{i18n>discard}" press="onCancelCreateTarget"/>
+            <Button
+                text="{i18n>save}"
+                type="Emphasized"
+                press="onCreateTarget"
+            />
+            <Button
+                text="{i18n>discard}"
+                press="onCancelCreateTarget"
+            />
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

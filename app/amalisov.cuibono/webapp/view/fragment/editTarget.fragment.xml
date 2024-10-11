@@ -1,20 +1,53 @@
 <core:FragmentDefinition
     xmlns="sap.m"
-    xmlns:core="sap.ui.core">
-    <Dialog id="editTargetDialog" title="{i18n>editTarget}" class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer">
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="editTargetDialog"
+        title="{i18n>editTarget}"
+        class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer"
+    >
         <VBox>
+            <!-- Edit Target Name -->
             <Label text="{i18n>name}" />
-            <Input id="editTargetNameInput" />
+            <Input
+                id="editTargetNameInput"
+                value="{trancheData>name}"
+            />
 
+            <!-- Edit Target Weight -->
             <Label text="{i18n>weight}" />
-            <Input id="editTargetWeightInput" type="Number" />
+            <Input
+                id="editTargetWeightInput"
+                type="Number"
+                value="{trancheData>weight}"
+            />
 
+            <!-- Edit Target Achievement -->
             <Label text="{i18n>achievement}" />
-            <Input id="editTargetAchievementInput" />
+            <Input
+                id="editTargetAchievementInput"
+                value="{trancheData>achievement}"
+            />
+
+            <!-- Edit Target Description -->
+            <Label text="{i18n>description}" />
+            <TextArea
+                id="editTargetDescriptionInput"
+                value="{trancheData>description}"
+                rows="4"
+            />
         </VBox>
         <buttons>
-            <Button text="{i18n>save}" type="Emphasized" press="onSaveEditTarget" />
-            <Button text="{i18n>cancel}" press="onCancelEditTarget" />
+            <Button
+                text="{i18n>save}"
+                type="Emphasized"
+                press="onSaveEditTarget"
+            />
+            <Button
+                text="{i18n>cancel}"
+                press="onCancelEditTarget"
+            />
         </buttons>
     </Dialog>
 </core:FragmentDefinition>
