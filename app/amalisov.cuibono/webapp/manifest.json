@@ -76,9 +76,9 @@
           "autoExpandSelect": true,
           "earlyRequests": true,
           "groupId": "$direct",
-					"metadataUrlParams": {
-						"sap-documentation": "heading"
-					}
+          "metadataUrlParams": {
+            "sap-documentation": "heading"
+          }
         }
       },
       "tranche": {
@@ -110,11 +110,9 @@
       "routes": [
         {
           "name": "RouteMain",
-          "pattern": ":?query:",
+          "pattern": "tranches:?query:",
           "target": "TargetMain"
         }
-
-       
       ],
       "targets": {
         "TargetMain": {

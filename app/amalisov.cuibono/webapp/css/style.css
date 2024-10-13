@@ -1,23 +1,23 @@
 /* Enter your custom styles here */
 
-.tableBar{
-background-color: white !important;
+.tableBar {
+    background-color: white !important;
 
 
 }
 
-.table{
+.table {
     margin-bottom: 20px;
 }
 
 
 
-.sapUiRespGrid{
+.sapUiRespGrid {
     background-color: #f5f6f7;
 
 }
 
-.sapMInputBaseIcon{
+.sapMInputBaseIcon {
     background-color: #e7e8e8;
 
 }
@@ -41,15 +41,17 @@ background-color: white !important;
 
 
 
-.trancheButtonBox{
+.trancheButtonBox {
     display: flex;
-    justify-content: end; 
+    justify-content: end;
     align-content: space-between;
     gap: 4px;
 
 }
 
-.editButton, .duplicateButton, .deleteButton{
+.editButton,
+.duplicateButton,
+.deleteButton {
     background-color: white;
     border: none;
     cursor: pointer;
@@ -65,7 +67,7 @@ background-color: white !important;
 
 .customInputs {
     width: 100%;
-    
+
 }
 
 
@@ -73,14 +75,14 @@ background-color: white !important;
     background-color: white !important;
     width: 33%;
     height: 30px;
-    border-bottom-left-radius: 15px;  
+    border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
 
 .totalTrancheWeightText {
-   
+
     text-align: right;
-    
+
     font-weight: bold;
 }
 
@@ -88,12 +90,12 @@ background-color: white !important;
     display: flex;
     justify-content: space-between;
     padding-left: 10px;
-    padding-right: 10px; 
-   
+    padding-right: 10px;
+
 }
 
 .totalTitle {
-    margin-left: 15px; 
+    margin-left: 15px;
 }
 
 .ToolbarSpacer {
@@ -101,7 +103,7 @@ background-color: white !important;
 }
 
 .horizontalAlign {
-    align-items: center; 
+    align-items: center;
 }
 
 .sapMITBContent {
@@ -114,7 +116,7 @@ background-color: white !important;
 }
 
 
-.bonusTitle{
+.bonusTitle {
     margin-left: 45px;
     padding: 10px;
 }
@@ -125,34 +127,6 @@ background-color: white !important;
     margin: 10px;
 }
 
-.sapUiIcon:disabled {
-    background-color: #b6cee2;  
-    cursor: not-allowed;
+#__data15 {
+    width: 100%;
 }
-
-
-.customButton:disabled {
-    color: white !important;
-}
-
-.deleteButton.customButton:disabled,
-.editButton.customButton:disabled {
-    opacity: 0.5;  
-}
-
-
-
-.sapFDynamicPageWithScroll {
-    height: 100%;
-    overflow: hidden !important;
-}
-
-.sapUiScrollDelegate{
-    height: 100%;
-    overflow: hidden !important;
-}
-
-
-
-
-
