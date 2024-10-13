@@ -10,6 +10,8 @@ export interface Tranche {
     dateOfOrigin: string
     endDate: string
     trancheWeight: string
+    status: "Running" | "Locked" | "Completed"
+    modifiedBy: string
     Target: Target[]
 }
 export interface Target {
@@ -32,8 +34,10 @@ export class InitializationHelper {
             endDate: "",
             dateOfOrigin: "",
             Location_ID: "",
+            modifiedBy: "",
+            status: "Running",
+            trancheWeight: "",
             Target: [],
-            trancheWeight: ""
         }
     }
     public getDropdownData(): object {

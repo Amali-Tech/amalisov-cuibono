@@ -8,6 +8,7 @@
         class="customShellBar"
         homeIcon="./images/infineonLogo.png"
         title="{i18n>appTitle}"
+        homeIconPressed="onLogoClick"
     >
         <f:profile>
             <Avatar

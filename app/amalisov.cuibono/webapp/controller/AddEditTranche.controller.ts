@@ -6,7 +6,7 @@ import Dialog from "sap/m/Dialog";
 import MessageToast from "sap/m/MessageToast";
 import ComboBox from "sap/m/ComboBox";
 import DatePicker from "sap/m/DatePicker";
-import { CurrentView, InitializationHelper, Tranche } from "../model/initialData";
+import { CurrentView, InitializationHelper, Target, Tranche } from "../model/initialData";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
 import Event from "sap/ui/base/Event";
@@ -27,17 +27,16 @@ export default class AddEditTranche extends BaseController {
     private _currentEditTrancheID: string
     private _oEditContext: Context;
     public onInit(): void {
-        this.getRouter()?.getRoute("RouteMain")?.attachPatternMatched(this.onRouteMatched, this);
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
+        this._trancheData = this.initialOdata.getdefaulTrancheData()
+        this.getRouter()?.getRoute("RouteMain")?.attachPatternMatched(this.onRouteMatched, this);
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
-        this._trancheData = this.initialOdata.getdefaulTrancheData()
         const oModelTranche = new JSONModel(this._trancheData);
         this.getView()?.setModel(oModelTranche, "trancheData");
     }
     public onSavePress() {
         const viewData: CurrentView = (this.getView()?.getModel("currentView") as JSONModel).getData()
-        console.log((this.getView()?.getModel("currentView") as JSONModel).getData())
         if (viewData.currentView && viewData.currentView === "create") {
             this.onCreatePress()
         } else if (viewData.currentView && viewData.currentView === "edit") {
@@ -77,7 +76,7 @@ export default class AddEditTranche extends BaseController {
             const oTrancheData = oNewTrancheModel?.getObject("/") as Tranche;
 
 
-            const newTranche: Tranche = {
+            const newTranche: Partial<Tranche> = {
                 name: trancheNameValue,
                 Location_ID: trancheLocationValue,
                 beginDate: this.formatDateWithoutTime(beginDateValue),
@@ -101,6 +100,7 @@ export default class AddEditTranche extends BaseController {
         catch (error) {
             MessageToast.show(error + this.getI18nText("cannotCreateTranche"));
         }
+        this.updateTotalWeightDisplay()
     }
     private formatDateWithoutTime(date: Date): string {
         const year = date.getFullYear();  // Full year, e.g., 2024
@@ -120,7 +120,7 @@ export default class AddEditTranche extends BaseController {
         // Get the current tranche data object (including the Target array)
         const oTrancheData = oNewTrancheModel?.getObject("/") as Tranche;
 
-        const newTranche: Tranche = {
+        const newTranche: Partial<Tranche> = {
             name: oTrancheData.name,
             Location_ID: trancheLocationValue,
             beginDate: this.formatDateWithoutTime(new Date(oTrancheData.beginDate)),
@@ -129,8 +129,6 @@ export default class AddEditTranche extends BaseController {
             trancheWeight: oTrancheData.trancheWeight,
             Target: oTrancheData.Target
         }
-
-
 
         oModel?.bindContext("/BonusTranche(...)")
             .setParameter("ID", this._currentEditTrancheID)
@@ -145,7 +143,6 @@ export default class AddEditTranche extends BaseController {
                 },
                 // failure in submit
                 (eer) => {
-                    console.log(eer)
                     MessageToast.show(eer + this.getI18nText("trancheEditFailed"));
                 }
             );
@@ -157,6 +154,8 @@ export default class AddEditTranche extends BaseController {
         if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
             this._currentEditTrancheID = oQuery.trancheId
             this._loadTrancheDetails(oQuery.trancheId);
+        } else {
+            this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
         }
     };
     private _loadTrancheDetails(trancheId: string): void {
@@ -173,6 +172,8 @@ export default class AddEditTranche extends BaseController {
                 name: oData.name,
                 beginDate: oData.beginDate,
                 dateOfOrigin: oData.dateOfOrigin,
+                modifiedBy: oData.modifiedBy,
+                status: oData.status,
                 endDate: oData.endDate,
                 Location_ID: oData.Location_ID,
                 Target: oData.Target,
@@ -180,9 +181,9 @@ export default class AddEditTranche extends BaseController {
                 description: oData.description
             }
             this.updateModelData("trancheData", editTranche, true)
-            console.log("Fetched Tranche Data:", editTranche);  // Process the fetched data here
-        }).catch((oError: Error) => {
-            console.error("Error fetching data:", oError);
+
+        }).catch(() => {
+            MessageToast.show(this.getI18nText("FetchError"))
         });
 
     }
@@ -245,7 +246,6 @@ export default class AddEditTranche extends BaseController {
 
         // Get the current tranche data object (including the Target array)
         const oTrancheData = oModel?.getObject("/");
-        console.log(oTrancheData)
 
 
         // Add the new target entry to the Target array
@@ -267,7 +267,6 @@ export default class AddEditTranche extends BaseController {
         // Close the dialog
         this.onCancelCreateTarget();
     }
-
     public onEditTargetPress(oEvent: Event) {
         // Get the item and its binding context
         const oItem = <CustomListItem>oEvent.getSource();
@@ -292,8 +291,8 @@ export default class AddEditTranche extends BaseController {
             (oDialog as Dialog).bindElement({ path: oContext.getPath(), model: "trancheData" });
             (oDialog as Dialog).open();
         }
+        this.updateTotalWeightDisplay()
     }
-
     public onSaveEditTarget() {
         // Check if we have the context of the item being edited
         if (!this._oEditContext) {
@@ -319,7 +318,6 @@ export default class AddEditTranche extends BaseController {
         // Show a success message
         MessageToast.show("Target updated successfully.");
     }
-
     public onCancelEditTarget(): void {
         const oDialog = this.byId("editTargetDialog") as Dialog;
         if (oDialog) {
@@ -351,13 +349,26 @@ export default class AddEditTranche extends BaseController {
         } else {
             console.error("Invalid index or Target array not found.");
         }
+        this.updateTotalWeightDisplay()
     }
+    private updateTotalWeightDisplay(): void {
+        const totalWeight = this.calculateTotalTargetWeight();
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;;
+        if (oModel) {
+            oModel?.setProperty("/totalWeight", totalWeight);
+            oModel.refresh();
+        }
+    }
+    private calculateTotalTargetWeight(): string {
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+        const oTrancheData: { Target: Target[] } = oModel?.getObject("/") || { Target: [] };
+        let totalWeight = 0;
+        if (Array.isArray(oTrancheData.Target)) {
+            totalWeight = oTrancheData.Target.reduce((acc: number, target: Target) => {
+                return acc + parseFloat(target.weight || "0"); // Calculate numerically while weights stay strings
+            }, 0);
+        }
 
-    private _generateUUID(): string {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
+        return totalWeight.toString();
     }
 }
