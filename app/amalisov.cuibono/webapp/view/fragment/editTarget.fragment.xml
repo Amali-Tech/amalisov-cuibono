@@ -36,6 +36,7 @@
                 id="editTargetDescriptionInput"
                 value="{trancheData>description}"
                 rows="4"
+                width="100%"
             />
         </VBox>
         <buttons>

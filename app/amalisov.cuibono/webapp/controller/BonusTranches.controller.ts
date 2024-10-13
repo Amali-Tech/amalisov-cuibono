@@ -70,17 +70,5 @@ export default class BonusTranches extends BaseController {
             MessageToast.show(this.getI18nText("noTrancheSelected"));
         }
     }
-
-
-    private extractID = (input: string): string | null => {
-        const regex = /\([^()]*\)/; // Non-greedy match inside parentheses without nested parentheses
-        const match = input.match(regex);
-
-        if (match) {
-            return match[0].slice(1, -1); // Remove the surrounding parentheses
-        } else {
-            return null;
-        }
-    };
 }
 
