@@ -1,8 +1,9 @@
 import cds, { Request } from "@sap/cds";
-import { AfterCreate, BeforeCreate, BeforeDelete, BeforeUpdate, Handler, ParamObj, Req } from "cds-routing-handlers";
+import {  AfterCreate, BeforeCreate, BeforeDelete, BeforeUpdate, Handler, ParamObj, Req } from "cds-routing-handlers";
 import { Service } from "typedi";
-import { BonusTranche, Employee, Target, TrancheParticipation } from "../../@cds-models/cuibono";
+import { BonusTranche, Employee, Target, TrancheParticipation } from "../../@cds-models/BonusTrancheService";
 import {DeleteParam} from '../utils/types/delete-bonus-tranche';
+// import {ExcludeParticipantParams} from '../utils/types/exclude-participant';
 
 const logger = cds.log("Bonus Tranche handler.");
 
@@ -54,6 +55,8 @@ export class BonusTrancheHandler {
             participant_ID: participant.ID,
           })
       }
+
+      console.log(newBonusTranche);
     } catch (error) {
       logger.error(error)
       throw error;
@@ -86,7 +89,6 @@ export class BonusTrancheHandler {
     }
   }
 
-
   @BeforeDelete()
   public async beforeDelete(@ParamObj() deleteParams: DeleteParam) {
     try {
@@ -101,4 +103,5 @@ export class BonusTrancheHandler {
       throw error;
     }
   }
+    
 }
