@@ -7,6 +7,7 @@ import ColumnListItem from "sap/m/ColumnListItem";
 import MessageToast from "sap/m/MessageToast";
 import Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
+import Formatter from "../model/formatter";
 
 /**
  * @namespace amalisov.cuibono.controller

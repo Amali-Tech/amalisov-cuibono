@@ -86,10 +86,10 @@
 }
 
 .totalBox {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 10px;
-    padding-right: 10px;
+    gap: 50px;
+    
+   
+    
 
 }
 
@@ -159,4 +159,20 @@
 
     border-radius: 10px;
     border-top: 1px solid #d9d9d9;
+}
+
+.totalWeightRed {
+    color: red !important;
+}
+
+.totalWeightGreen {
+    color: green !important;
+}
+
+.iconRed {
+    color: red !important;
+}
+
+.iconGreen {
+    color: green !important;
 }

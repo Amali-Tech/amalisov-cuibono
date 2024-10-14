@@ -100,7 +100,7 @@ export default class AddEditTranche extends BaseController {
         catch (error) {
             MessageToast.show(error + this.getI18nText("cannotCreateTranche"));
         }
-        this.updateTotalWeightDisplay()
+        
     }
     private formatDateWithoutTime(date: Date): string {
         const year = date.getFullYear();  // Full year, e.g., 2024
@@ -260,12 +260,15 @@ export default class AddEditTranche extends BaseController {
 
         // // Update the model with the new data
         // oModel?.updateBindings();
-
-        // Show a success message
+        
         MessageToast.show("Target added successfully.");
+       
+        // Show a success message
 
         // Close the dialog
         this.onCancelCreateTarget();
+        this.updateTotalWeightDisplay()
+        
     }
     public onEditTargetPress(oEvent: Event) {
         // Get the item and its binding context
@@ -291,7 +294,7 @@ export default class AddEditTranche extends BaseController {
             (oDialog as Dialog).bindElement({ path: oContext.getPath(), model: "trancheData" });
             (oDialog as Dialog).open();
         }
-        this.updateTotalWeightDisplay()
+      
     }
     public onSaveEditTarget() {
         // Check if we have the context of the item being edited
@@ -315,8 +318,12 @@ export default class AddEditTranche extends BaseController {
         // Close the dialog
         (this.byId("editTargetDialog") as Dialog)?.close();
 
+       
+
         // Show a success message
         MessageToast.show("Target updated successfully.");
+        this.updateTotalWeightDisplay()
+        
     }
     public onCancelEditTarget(): void {
         const oDialog = this.byId("editTargetDialog") as Dialog;
@@ -345,11 +352,13 @@ export default class AddEditTranche extends BaseController {
             // Update the model with the new data
             oModel?.refresh(); // Refresh to update the UI bindings
             // Display a success message
+            
             MessageToast.show("Target deleted successfully.");
+            this.updateTotalWeightDisplay()
         } else {
             console.error("Invalid index or Target array not found.");
         }
-        this.updateTotalWeightDisplay()
+        
     }
     private updateTotalWeightDisplay(): void {
         const totalWeight = this.calculateTotalTargetWeight();
@@ -363,12 +372,16 @@ export default class AddEditTranche extends BaseController {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
         const oTrancheData: { Target: Target[] } = oModel?.getObject("/") || { Target: [] };
         let totalWeight = 0;
+        
         if (Array.isArray(oTrancheData.Target)) {
             totalWeight = oTrancheData.Target.reduce((acc: number, target: Target) => {
-                return acc + parseFloat(target.weight || "0"); // Calculate numerically while weights stay strings
+               
+                const weight = parseFloat(target.weight?.toString() || "0");
+                return acc + weight; 
             }, 0);
         }
-
-        return totalWeight.toString();
+    
+        return totalWeight.toString(); // Return as string
     }
+    
 }

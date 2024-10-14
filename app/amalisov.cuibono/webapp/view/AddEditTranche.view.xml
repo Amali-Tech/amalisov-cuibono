@@ -144,13 +144,13 @@
             </OverflowToolbar>
         </headerToolbar>
         <columns>
-            <Column>
+            <Column hAlign="Begin">
                 <Text text="{i18n>name}" />
             </Column>
-            <Column>
+            <Column hAlign="Begin">
                 <Text text="{i18n>targetWeight}" />
             </Column>
-            <Column hAlign="End">
+            <Column hAlign="Begin">
                 <Text text="{i18n>achievements}" />
             </Column>
             <Column>
@@ -182,24 +182,30 @@
                 </cells>
             </ColumnListItem>
         </items>
+       
     </Table>
 
-    <VBox class="totalTrancheWeight sapUiLargeMarginBottom">
+    <FlexBox class="totalTrancheWeight sapUiLargeMarginBottom  " justifyContent="SpaceBetween">
         <HBox class="totalBox">
             <Title
                 text="{i18n>total}"
                 class="totalTitle"
             />
 
-            <ToolbarSpacer />
+            <core:Icon
+            src="sap-icon://alert"
+            visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
+            class="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconColorClass'}"
+        />
             <Text
+              
                 text="{trancheData>/totalWeight}"
-                class="totalTrancheWeightText"
+                 class="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatTextClass'}"
             />
 
-            <ToolbarSpacer />
+          
         </HBox>
-    </VBox>
+    </FlexBox>
     <FlexBox
         class="customBtn1"
         width="99%"

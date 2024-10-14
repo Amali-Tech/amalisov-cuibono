@@ -15,6 +15,21 @@ const Formatter = {
         return oDateFormat.format(new Date(date));
     },
 
+   formatTextClass(weight: string): string {
+        const totalWeight = parseFloat(weight || "0");
+        return totalWeight === 100 ? "totalWeightGreen" : "totalWeightRed";
+    },
+
+    formatIconColorClass(weight: string): string {
+        const totalWeight = parseFloat(weight || "0");
+        return totalWeight === 100 ? "iconGreen" : "iconRed";
+    },
+
+    formatIconVisibility(weight: string): boolean {
+        const totalWeight = parseFloat(weight || "0");
+        return totalWeight !== 100; // Show the icon only if the weight is not 100
+    }
+
 }
 
 export default Formatter;
