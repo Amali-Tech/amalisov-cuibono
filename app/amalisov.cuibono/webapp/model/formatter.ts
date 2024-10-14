@@ -2,7 +2,7 @@ import DateFormat from "sap/ui/core/format/DateFormat";
 
 const Formatter = {
     formatButtonEnabled: (status: string): boolean => {
-        return status !== "Locked" && status !== "Completed";
+        return status !== "Completed";
     },
 
     formatDate: (date: string): string => {

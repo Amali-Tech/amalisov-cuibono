@@ -262,7 +262,7 @@ export default class AddEditTranche extends BaseController {
         // oModel?.updateBindings();
 
         // Show a success message
-        MessageToast.show("Target added successfully.");
+        MessageToast.show(this.getI18nText("targetAdded"));
 
         // Close the dialog
         this.onCancelCreateTarget();
@@ -296,7 +296,7 @@ export default class AddEditTranche extends BaseController {
     public onSaveEditTarget() {
         // Check if we have the context of the item being edited
         if (!this._oEditContext) {
-            MessageToast.show("No target selected for editing.");
+            MessageToast.show(this.getI18nText("targetEditFailed"));
             return;
         }
 
@@ -304,7 +304,7 @@ export default class AddEditTranche extends BaseController {
         const oModel = this.getView()?.getModel("trancheData");
 
         if (!oModel) {
-            console.error("Model not found.");
+            MessageToast.show(this.getI18nText("targetAdded"));
             return;
         }
 
@@ -316,7 +316,7 @@ export default class AddEditTranche extends BaseController {
         (this.byId("editTargetDialog") as Dialog)?.close();
 
         // Show a success message
-        MessageToast.show("Target updated successfully.");
+        MessageToast.show(this.getI18nText("targetUpdated"));
     }
     public onCancelEditTarget(): void {
         const oDialog = this.byId("editTargetDialog") as Dialog;
@@ -330,7 +330,7 @@ export default class AddEditTranche extends BaseController {
         const oContext = oItem.getBindingContext("trancheData");
         // Ensure that oContext exists
         if (!oContext) {
-            console.error("Binding context not found.");
+            MessageToast.show(this.getI18nText("trancheDeletionFailed"));
             return;
         }
         // Get the model and the data
@@ -345,9 +345,9 @@ export default class AddEditTranche extends BaseController {
             // Update the model with the new data
             oModel?.refresh(); // Refresh to update the UI bindings
             // Display a success message
-            MessageToast.show("Target deleted successfully.");
+            MessageToast.show("targetDeleted");
         } else {
-            console.error("Invalid index or Target array not found.");
+            MessageToast.show("targetDeleted");
         }
         this.updateTotalWeightDisplay()
     }
