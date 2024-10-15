@@ -19,6 +19,7 @@ entity Target {
 entity BonusTranche: managed {
   key ID                   : UUID;
       name                 : String(50) @mandatory;
+      description          : String;
       beginDate            : DateTime @mandatory;
       endDate              : DateTime @mandatory;
       dateOfOrigin         : DateTime @mandatory;
