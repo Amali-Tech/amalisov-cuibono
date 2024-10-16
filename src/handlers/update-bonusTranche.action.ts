@@ -8,9 +8,9 @@ const logger = cds.log("Update bonus tranche action.");
 interface BonustrancheDataInterface {
   bonusTrancheId: string;
   name: string;
-  beginDate: string;
-  endDate: string;
-  dateOfOrigin: string;
+  beginDate: Date;
+  endDate: Date;
+  dateOfOrigin: Date;
   description: string;
   status: string;
   trancheWeight: number;
@@ -39,8 +39,14 @@ export class UpdateBonusTranche {
         return req.reject(404, "Bonus tranche with that ID doesn't exist.");
       }
 
-      if (trancheToUpdate.status === "Locked") {
-        return req.reject(400, "Locked bonus tranche can't be updated.");
+      if (
+        trancheToUpdate.status === "Locked" ||
+        trancheToUpdate.status === "Completed"
+      ) {
+        return req.reject(
+          400,
+          "Locked or Completed bonus tranche can't be updated."
+        );
       }
 
       const formatedBeginDate = new Date(updatedTrancheData.beginDate);
