@@ -31,19 +31,24 @@ export class BonusTrancheHandler {
       const now = new Date();
       const beginDateFormated = new Date(beginDate);
       const endDateFormated = new Date(endDate);
-      const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
+      const totalTargetsWeight: number = targets.reduce(
+        (acc, target) => acc + (target.weight ?? 0),
+        0
+      );
 
-
-      if (totalTargetsWeight > 100) { 
+      if (totalTargetsWeight > 100) {
         return req.error(400, "Total weight of targets must not exceed 100%");
       }
 
       if (totalTargetsWeight !== 100 && status === "Locked") {
-        return req.error(400, "The target should have a total weight of 100% while the status in Locked");
+        return req.error(
+          400,
+          "The target should have a total weight of 100% while the status in Locked"
+        );
       }
 
       if (status === "Completed") {
-        return req.error(400, 'Cannot create a bonus tranche as completed');
+        return req.error(400, "Cannot create a bonus tranche as completed");
       }
 
       if (beginDateFormated < now) {
@@ -51,9 +56,12 @@ export class BonusTrancheHandler {
       }
 
       if (beginDateFormated > endDateFormated) {
-        return req.error(400, "Bonus Tranche end date should be after begin date");
+        return req.error(
+          400,
+          "Bonus Tranche end date should be after begin date"
+        );
       }
-      
+
       for (const target of targets) {
         target.BonusTranche_ID = bonusTrancheId;
         await INSERT.into(Target).entries(target);
@@ -78,38 +86,10 @@ export class BonusTrancheHandler {
       const participantsInBonusTranche = await SELECT.from(Employee.name);
 
       for (const participant of participantsInBonusTranche) {
-        await INSERT.into(TrancheParticipation.name)
-          .entries({
-            bonusTranche_ID: newBonusTranche.ID,
-            participant_ID: participant.ID,
-          })
-      }
-
-    } catch (error) {
-      logger.error(error)
-      throw error;
-    }
-  }
-
-  @BeforeUpdate()
-  public async beforeUpdate(@Req() req: Request) {
-    try {
-      logger.info("Bonus Tranche before Update handler!");
-
-      const targets: Target[] = req.data.Target;
-      const { ID: bonusTrancheId } = req.data;
-
-      await DELETE.from(Target.name).where({ BonusTranche_ID: bonusTrancheId });
-
-      const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
-
-      if (totalTargetsWeight > 100) { 
-        return req.error(400, "Total weight of targets must not exceed 100%");
-      }
-
-      for (const target of targets) {
-          target.BonusTranche_ID = bonusTrancheId;
-          await INSERT.into(Target).entries(target);
+        await INSERT.into(TrancheParticipation.name).entries({
+          bonusTranche_ID: newBonusTranche.ID,
+          participant_ID: participant.ID,
+        });
       }
     } catch (error) {
       logger.error(error);
@@ -124,12 +104,11 @@ export class BonusTrancheHandler {
 
       const { ID: trancheToBeDeletedId } = deleteParams;
       await DELETE.from(Target.name).where({
-        BonusTranche_ID: trancheToBeDeletedId
+        BonusTranche_ID: trancheToBeDeletedId,
       });
       await DELETE.from(TrancheParticipation.name).where({
-        bonusTranche_ID: trancheToBeDeletedId
+        bonusTranche_ID: trancheToBeDeletedId,
       });
-
     } catch (error) {
       logger.error(error);
       throw error;
