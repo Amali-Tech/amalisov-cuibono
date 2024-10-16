@@ -3,20 +3,20 @@
 
 ### Get all Bonus Tranches
 GET {{baseUrl}}/BonusTranche
-Authorization: Basic QURNSU46QURNSU4xMjM0
+Authorization: Basic <YOUR_AUTH_TOKEN>
 
 ### Get a specific BonusTranche by ID
 GET {{baseUrl}}/BonusTranche/52ab4457-d716-450a-b8dc-e9104114fe34
-Authorization: Basic QURNSU46QURNSU4xMjM0
+Authorization: Basic <YOUR_AUTH_TOKEN>
 
 ### Delete a specific Bonus Tranche by ID
 DELETE {{baseUrl}}/BonusTranche/52ab4457-d716-450a-b8dc-e9104114fe34
-Authorization: Basic QURNSU46QURNSU4xMjM0
+Authorization: Basic <YOUR_AUTH_TOKEN>
 
 ### Create a Bonus Tranche
 POST {{baseUrl}}/BonusTranche
 Content-Type: application/json
-Authorization: Basic QURNSU46QURNSU4xMjM0
+Authorization: Basic <YOUR_AUTH_TOKEN>
 
 {
     "Location_ID": "2f5d3f93-0c3f-437d-9d8d-8ad9a4e84f7d",
@@ -42,7 +42,7 @@ Authorization: Basic QURNSU46QURNSU4xMjM0
 ### EditContent for a Bonus Tranche
 POST {{baseUrl}}/updateBonusTranche
 Content-Type: application/json
-Authorization: Basic QURNSU46QURNSU4xMjM0
+Authorization: Basic <YOUR_AUTH_TOKEN>
 
 {    
     "bonusTrancheId": "52ab4457-d716-450a-b8dc-e9104114fe34",
