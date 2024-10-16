@@ -22,6 +22,7 @@ export default class BonusTranches extends BaseController {
         oRouter.getRoute("RouteMain")?.attachMatched(this.onRouteMatched, this);
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
+
     }
 
 
@@ -55,8 +56,6 @@ export default class BonusTranches extends BaseController {
         const oContext = oItem.getBindingContext("trancheModel");
 
         const trancheId = oContext?.getProperty("ID");
-
-
 
         if (trancheId) {
             const oQuery = {

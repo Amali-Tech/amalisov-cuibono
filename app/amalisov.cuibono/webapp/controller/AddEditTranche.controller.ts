@@ -15,17 +15,20 @@ import Input from "sap/m/Input";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import Context from "sap/ui/model/odata/v4/Context";
 import CustomListItem from "sap/m/CustomListItem";
+import Formatter from "../model/formatter";
+import Table from "sap/m/Table";
 
 /**
  * @namespace amalisov.cuibono.controller
  */
 export default class AddEditTranche extends BaseController {
-
+    public formatter = Formatter;
     private _pDialog: Promise<Dialog> | undefined;
     private initialOdata: InitializationHelper;
     private _trancheData: Tranche
     private _currentEditTrancheID: string
     private _oEditContext: Context;
+    private _oTrancheTable: Table
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
         this._trancheData = this.initialOdata.getdefaulTrancheData()
@@ -33,6 +36,7 @@ export default class AddEditTranche extends BaseController {
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
         const oModelTranche = new JSONModel(this._trancheData);
+        this._oTrancheTable = this.byId("idTranchesTable") as Table
         this.getView()?.setModel(oModelTranche, "trancheData");
     }
     public onSavePress() {
@@ -110,16 +114,15 @@ export default class AddEditTranche extends BaseController {
         return `${year}-${month}-${day}`;
     }
     public async onEditTranche(): Promise<void> {
+
         const trancheLocation = this.byId("trancheLocation") as ComboBox;
         const trancheLocationValue = trancheLocation.getSelectedKey();
-        const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
-
+        const oModel = this.getView()?.getModel("trancheModel")
         // Get the model and the current data for the Target array from the binding context
         const oNewTrancheModel = this.getView()?.getModel("trancheData");
 
         // Get the current tranche data object (including the Target array)
         const oTrancheData = oNewTrancheModel?.getObject("/") as Tranche;
-
         const newTranche: Partial<Tranche> = {
             name: oTrancheData.name,
             Location_ID: trancheLocationValue,
@@ -129,23 +132,27 @@ export default class AddEditTranche extends BaseController {
             trancheWeight: oTrancheData.trancheWeight,
             Target: oTrancheData.Target
         }
+        const sBindingPath = `/BonusTranche('${this._currentEditTrancheID}')`;
+        // Create a context binding (without binding it to the view)
+        const oContextBinding = oModel?.bindContext(sBindingPath, undefined, { $expand: "Target" });
 
-        oModel?.bindContext("/BonusTranche(...)")
-            .setParameter("ID", this._currentEditTrancheID)
-            .setParameter("content", newTranche)
-            .invoke()
-            .then(
-                // successful submit
-                () => {
-                    oModel.refresh();
-                    this.getRouter().navTo("RouteMain");
-                    MessageToast.show(this.getI18nText("TrancheEditSuccess"));
-                },
-                // failure in submit
-                (eer) => {
-                    MessageToast.show(eer + this.getI18nText("trancheEditFailed"));
-                }
-            );
+        // const oContext = oContextBinding.getContext()
+        console.log(oContextBinding?.getBoundContext())
+
+        // .invoke()
+        // .then(
+        //     // successful submit
+        //     () => {
+        //         oModel.refresh();
+        //         MessageToast.show(this.getI18nText("TrancheEditSuccess"));
+        //         this.getRouter().navTo("RouteMain");
+        //     },
+        //     // failure in submit
+        //     (eer) => {
+        //         console.error(eer)
+        //         MessageToast.show(eer + this.getI18nText("trancheEditFailed"));
+        //     }
+        // );
     }
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
         const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
@@ -159,13 +166,11 @@ export default class AddEditTranche extends BaseController {
         }
     };
     private _loadTrancheDetails(trancheId: string): void {
-
         // Get the OData V4 model
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel
         const sBindingPath = `/BonusTranche('${trancheId}')`;
         // Create a context binding (without binding it to the view)
         const oContextBinding = oModel.bindContext(sBindingPath, undefined, { $expand: "Target" });
-
         // Fetch the data from the bound context
         oContextBinding.requestObject().then((oData: Tranche) => {
             const editTranche: Tranche = {

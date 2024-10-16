@@ -81,7 +81,7 @@
                         <Label text="{i18n>startDate}" />
                         <DatePicker
                             id="beginDate"
-                            value="{trancheData>/beginDate}"
+                            value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
                         />
@@ -90,7 +90,7 @@
                         <Label text="{i18n>endDate}" />
                         <DatePicker
                             id="endDate"
-                            value="{trancheData>/endDate}"
+                            value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
                         />
@@ -114,7 +114,7 @@
                         <Label text="{i18n>originDate}" />
                         <DatePicker
                             id="trancheOriginDate"
-                            value="{trancheData>/dateOfOrigin}"
+                            value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
                         />
