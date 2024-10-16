@@ -17,28 +17,30 @@ export class BonusTrancheHandler {
       logger.info("Bonus Tranche before Create handler!");
 
       const targets: Target[] = req.data.Target;
-      const { ID: bonusTrancheId } = req.data;
+      const { ID: bonusTrancheId, beginDate, endDate, status } = req.data;
       const now = new Date();
+      const beginDateFormated = new Date(beginDate);
+      const endDateFormated = new Date(endDate);
       const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
+
 
       if (totalTargetsWeight > 100) { 
         return req.error(400, "Total weight of targets must not exceed 100%");
       }
 
-      if (totalTargetsWeight !== 100 && req.data.status === "Locked") {
+      if (totalTargetsWeight !== 100 && status === "Locked") {
         return req.error(400, "The target should have a total weight of 100% while the status in Locked");
       }
 
-      if (req?.data?.status === "Completed") {
+      if (status === "Completed") {
         return req.error(400, 'Cannot create a bonus tranche as completed');
       }
 
-
-      if (req.data.beginData < now) {
+      if (beginDateFormated < now) {
         return req.error(400, "Bonus Tranche start date cannot be in the past");
       }
 
-      if (req.data.beginData > req.data.endData) {
+      if (beginDateFormated > endDateFormated) {
         return req.error(400, "Bonus Tranche end date should be after begin date");
       }
       
