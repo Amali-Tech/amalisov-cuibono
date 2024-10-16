@@ -18,11 +18,28 @@ export class BonusTrancheHandler {
 
       const targets: Target[] = req.data.Target;
       const { ID: bonusTrancheId } = req.data;
-
+      const now = new Date();
       const totalTargetsWeight: number = targets.reduce((acc, target) => acc + (target.weight ?? 0), 0);
 
       if (totalTargetsWeight > 100) { 
         return req.error(400, "Total weight of targets must not exceed 100%");
+      }
+
+      if (totalTargetsWeight !== 100 && req.data.status === "Locked") {
+        return req.error(400, "The target should have a total weight of 100% while the status in Locked");
+      }
+
+      if (req?.data?.status === "Completed") {
+        return req.error(400, 'Cannot create a bonus tranche as completed');
+      }
+
+
+      if (req.data.beginData < now) {
+        return req.error(400, "Bonus Tranche start date cannot be in the past");
+      }
+
+      if (req.data.beginData > req.data.endData) {
+        return req.error(400, "Bonus Tranche end date should be after begin date");
       }
       
       for (const target of targets) {
@@ -56,7 +73,6 @@ export class BonusTrancheHandler {
           })
       }
 
-      console.log(newBonusTranche);
     } catch (error) {
       logger.error(error)
       throw error;
@@ -97,6 +113,7 @@ export class BonusTrancheHandler {
       const { ID: trancheToBeDeletedId } = deleteParams;
 
       await DELETE.from(Target.name).where({ BonusTranche_ID: trancheToBeDeletedId });
+      await DELETE.from(TrancheParticipation.name).where({ bonusTranche_ID: trancheToBeDeletedId });
 
     } catch (error) {
       logger.error(error)
