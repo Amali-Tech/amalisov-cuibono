@@ -1,5 +1,5 @@
 import UIComponent from "sap/ui/core/UIComponent";
-import { InitializationHelper, RouterArguments, Tranche } from "../model/initialData";
+import { InitializationHelper, RouterArguments } from "../model/initialData";
 import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
@@ -8,8 +8,7 @@ import MessageToast from "sap/m/MessageToast";
 import Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
 import Formatter from "../model/formatter";
-import ODataModel from "sap/ui/model/odata/v4/ODataModel";
-import MessageBox from "sap/m/MessageBox";
+
 
 /**
  * @namespace amalisov.cuibono.controller

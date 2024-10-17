@@ -113,12 +113,7 @@ export default class AddEditTranche extends BaseController {
 
         return `${year}-${month}-${day}`;
     }
-    public onAfterRendering() {
-        // Get the control and apply class
-        const oText = this.byId("yourTextControlId");
-        const sClass = this.formatter.formatTextClass(oText?.getBindingContext()?.getProperty("someProperty"));
-        oText// Or use removeStyleClass/addStyleClass as needed
-     }
+   
     public async onEditTranche(): Promise<void> {
         const trancheLocation = this.byId("trancheLocation") as ComboBox;
         const trancheLocationValue = trancheLocation.getSelectedKey();
@@ -209,52 +204,7 @@ export default class AddEditTranche extends BaseController {
         });
     }
 
-    // private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
-    //     const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string, data?: string } };
-    //     const oQuery = oArgs["?query"];
-    
-    //     if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
-    //         console.log("edit", oQuery.trancheId)
-    //         this._currentEditTrancheID = oQuery.trancheId;
-    //         this._loadTrancheDetails(oQuery.trancheId);
-    //     } 
-    //     // Handle Create by duplicating the data
-    //     else if (oQuery && oQuery.operation === "create" && oQuery.data) {
-    //         this.updateTotalWeightDisplay()
-           
-    //         console.log("Data received for duplication:", oQuery.data);
-            
-    //         const duplicateData = JSON.parse(oQuery.data);
-    //         console.log("Parsed duplicate data:", duplicateData); 
-            
-    //         // Prepare the new data for duplication
-    //         const newTranche = {
-    //             ...duplicateData,
-    //             ID: undefined, // Clear ID for duplication
-               
-    //         };
-    
-    //         // Update the model with the new data
-    //         this.updateModelData("trancheData", newTranche, true);
-    //     } else {
-    //         this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true);
-    //     }
-    // }
    
-    
-    
-    
-    // private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
-    //     const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
-    //     const oQuery = oArgs["?query"];
-    
-    //     if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
-    //         this._currentEditTrancheID = oQuery.trancheId
-    //         this._loadTrancheDetails(oQuery.trancheId);
-    //     } else {
-    //         this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
-    //     }
-    // };
     private _loadTrancheDetails(trancheId: string): void {
 
         // Get the OData V4 model
