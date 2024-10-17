@@ -161,8 +161,16 @@
             <ColumnListItem>
                 <cells>
                     <Text text="{trancheData>name}" />
-                    <Text text="{trancheData>weight}" />
-                    <Text text="{trancheData>achievement}" />
+                    <Text
+                        text="{ 
+                        path: 'trancheData>weight', 
+                        formatter: '.formatter.formatPercentage' }"
+                    />
+                    <Text
+                        text="{ 
+                        path: 'trancheData>achievement', 
+                        formatter: '.formatter.formatPercentage' }"
+                    />
 
                     <HBox class="trancheButtonBox">
                         <Button
@@ -182,28 +190,32 @@
                 </cells>
             </ColumnListItem>
         </items>
-       
     </Table>
 
-    <FlexBox class="totalTrancheWeight sapUiLargeMarginBottom  " justifyContent="SpaceBetween">
-        <HBox class="totalBox">
-            <Title
-                text="{i18n>total}"
-                class="totalTitle"
-            />
-
-            <core:Icon
-            src="sap-icon://alert"
-            visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
-            class="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconColorClass'}"
+    <FlexBox class="totalTrancheWeight sapUiLargeMarginBottom  ">
+        <Title
+            text="{i18n>total}"
+            class="totalTitle"
         />
-            <Text
-              
-                text="{trancheData>/totalWeight}"
-                 class="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatTextClass'}"
+        <HBox class="totalBox">
+            <core:Icon
+                color="red"
+                src="sap-icon://alert"
+                visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
+                class="iconAlert"
             />
 
-          
+            <!-- Total Weight Text -->
+            <Text
+                text="{ 
+                    path: 'trancheData>/totalWeight', 
+                    formatter: '.formatter.formatPercentage' 
+                }"
+                class="{ 
+                    path: 'trancheData>/totalWeight', 
+                    formatter: '.formatter.formatTextClass'
+                }"
+            />
         </HBox>
     </FlexBox>
     <FlexBox
@@ -215,31 +227,34 @@
             type="Emphasized"
             text="{i18n>save}"
             press="onSavePress"
-        />
-        <Button
-            type="Default"
-            text="{i18n>discard}"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
         />
 
         <Button
             type="Ghost"
             text="{i18n>lock}"
             icon="sap-icon://locked"
-            visible="{= ${trancheData>/status}==='Running'?true:false}"
+            press=".onLockTranche"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatLockedVisibility'}"
         />
         <Button
             type="Accept"
             text="{i18n>completed}"
             icon="sap-icon://complete"
             press=".onCompleteTranche"
-            visible="{= ${trancheData>/status}==='Locked'?true:false}"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
         />
         <Button
             type="Ghost"
             text="{i18n>reopen}"
             icon="sap-icon://unlocked"
             press=".onReOpenTranche"
-            visible="{= ${trancheData>/status}==='Locked'?true:false}"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
+        />
+        <Button
+            press=".onNavBack"
+            type="Default"
+            text="{i18n>discard}"
         />
     </FlexBox>
 </mvc:View>

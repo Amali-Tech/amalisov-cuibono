@@ -85,13 +85,7 @@
     font-weight: bold;
 }
 
-.totalBox {
-    gap: 50px;
-    
-   
-    
 
-}
 
 .totalTitle {
     margin-left: 15px;
@@ -145,7 +139,6 @@
     opacity: 0.5;
 }
 
-.customPageContainer {}
 
 .customBtn1 {
     position: sticky;
@@ -161,11 +154,11 @@
     border-top: 1px solid #d9d9d9;
 }
 
-.totalWeightRed {
+.sapMText.totalWeightRed {
     color: red !important;
 }
 
-.totalWeightGreen {
+.sapMText.totalWeightGreen {
     color: green !important;
 }
 
@@ -175,4 +168,12 @@
 
 .iconGreen {
     color: green !important;
+}
+
+.iconAlert{
+    color: red;
+}
+
+.totalBox{
+    margin-left: 50px;
 }

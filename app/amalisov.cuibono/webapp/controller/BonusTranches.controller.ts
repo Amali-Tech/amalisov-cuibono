@@ -1,5 +1,5 @@
 import UIComponent from "sap/ui/core/UIComponent";
-import { InitializationHelper, RouterArguments } from "../model/initialData";
+import { InitializationHelper, RouterArguments, Tranche } from "../model/initialData";
 import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
@@ -8,6 +8,8 @@ import MessageToast from "sap/m/MessageToast";
 import Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
 import Formatter from "../model/formatter";
+import ODataModel from "sap/ui/model/odata/v4/ODataModel";
+import MessageBox from "sap/m/MessageBox";
 
 /**
  * @namespace amalisov.cuibono.controller
@@ -36,6 +38,10 @@ export default class BonusTranches extends BaseController {
             oView.bindElement({
                 path: sBindingPath,
                 model: "trancheModel",
+                parameters: {
+                    expand: "Target"
+                }
+               
             });
         }
     };
@@ -71,5 +77,36 @@ export default class BonusTranches extends BaseController {
             MessageToast.show(this.getI18nText("noTrancheSelected"));
         }
     }
+
+    public onCopyPress(oEvent: Event): void {
+        const oSource = oEvent.getSource() as Control;
+        const oItem = oSource.getParent() as ColumnListItem;
+        const oContext = oItem.getBindingContext("trancheModel");
+    
+        const trancheId = oContext?.getProperty("ID");
+    
+        if (trancheId) {
+            const oQuery = {
+                "?query": {
+                    tab: "bonusTranches",
+                    operation: "create",
+                    trancheId: trancheId
+                }
+            };
+            this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+        } else {
+            MessageToast.show(this.getI18nText("noTrancheSelected"));
+        }
+    }
+
+   
+
+
+    
+
+
+   
+   
+    
 }
 

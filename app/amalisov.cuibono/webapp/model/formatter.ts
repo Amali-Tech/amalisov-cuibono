@@ -1,36 +1,58 @@
 import DateFormat from "sap/ui/core/format/DateFormat";
 
 const Formatter = {
-    formatButtonEnabled: (status: string): boolean => {
-        return status !== "Locked" && status !== "Completed";
-    },
+  formatButtonEnabled: (status: string): boolean => {
+    return status !== "completed";
+  },
 
-    formatDate: (date: string): string => {
-        if (!date) {
-            return "";
-        }
-        const oDateFormat = DateFormat.getDateInstance({
-            pattern: "MMMM d, yyyy"
-        });
-        return oDateFormat.format(new Date(date));
-    },
+  formatCompleteVisibility: (status: string, totalWeight: number): boolean => {
 
-   formatTextClass(weight: string): string {
-        const totalWeight = parseFloat(weight || "0");
-        return totalWeight === 100 ? "totalWeightGreen" : "totalWeightRed";
-    },
+    return (
+      (status === "Locked" || status === "Completed") && totalWeight === 100
+    );
+  },
 
-    formatIconColorClass(weight: string): string {
-        const totalWeight = parseFloat(weight || "0");
-        return totalWeight === 100 ? "iconGreen" : "iconRed";
-    },
+  formatSaveVisibility: (status: string): boolean => {
+    return status === "Running";
+  },
 
-    formatIconVisibility(weight: string): boolean {
-        const totalWeight = parseFloat(weight || "0");
-        return totalWeight !== 100; // Show the icon only if the weight is not 100
+  formatLockedVisibility: (status: string, totalWeight: number): boolean => {
+    return (status === "Running" || status === "Open") && totalWeight === 100;
+  },
+
+  formatDate: (date: string): string => {
+    if (!date) {
+      return "";
+    }
+    const oDateFormat = DateFormat.getDateInstance({
+      pattern: "MMMM d, yyyy",
+    });
+    return oDateFormat.format(new Date(date));
+  },
+
+  formatTextClass(totalWeight: number): string {
+   
+    return totalWeight === 100 ? "totalWeightGreen" : "totalWeightRed";
+},
+
+
+  formatIconColorClass(totalWeight: number): string {
+    return totalWeight === 100 ? "iconGreen" : "iconRed";
+  },
+
+  formatIconVisibility(totalWeight: number): boolean {
+    return totalWeight > 100;
+  },
+
+  formatPercentage: (value: number): string => {
+    if (value == null) {
+      return "";
     }
 
-}
+    const percentage = value + "%";
+
+    return percentage;
+  },
+};
 
 export default Formatter;
-

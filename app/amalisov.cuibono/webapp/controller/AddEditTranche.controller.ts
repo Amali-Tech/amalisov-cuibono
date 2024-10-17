@@ -15,12 +15,12 @@ import Input from "sap/m/Input";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import Context from "sap/ui/model/odata/v4/Context";
 import CustomListItem from "sap/m/CustomListItem";
-
+import Formatter from "../model/formatter";
 /**
  * @namespace amalisov.cuibono.controller
  */
 export default class AddEditTranche extends BaseController {
-
+    public formatter = Formatter;
     private _pDialog: Promise<Dialog> | undefined;
     private initialOdata: InitializationHelper;
     private _trancheData: Tranche
@@ -33,7 +33,11 @@ export default class AddEditTranche extends BaseController {
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
         const oModelTranche = new JSONModel(this._trancheData);
+       
         this.getView()?.setModel(oModelTranche, "trancheData");
+       
+        
+       
     }
     public onSavePress() {
         const viewData: CurrentView = (this.getView()?.getModel("currentView") as JSONModel).getData()
@@ -109,6 +113,12 @@ export default class AddEditTranche extends BaseController {
 
         return `${year}-${month}-${day}`;
     }
+    public onAfterRendering() {
+        // Get the control and apply class
+        const oText = this.byId("yourTextControlId");
+        const sClass = this.formatter.formatTextClass(oText?.getBindingContext()?.getProperty("someProperty"));
+        oText// Or use removeStyleClass/addStyleClass as needed
+     }
     public async onEditTranche(): Promise<void> {
         const trancheLocation = this.byId("trancheLocation") as ComboBox;
         const trancheLocationValue = trancheLocation.getSelectedKey();
@@ -147,17 +157,104 @@ export default class AddEditTranche extends BaseController {
                 }
             );
     }
+
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
         const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
         const oQuery = oArgs["?query"];
-
-        if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
-            this._currentEditTrancheID = oQuery.trancheId
-            this._loadTrancheDetails(oQuery.trancheId);
-        } else {
-            this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
+    
+        if (oQuery) {
+            if (oQuery.operation === "edit" && oQuery.trancheId) {
+                this._loadTrancheDetails(oQuery.trancheId);
+            } else if (oQuery.operation === "create" && oQuery.trancheId) {
+                // This is for the copy operation
+                this._duplicateTranche(oQuery.trancheId);
+            } else {
+                this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true);
+            }
         }
     };
+
+    private _duplicateTranche(trancheId: string): void {
+        const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
+        const sBindingPath = `/BonusTranche('${trancheId}')`;
+        
+        const oContextBinding = oModel.bindContext(sBindingPath, undefined, { 
+            $expand: "Target" 
+        });
+        
+        oContextBinding.requestObject().then((oData: Tranche) => {
+            console.log("Tranche Data Retrieved for Duplication:", oData);
+            
+            const duplicateData: Partial<Tranche> = {
+                name: oData.name,
+                Location_ID: oData.Location_ID,
+                beginDate: oData.beginDate,
+                endDate: oData.endDate,
+                dateOfOrigin: oData.dateOfOrigin,
+                trancheWeight: oData.trancheWeight,
+                status: oData.status,
+                Target: oData.Target.map(target => ({
+                    name: target.name,
+                    weight: target.weight,
+                    achievement: target.achievement,
+                    description: target.description
+                }))
+            };
+    
+            this.updateModelData("trancheData", duplicateData, true);
+            this.updateTotalWeightDisplay();
+        }).catch((error) => {
+            console.error("Error duplicating tranche data:", error);
+            MessageToast.show(this.getI18nText("errorDuplicatingTranche"));
+        });
+    }
+
+    // private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
+    //     const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string, data?: string } };
+    //     const oQuery = oArgs["?query"];
+    
+    //     if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
+    //         console.log("edit", oQuery.trancheId)
+    //         this._currentEditTrancheID = oQuery.trancheId;
+    //         this._loadTrancheDetails(oQuery.trancheId);
+    //     } 
+    //     // Handle Create by duplicating the data
+    //     else if (oQuery && oQuery.operation === "create" && oQuery.data) {
+    //         this.updateTotalWeightDisplay()
+           
+    //         console.log("Data received for duplication:", oQuery.data);
+            
+    //         const duplicateData = JSON.parse(oQuery.data);
+    //         console.log("Parsed duplicate data:", duplicateData); 
+            
+    //         // Prepare the new data for duplication
+    //         const newTranche = {
+    //             ...duplicateData,
+    //             ID: undefined, // Clear ID for duplication
+               
+    //         };
+    
+    //         // Update the model with the new data
+    //         this.updateModelData("trancheData", newTranche, true);
+    //     } else {
+    //         this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true);
+    //     }
+    // }
+   
+    
+    
+    
+    // private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
+    //     const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
+    //     const oQuery = oArgs["?query"];
+    
+    //     if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
+    //         this._currentEditTrancheID = oQuery.trancheId
+    //         this._loadTrancheDetails(oQuery.trancheId);
+    //     } else {
+    //         this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
+    //     }
+    // };
     private _loadTrancheDetails(trancheId: string): void {
 
         // Get the OData V4 model
@@ -165,9 +262,10 @@ export default class AddEditTranche extends BaseController {
         const sBindingPath = `/BonusTranche('${trancheId}')`;
         // Create a context binding (without binding it to the view)
         const oContextBinding = oModel.bindContext(sBindingPath, undefined, { $expand: "Target" });
-
+        
         // Fetch the data from the bound context
         oContextBinding.requestObject().then((oData: Tranche) => {
+            
             const editTranche: Tranche = {
                 name: oData.name,
                 beginDate: oData.beginDate,
@@ -181,11 +279,15 @@ export default class AddEditTranche extends BaseController {
                 description: oData.description
             }
             this.updateModelData("trancheData", editTranche, true)
-
+            this.updateTotalWeightDisplay()
         }).catch(() => {
             MessageToast.show(this.getI18nText("FetchError"))
         });
 
+    }
+
+    public onNavBack() {
+        this.getRouter().navTo("RouteMain")
     }
     public onAddTarget(): void {
         const oView = this.getView() as View;
@@ -362,26 +464,74 @@ export default class AddEditTranche extends BaseController {
     }
     private updateTotalWeightDisplay(): void {
         const totalWeight = this.calculateTotalTargetWeight();
-        const oModel = this.getView()?.getModel("trancheData") as JSONModel;;
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;
         if (oModel) {
-            oModel?.setProperty("/totalWeight", totalWeight);
-            oModel.refresh();
+            oModel.setProperty("/totalWeight", totalWeight);
+            oModel.refresh(true); // Ensure refresh triggers any bindings
         }
     }
-    private calculateTotalTargetWeight(): string {
+
+    private calculateTotalTargetWeight(): number {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+      
         const oTrancheData: { Target: Target[] } = oModel?.getObject("/") || { Target: [] };
+     
         let totalWeight = 0;
         
         if (Array.isArray(oTrancheData.Target)) {
             totalWeight = oTrancheData.Target.reduce((acc: number, target: Target) => {
-               
                 const weight = parseFloat(target.weight?.toString() || "0");
                 return acc + weight; 
             }, 0);
         }
     
-        return totalWeight.toString(); // Return as string
+        return totalWeight;
     }
+
+    public onReOpenTranche(): void {
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+        if (oModel) {
+            oModel.setProperty("/status", "Running");
+            oModel.refresh(true);
+    
+            // Display a success message
+            MessageToast.show(this.getI18nText("trancheReopened"));
+        }
+    }
+
+    public onCompleteTranche(): void {
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+        if (oModel) {
+            const totalWeight = oModel.getProperty("/totalWeight");
+            
+            if (totalWeight === 100) {
+                oModel.setProperty("/status", "Completed");
+                oModel.refresh(true);
+    
+                // Display a success message
+                MessageToast.show(this.getI18nText("trancheCompleted"));
+            } else {
+                MessageToast.show(this.getI18nText("cannotCompleteTrancheNot100"));
+            }
+        }
+    }
+
+    public onLockTranche(): void {
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+        if (oModel) {
+            oModel.setProperty("/status", "Locked");
+            oModel.refresh(true);
+    
+            // Display a success message
+            MessageToast.show(this.getI18nText("trancheLocked"));
+             
+        }
+    }
+    
+    
+    
+    
+    
+   
     
 }
