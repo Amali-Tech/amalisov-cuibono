@@ -42,6 +42,7 @@ export default class Main extends BaseController {
                     this.updateModelData("currentView", this.currentView)
 
                 }
+
                 else {
                     this.currentView.currentView = "default"
                     this.updateModelData("currentView", this.currentView)
@@ -57,6 +58,7 @@ export default class Main extends BaseController {
             }, true /*no history*/);
         }
     }
+
     private updateModelData(
         modelName: string,
         data: object,
@@ -77,6 +79,10 @@ export default class Main extends BaseController {
             }
         }
         this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+    }
+
+    public onLogoClick() {
+        this.getRouter().navTo("RouteMain")
     }
 }
 

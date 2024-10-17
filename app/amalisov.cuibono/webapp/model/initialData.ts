@@ -2,6 +2,24 @@ export interface CurrentView { currentView: "default" | "edit" | "create" }
 export interface RouterArguments {
     "?query"?: { tab?: string, operation?: "default" | "edit" | "create" };
 }
+export interface Tranche {
+    name: string
+    Location_ID: string
+    description?: string
+    beginDate: string
+    dateOfOrigin: string
+    endDate: string
+    trancheWeight: string
+    status: "Running" | "Locked" | "Completed"
+    modifiedBy: string
+    Target: Target[]
+}
+export interface Target {
+    name: string
+    achievement: string
+    weight: number
+    description?: string
+}
 export class InitializationHelper {
     constructor(private getI18nText: (textPath: string) => string) { }
     /**
@@ -9,6 +27,19 @@ export class InitializationHelper {
          * @public
          * @returns {object} An object containing the dropdown data.
          */
+    public getdefaulTrancheData(): Tranche {
+        return {
+            name: "",
+            beginDate: "",
+            endDate: "",
+            dateOfOrigin: "",
+            Location_ID: "",
+            modifiedBy: "",
+            status: "Running",
+            trancheWeight: "",
+            Target: [],
+        }
+    }
     public getDropdownData(): object {
         return {
             trancheStatus: [
