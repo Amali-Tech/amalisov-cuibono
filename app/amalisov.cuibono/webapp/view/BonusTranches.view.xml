@@ -40,7 +40,7 @@
                 id="filterbar2"
                 persistencyKey="myPersKey"
                 useToolbar="false"
-                search=""
+                search=".onSearch"
                 dragDropConfig="move"
                 class="_filterBarClass"
             >
@@ -50,8 +50,8 @@
                 </fb:layoutData>
                 <fb:filterGroupItems>
                     <fb:FilterGroupItem
-                        id="SearchItem2"
-                        name="search"
+                        id="Search"
+                        name="Search"
                         groupName="group1"
                         visibleInFilterBar="true"
                     >
@@ -89,7 +89,7 @@
                     </fb:FilterGroupItem>
                     <fb:FilterGroupItem
                         id="locationID"
-                        name="location"
+                        name="locationID"
                         label="{i18n>location}"
                         groupName="Group1"
                         visibleInFilterBar="true"
@@ -112,7 +112,7 @@
                     </fb:FilterGroupItem>
                     <fb:FilterGroupItem
                         id="fiscalYearID"
-                        name="fiscal"
+                        name="fiscalYear"
                         label="{i18n>fiscal}"
                         groupName="Group1"
                         visibleInFilterBar="true"
@@ -167,25 +167,30 @@
                     </m:OverflowToolbar>
                 </m:headerToolbar>
                 <m:columns>
-                    <m:Column width="12em">
+                    <m:Column
+                        id="trancheSearchStatus"
+                        width="12em"
+                    >
                         <m:Text text="{i18n>status}" />
                     </m:Column>
                     <m:Column
+                        id="trancheSearchName"
                         minScreenWidth="Tablet"
                         demandPopin="true"
                     >
                         <m:Text text="{i18n>name}" />
                     </m:Column>
                     <m:Column
+                        id="trancheSearchLocation"
                         minScreenWidth="Tablet"
                         demandPopin="true"
                     >
                         <m:Text text="{i18n>location}" />
                     </m:Column>
-                    <m:Column>
+                    <m:Column id="trancheStartDate">
                         <m:Text text="{i18n>startDate}" />
                     </m:Column>
-                    <m:Column>
+                    <m:Column id="trancheEndDate">
                         <m:Text text="{i18n>endDate}" />
                     </m:Column>
                     <m:Column hAlign="End">

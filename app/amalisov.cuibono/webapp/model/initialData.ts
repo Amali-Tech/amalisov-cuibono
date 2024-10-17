@@ -20,6 +20,16 @@ export interface Target {
     weight: number
     description?: string
 }
+export interface IFilterCondition {
+    operator: string;
+    values: unknown[]; // Depending on your data type, you can narrow this type.
+}
+export enum FilterItemName {
+    SEARCH = "search",
+    STATUS = "status",
+    LOCATION = "location",
+    FISCAL = "fiscal"
+}
 export class InitializationHelper {
     constructor(private getI18nText: (textPath: string) => string) { }
     /**
