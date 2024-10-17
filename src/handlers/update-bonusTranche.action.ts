@@ -42,12 +42,35 @@ export class UpdateBonusTranche {
       if (trancheToUpdate.status === "Completed") {
         return req.reject(400, "Completed bonus tranche can't be updated.");
       }
-      
+
+      if (
+        trancheToUpdate.status === "Locked" &&
+        updatedTrancheData.status === "Completed"
+      ) {
+        await await UPDATE(BonusTranche.name)
+          .where({ ID: bonusTrancheId })
+          .with({ status: "Completed" });
+
+        return await SELECT.from(BonusTranche.name).where({
+          ID: bonusTrancheId,
+        });
+      }
+
       if (
         trancheToUpdate.status === "Locked" &&
         updatedTrancheData.status !== "Running"
       ) {
         return req.reject(400, "Locked bonus tranche can't be updated.");
+      }
+
+      if (
+        trancheToUpdate.status === "Running" &&
+        updatedTrancheData.status === "Completed"
+      ) {
+        return req.reject(
+          400,
+          "you can't update a tranche status from running to complted."
+        );
       }
 
       const formatedBeginDate = new Date(updatedTrancheData.beginDate);
