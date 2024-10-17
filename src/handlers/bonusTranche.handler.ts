@@ -79,10 +79,11 @@ export class BonusTrancheHandler {
    * @param {Request} req - The request containing the newly created BonusTranche.
    */
   public async afterCreate(@Req() req: Request) {
-    try {
-      logger.info("Bonus Tranche on After Create handler!");
+    logger.info("Bonus Tranche on After Create handler!");
 
-      const newBonusTranche = req?.data;
+    const newBonusTranche: BonusTranche = req?.data;
+
+    const job = cds.spawn({}, async () => {
       const participantsInBonusTranche = await SELECT.from(Employee.name);
 
       for (const participant of participantsInBonusTranche) {
@@ -91,10 +92,22 @@ export class BonusTrancheHandler {
           participant_ID: participant.ID,
         });
       }
-    } catch (error) {
-      logger.error(error);
+    });
+
+    job.on("succeeded", async () => {
+      await UPDATE(BonusTranche.name)
+        .where({ ID: newBonusTranche.ID })
+        .with({ participantCreationStatus: "Done" });
+    });
+
+    job.on("failed", async (error) => {
+      await UPDATE(BonusTranche.name)
+        .where({ ID: newBonusTranche.ID })
+        .with({ participantCreationStatus: "Failed" });
+
+      logger.error("Error in participant creation Job: \n", error);
       throw error;
-    }
+    });
   }
 
   @BeforeDelete()

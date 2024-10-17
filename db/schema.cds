@@ -25,6 +25,7 @@ entity BonusTranche: managed {
       dateOfOrigin         : DateTime @mandatory;
       status               : String default 'Running';
       trancheWeight        : Decimal;
+      participantCreationStatus : String default 'InProcess';
       Target               : Association to many Target
                               on Target.BonusTranche = $self;
       trancheParticipation : Association to many TrancheParticipation
