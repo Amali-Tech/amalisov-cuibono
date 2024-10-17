@@ -39,14 +39,15 @@ export class UpdateBonusTranche {
         return req.reject(404, "Bonus tranche with that ID doesn't exist.");
       }
 
+      if (trancheToUpdate.status === "Completed") {
+        return req.reject(400, "Completed bonus tranche can't be updated.");
+      }
+      
       if (
-        trancheToUpdate.status === "Locked" ||
-        trancheToUpdate.status === "Completed"
+        trancheToUpdate.status === "Locked" &&
+        updatedTrancheData.status !== "Running"
       ) {
-        return req.reject(
-          400,
-          "Locked or Completed bonus tranche can't be updated."
-        );
+        return req.reject(400, "Locked bonus tranche can't be updated.");
       }
 
       const formatedBeginDate = new Date(updatedTrancheData.beginDate);
