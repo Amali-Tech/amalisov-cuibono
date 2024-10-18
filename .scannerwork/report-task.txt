@@ -1,0 +1,6 @@
+projectKey=Infineon
+serverUrl=http://localhost:9000
+serverVersion=10.6.0.92116
+dashboardUrl=http://localhost:9000/dashboard?id=Infineon
+ceTaskId=44aff41a-97ff-41c6-94d7-5a34373a65b7
+ceTaskUrl=http://localhost:9000/api/ce/task?id=44aff41a-97ff-41c6-94d7-5a34373a65b7

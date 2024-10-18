@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/bonus-tranche/",
+        "uri": "/api/v1/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -76,9 +76,9 @@
           "autoExpandSelect": true,
           "earlyRequests": true,
           "groupId": "$direct",
-					"metadataUrlParams": {
-						"sap-documentation": "heading"
-					}
+          "metadataUrlParams": {
+            "sap-documentation": "heading"
+          }
         }
       },
       "tranche": {
@@ -110,19 +110,8 @@
       "routes": [
         {
           "name": "RouteMain",
-          "pattern": ":?query:",
+          "pattern": "tranches:?query:",
           "target": "TargetMain"
-        },
-
-        {
-          "pattern": "createTranche",
-          "name": "createTranche",
-          "target": "trancheDetail"
-        },
-        {
-          "pattern": "editTranche/{trancheId}",
-          "name": "editTranche",
-          "target": "trancheDetail"
         }
       ],
       "targets": {
@@ -150,11 +139,6 @@
           "id": "notFound",
           "name": "NotFound",
           "transition": "show"
-        },
-        "trancheDetail": {
-          "viewName": "TrancheDetail",
-          "viewLevel": 1,
-          "viewPath": "amalisov.cuibono.view"
         }
       }
     },

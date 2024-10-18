@@ -6,14 +6,6 @@
     xmlns:f="sap.f"
     xmlns:layout="sap.ui.layout.form"
 >
-    <HBox class="horizontalAlign">
-        <Switch
-            state="{tranche>/Active}"
-            change="onSwitchChange"
-        />
-        <Label text="{i18n>locked}" />
-    </HBox>
-
     <layout:SimpleForm
         class="table"
         editable="true"
@@ -27,75 +19,114 @@
     >
         <layout:content>
             <VBox>
-                <HBox class="spaceAbove">
-                    <VBox>
+                <FlexBox
+                    width="48%"
+                    alignItems="Center"
+                >
+                    <Label text="{i18n>status}:" />
+                    <Label
+                        id="trancheStatus"
+                        text="{trancheData>/status}"
+                        class="customInputs"
+                    />
+                </FlexBox>
+                <FlexBox
+                    class="spaceAbove"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="48%">
                         <Label text="{i18n>name}" />
                         <Input
-                            value="{tranche>/Name}"
+                            id="trancheName"
+                            value="{trancheData>/name}"
                             class="customInputs "
+                            required="true"
                         />
                     </VBox>
 
-                    <VBox class="spaceBetween">
+                    <VBox width="48%">
                         <Label text="{i18n>location}" />
                         <ComboBox
+                            id="trancheLocation"
                             items="{
-                                    path: ''
-                                   
+                                    path: 'trancheModel>/Location'
                                 }"
                             class="customInputs"
+                            selectedKey="{trancheData>/Location_ID}"
+                            required="true"
                         >
                             <core:Item
-                                key="{key}"
-                                text="{text}"
+                                key="{trancheModel>ID}"
+                                text="{trancheModel>name}"
                             />
                         </ComboBox>
                     </VBox>
-                </HBox>
+                </FlexBox>
 
                 <VBox class="spaceAbove">
                     <Label text="{i18n>description}" />
                     <TextArea
-                        value="{tranche>/Description}"
+                        id="trancheDescription"
+                        value="{trancheData>/description}"
                         rows="4"
                         class="customInput"
                     />
                 </VBox>
 
-                <HBox class="spaceAbove">
-                    <VBox>
+                <FlexBox
+                    class="spaceAbove"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="48%">
                         <Label text="{i18n>startDate}" />
                         <DatePicker
-                            value="{tranche>/StartDate}"
+                            id="beginDate"
+                            value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
+                            required="true"
                         />
                     </VBox>
-                    <VBox class="spaceBetween">
+                    <VBox width="48%">
                         <Label text="{i18n>endDate}" />
                         <DatePicker
-                            value="{tranche>/EndDate}"
+                            id="endDate"
+                            value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
+                            required="true"
                         />
                     </VBox>
-                </HBox>
+                </FlexBox>
 
-               
-                <HBox class="spaceAbove">
-                    <VBox>
+                <FlexBox
+                    class="spaceAbove"
+                    justifyContent="SpaceBetween"
+                >
+                    <VBox width="48%">
                         <Label text="{i18n>trancheWeight}" />
                         <Input
-                            value="{tranche>/Weight}"
+                            id="trancheWeight"
+                            value="{trancheData>/trancheWeight}"
                             class="customInput"
+                            required="true"
                         />
                     </VBox>
-                </HBox>
+                    <VBox width="48%">
+                        <Label text="{i18n>originDate}" />
+                        <DatePicker
+                            id="trancheOriginDate"
+                            value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
+                            class="customInput"
+                            required="true"
+                        />
+                    </VBox>
+                </FlexBox>
             </VBox>
         </layout:content>
     </layout:SimpleForm>
 
     <Table
         id="targetTable"
-        items="{path: 'tranche>/TargetCollection'}"
+        items="{path: 'trancheData>/Target'}"
         width="33%"
     >
         <headerToolbar>
@@ -116,11 +147,11 @@
             <Column>
                 <Text text="{i18n>name}" />
             </Column>
-            <Column hAlign="End">
+            <Column>
                 <Text text="{i18n>targetWeight}" />
             </Column>
             <Column hAlign="End">
-                <Text text="{i18n>achievement}" />
+                <Text text="{i18n>achievements}" />
             </Column>
             <Column>
                 <Text text="" />
@@ -129,9 +160,9 @@
         <items>
             <ColumnListItem>
                 <cells>
-                    <Text text="{tranche>Name}" />
-                    <Text text="{tranche>Weight}" />
-                    <Text text="{tranche>Achievement}" />
+                    <Text text="{trancheData>name}" />
+                    <Text text="{trancheData>weight}" />
+                    <Text text="{trancheData>achievement}" />
 
                     <HBox class="trancheButtonBox">
                         <Button
@@ -153,7 +184,7 @@
         </items>
     </Table>
 
-    <VBox class="totalTrancheWeight">
+    <VBox class="totalTrancheWeight sapUiLargeMarginBottom">
         <HBox class="totalBox">
             <Title
                 text="{i18n>total}"
@@ -161,13 +192,48 @@
             />
 
             <ToolbarSpacer />
-
             <Text
-                text="{i18n>percent}"
+                text="{trancheData>/totalWeight}"
                 class="totalTrancheWeightText"
             />
 
             <ToolbarSpacer />
         </HBox>
     </VBox>
+    <FlexBox
+        class="customBtn1"
+        width="99%"
+        justifyContent="End"
+    >
+        <Button
+            type="Emphasized"
+            text="{i18n>save}"
+            press="onSavePress"
+        />
+        <Button
+            type="Default"
+            text="{i18n>discard}"
+        />
+
+        <Button
+            type="Ghost"
+            text="{i18n>lock}"
+            icon="sap-icon://locked"
+            visible="{= ${trancheData>/status}==='Running'?true:false}"
+        />
+        <Button
+            type="Accept"
+            text="{i18n>completed}"
+            icon="sap-icon://complete"
+            press=".onCompleteTranche"
+            visible="{= ${trancheData>/status}==='Locked'?true:false}"
+        />
+        <Button
+            type="Ghost"
+            text="{i18n>reopen}"
+            icon="sap-icon://unlocked"
+            press=".onReOpenTranche"
+            visible="{= ${trancheData>/status}==='Locked'?true:false}"
+        />
+    </FlexBox>
 </mvc:View>
