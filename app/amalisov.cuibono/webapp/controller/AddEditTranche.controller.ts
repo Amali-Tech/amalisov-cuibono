@@ -163,7 +163,7 @@ export default class AddEditTranche extends BaseController {
         const oQuery = oArgs["?query"];
 
         if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
-            this._currentEditTrancheID = oQuery.trancheId
+
             this._loadTrancheDetails(oQuery.trancheId);
         } else {
             this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
@@ -303,7 +303,7 @@ export default class AddEditTranche extends BaseController {
             (oDialog as Dialog).bindElement({ path: oContext.getPath(), model: "trancheData" });
             (oDialog as Dialog).open();
         }
-        this.updateTotalWeightDisplay()
+
     }
     public onSaveEditTarget() {
         // Check if we have the context of the item being edited
@@ -326,7 +326,7 @@ export default class AddEditTranche extends BaseController {
 
         // Close the dialog
         (this.byId("editTargetDialog") as Dialog)?.close();
-
+        this.updateTotalWeightDisplay()
         // Show a success message
         MessageToast.show(this.getI18nText("targetUpdated"));
     }
@@ -371,16 +371,20 @@ export default class AddEditTranche extends BaseController {
             oModel.refresh();
         }
     }
-    private calculateTotalTargetWeight(): string {
+    private calculateTotalTargetWeight(): number {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+
         const oTrancheData: { Target: Target[] } = oModel?.getObject("/") || { Target: [] };
+
         let totalWeight = 0;
+
         if (Array.isArray(oTrancheData.Target)) {
             totalWeight = oTrancheData.Target.reduce((acc: number, target: Target) => {
-                return acc + parseFloat(target.weight || "0"); // Calculate numerically while weights stay strings
+                const weight = parseFloat(target.weight?.toString() || "0");
+                return acc + weight;
             }, 0);
         }
 
-        return totalWeight.toString();
+        return totalWeight;
     }
 }
