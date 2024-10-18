@@ -3,6 +3,7 @@ export interface RouterArguments {
     "?query"?: { tab?: string, operation?: "default" | "edit" | "create" };
 }
 export interface Tranche {
+    ID: string
     name: string
     Location_ID: string
     description?: string
@@ -39,6 +40,7 @@ export class InitializationHelper {
          */
     public getdefaulTrancheData(): Tranche {
         return {
+            ID: "",
             name: "",
             beginDate: "",
             endDate: "",

@@ -67,7 +67,7 @@
                     <Label text="{i18n>description}" />
                     <TextArea
                         id="trancheDescription"
-                        value="{tranche>/Description}"
+                        value="{trancheData>/description}"
                         rows="4"
                         class="customInput"
                     />
