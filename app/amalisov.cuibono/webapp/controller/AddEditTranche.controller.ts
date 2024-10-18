@@ -16,6 +16,9 @@ import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import Context from "sap/ui/model/odata/v4/Context";
 import CustomListItem from "sap/m/CustomListItem";
 import Formatter from "../model/formatter";
+import TextArea from "sap/m/TextArea";
+
+
 /**
  * @namespace amalisov.cuibono.controller
  */
@@ -24,8 +27,8 @@ export default class AddEditTranche extends BaseController {
     private _pDialog: Promise<Dialog> | undefined;
     private initialOdata: InitializationHelper;
     private _trancheData: Tranche
-    private _currentEditTrancheID: string
     private _oEditContext: Context;
+
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
         this._trancheData = this.initialOdata.getdefaulTrancheData()
@@ -51,7 +54,7 @@ export default class AddEditTranche extends BaseController {
         try {
             const trancheName = this.byId("trancheName") as Input;
             const trancheLocation = this.byId("trancheLocation") as ComboBox;
-            //const trancheDescription = this.byId("trancheDescription") as TextArea;
+            const trancheDescription = this.byId("trancheDescription") as TextArea;
             const beginDate = this.byId("beginDate") as DatePicker
             const endDate = this.byId("endDate") as DatePicker
             const originDate = this.byId("trancheOriginDate") as DatePicker
@@ -59,7 +62,7 @@ export default class AddEditTranche extends BaseController {
 
             const trancheNameValue = trancheName.getValue();
             const trancheLocationValue = trancheLocation.getSelectedKey();
-            //const trancheDescriptionValue = trancheDescription.getValue();
+            const trancheDescriptionValue = trancheDescription.getValue();
             const beginDateValue = beginDate.getDateValue();
             const endDateValue = endDate.getDateValue();
             const originDateValue = originDate.getDateValue();
@@ -109,6 +112,7 @@ export default class AddEditTranche extends BaseController {
                 Location_ID: trancheLocationValue,
                 beginDate: this.formatDateWithoutTime(beginDateValue),
                 endDate: this.formatDateWithoutTime(endDateValue),
+                description: trancheDescriptionValue,
                 dateOfOrigin: this.formatDateWithoutTime(originDateValue),
                 trancheWeight: trancheWeightValue,
                 Target: oTrancheData.Target
@@ -140,36 +144,43 @@ export default class AddEditTranche extends BaseController {
     }
    
     public async onEditTranche(): Promise<void> {
+
         const trancheLocation = this.byId("trancheLocation") as ComboBox;
         const trancheLocationValue = trancheLocation.getSelectedKey();
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
-
         // Get the model and the current data for the Target array from the binding context
         const oNewTrancheModel = this.getView()?.getModel("trancheData");
 
         // Get the current tranche data object (including the Target array)
         const oTrancheData = oNewTrancheModel?.getObject("/") as Tranche;
-
-        const newTranche: Partial<Tranche> = {
+        const newTranche = {
+            bonusTrancheId: oTrancheData.ID,
             name: oTrancheData.name,
             Location_ID: trancheLocationValue,
             beginDate: this.formatDateWithoutTime(new Date(oTrancheData.beginDate)),
             endDate: this.formatDateWithoutTime(new Date(oTrancheData.endDate)),
             dateOfOrigin: this.formatDateWithoutTime(new Date(oTrancheData.dateOfOrigin)),
             trancheWeight: oTrancheData.trancheWeight,
-            Target: oTrancheData.Target
+            targets: oTrancheData.Target
         }
-
-        oModel?.bindContext("/BonusTranche(...)")
-            .setParameter("ID", this._currentEditTrancheID)
-            .setParameter("content", newTranche)
+        const sBindingPath = '/updateBonusTranche(...)';
+        // Create a context binding (without binding it to the view)
+        oModel?.bindContext(sBindingPath)
+            .setParameter('bonusTrancheId', newTranche.bonusTrancheId)
+            .setParameter('name', newTranche.name)
+            .setParameter('Location_ID', newTranche.Location_ID)
+            .setParameter('beginDate', newTranche.beginDate)
+            .setParameter('endDate', newTranche.endDate)
+            .setParameter('dateOfOrigin', newTranche.dateOfOrigin)
+            .setParameter('trancheWeight', newTranche.trancheWeight)
+            .setParameter('targets', newTranche.targets)
             .invoke()
             .then(
                 // successful submit
                 () => {
                     oModel.refresh();
-                    this.getRouter().navTo("RouteMain");
                     MessageToast.show(this.getI18nText("TrancheEditSuccess"));
+                    this.getRouter().navTo("RouteMain");
                 },
                 // failure in submit
                 (eer) => {
@@ -232,7 +243,6 @@ export default class AddEditTranche extends BaseController {
 
    
     private _loadTrancheDetails(trancheId: string): void {
-
         // Get the OData V4 model
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel
         const sBindingPath = `/BonusTranche('${trancheId}')`;
@@ -243,6 +253,7 @@ export default class AddEditTranche extends BaseController {
         oContextBinding.requestObject().then((oData: Tranche) => {
             
             const editTranche: Tranche = {
+                ID: oData.ID,
                 name: oData.name,
                 beginDate: oData.beginDate,
                 dateOfOrigin: oData.dateOfOrigin,
@@ -268,7 +279,7 @@ export default class AddEditTranche extends BaseController {
     public onAddTarget(): void {
         const oView = this.getView() as View;
 
-        if (!this._pDialog) {
+        if (!this.byId("createTargetDialog")) {
             this._pDialog = Fragment.load({
                 id: oView.getId(),
                 name: "amalisov.cuibono.view.fragment.createTarget",
@@ -283,7 +294,7 @@ export default class AddEditTranche extends BaseController {
             });
         }
 
-        this._pDialog.then((oDialog) => {
+        this._pDialog?.then((oDialog) => {
             oDialog.open();
         }).catch(() => {
 
@@ -325,7 +336,6 @@ export default class AddEditTranche extends BaseController {
         // Get the current tranche data object (including the Target array)
         const oTrancheData = oModel?.getObject("/");
 
-
         // Add the new target entry to the Target array
         oTrancheData.Target.push({
             name: sTargetName,
@@ -336,12 +346,14 @@ export default class AddEditTranche extends BaseController {
 
         this.updateModelData("trancheData", oTrancheData)
 
-        // // Update the model with the new data
-        // oModel?.updateBindings();
-        
-        MessageToast.show("Target added successfully.");
-       
+        this._pDialog?.then((oDialog) => {
+            oDialog.destroy();
+        }).catch(() => {
+            MessageToast.show(this.getI18nText("errorDialog"))
+        });
+
         // Show a success message
+        MessageToast.show(this.getI18nText("targetAdded"));
 
         // Close the dialog
         this.onCancelCreateTarget();
@@ -377,13 +389,17 @@ export default class AddEditTranche extends BaseController {
     public onSaveEditTarget() {
         // Check if we have the context of the item being edited
         if (!this._oEditContext) {
-            MessageToast.show("No target selected for editing.");
+            MessageToast.show(this.getI18nText("targetEditFailed"));
             return;
         }
 
         // Get the model and the tranche data
         const oModel = this.getView()?.getModel("trancheData");
-      
+
+        if (!oModel) {
+            MessageToast.show(this.getI18nText("targetAdded"));
+            return;
+        }
 
         // The data is already bound to the model, so changes will reflect automatically.
         // Just close the dialog and refresh the model binding to update the table.
@@ -395,9 +411,7 @@ export default class AddEditTranche extends BaseController {
        
 
         // Show a success message
-        MessageToast.show("Target updated successfully.");
-        this.updateTotalWeightDisplay()
-        
+        MessageToast.show(this.getI18nText("targetUpdated"));
     }
     public onCancelEditTarget(): void {
         const oDialog = this.byId("editTargetDialog") as Dialog;
@@ -410,7 +424,10 @@ export default class AddEditTranche extends BaseController {
         const oItem = <CustomListItem>oEvent.getSource(); // ColumnListItem or CustomListItem
         const oContext = oItem.getBindingContext("trancheData");
         // Ensure that oContext exists
-        
+        if (!oContext) {
+            MessageToast.show(this.getI18nText("trancheDeletionFailed"));
+            return;
+        }
         // Get the model and the data
         const oModel = this.getView()?.getModel("trancheData");
         const oTrancheData = oModel?.getObject("/");
@@ -423,12 +440,9 @@ export default class AddEditTranche extends BaseController {
             // Update the model with the new data
             oModel?.refresh(); 
             // Display a success message
-            
-            MessageToast.show("Target deleted successfully.");
-            this.updateTotalWeightDisplay()
+            MessageToast.show("targetDeleted");
         } else {
-            
-            MessageToast.show("Target deleted successfully.");
+            MessageToast.show("targetDeleted");
         }
         
     }

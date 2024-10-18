@@ -16,12 +16,17 @@ import Filter from "sap/ui/model/Filter";
 import FilterOperator from "sap/ui/model/FilterOperator";
 import { SearchField$SearchEvent } from "sap/m/SearchField";
 
+import FilterBar from "sap/sac/df/FilterBar";
+
+
 
 /**
  * @namespace amalisov.cuibono.controller
  */
 export default class BonusTranches extends BaseController {
     public formatter = Formatter;
+    private _oFilterBar: FilterBar;
+    private _oTable1: Table;
 
     private initialOdata: InitializationHelper;
     public onInit(): void {
@@ -30,8 +35,9 @@ export default class BonusTranches extends BaseController {
         oRouter.getRoute("RouteMain")?.attachMatched(this.onRouteMatched, this);
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
+        this._oFilterBar = this.byId("filterbar2") as FilterBar;
+        this._oTable1 = this.byId("idTranchesTable") as Table;
     }
-
 
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
         const oArgs = oEvent.getParameter("arguments") as { trancheId: string };
@@ -101,14 +107,13 @@ export default class BonusTranches extends BaseController {
         }
         this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
     }
+
     public onEditPress(oEvent: Event): void {
         const oSource = oEvent.getSource() as Control;
         const oItem = oSource.getParent() as ColumnListItem;
         const oContext = oItem.getBindingContext("trancheModel");
 
         const trancheId = oContext?.getProperty("ID");
-
-
 
         if (trancheId) {
             const oQuery = {

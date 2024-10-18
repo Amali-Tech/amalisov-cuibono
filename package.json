@@ -8,6 +8,7 @@
   "dependencies": {
     "@cap-js/hana": "^1",
     "@sap/cds": "^8",
+    "@sap/cds-messaging": "^1.8.3",
     "@sap/eslint-plugin-cds": "^3.0.5",
     "@sap/xssec": "^4",
     "cds-routing-handlers": "^3.0.7",
@@ -52,6 +53,9 @@
             "password": "ADMIN1234"
           }
         }
+      },
+      "messaging": {
+        "kind": "file-based-messaging"
       },
       "connectivity": true,
       "destinations": true,

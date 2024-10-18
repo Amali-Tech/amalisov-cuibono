@@ -3,6 +3,7 @@ export interface RouterArguments {
     "?query"?: { tab?: string, operation?: "default" | "edit" | "create" };
 }
 export interface Tranche {
+    ID: string
     name: string
     Location_ID: string
     description?: string
@@ -20,6 +21,16 @@ export interface Target {
     weight: number
     description?: string
 }
+export interface IFilterCondition {
+    operator: string;
+    values: unknown[]; // Depending on your data type, you can narrow this type.
+}
+export enum FilterItemName {
+    SEARCH = "search",
+    STATUS = "status",
+    LOCATION = "location",
+    FISCAL = "fiscal"
+}
 export class InitializationHelper {
     constructor(private getI18nText: (textPath: string) => string) { }
     /**
@@ -29,6 +40,7 @@ export class InitializationHelper {
          */
     public getdefaulTrancheData(): Tranche {
         return {
+            ID: "",
             name: "",
             beginDate: "",
             endDate: "",
