@@ -16,21 +16,31 @@ entity Target {
       BonusTranche : Association to BonusTranche
 }
 
-entity BonusTranche: managed {
-  key ID                   : UUID;
-      name                 : String(50) @mandatory;
-      description          : String;
-      beginDate            : DateTime @mandatory;
-      endDate              : DateTime @mandatory;
-      dateOfOrigin         : DateTime @mandatory;
-      status               : String default 'Running';
-      trancheWeight        : Decimal;
-      participantCreationStatus : String default 'InProcess';
-      Target               : Association to many Target
-                              on Target.BonusTranche = $self;
-      trancheParticipation : Association to many TrancheParticipation
-                              on trancheParticipation.bonusTranche = $self;
-      Location             : Association to Location;
+entity BonusTranche : managed {
+  key ID                        : UUID;
+      name                      : String(50) @mandatory;
+      description               : String;
+      beginDate                 : DateTime   @mandatory;
+      endDate                   : DateTime   @mandatory;
+      dateOfOrigin              : DateTime   @mandatory;
+      status                    : String enum {
+        Running;
+        Locked;
+        Completed
+      } default 'Running';
+
+      trancheWeight             : Decimal;
+      participantCreationStatus : String enum {
+        InProcess;
+        Done;
+        Failed
+      } default 'InProcess';
+
+      Target                    : Association to many Target
+                                    on Target.BonusTranche = $self;
+      trancheParticipation      : Association to many TrancheParticipation
+                                    on trancheParticipation.bonusTranche = $self;
+      Location                  : Association to Location;
 }
 
 entity Department {
@@ -52,7 +62,7 @@ entity Employee {
 
 entity Attendance {
   key ID : UUID;
-  startDate : DateTime;
+      startDate : DateTime;
   endDate: DateTime;
   employee: Association to Employee
 }

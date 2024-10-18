@@ -14,7 +14,12 @@ import {
   Target,
   TrancheParticipation,
 } from "../../@cds-models/BonusTrancheService";
-import { DeleteParam } from "../utils/types/delete-bonus-tranche";
+import {
+  DeleteParam,
+  ParticipantCreationStatusEnum,
+  TrancheStatusEnum,
+} from "../utils/types/api";
+import { isTrancheStatusValid } from "../utils/helpers/isTrancheStatusValid";
 
 const logger = cds.log("Bonus Tranche handler.");
 
@@ -40,15 +45,24 @@ export class BonusTrancheHandler {
         return req.error(400, "Total weight of targets must not exceed 100%");
       }
 
-      if (totalTargetsWeight !== 100 && status === "Locked") {
+      if (totalTargetsWeight !== 100 && status === TrancheStatusEnum.LOCKED) {
         return req.error(
           400,
           "The target should have a total weight of 100% while the status in Locked"
         );
       }
 
-      if (status === "Completed") {
+      if (status === TrancheStatusEnum.COMPLETED) {
         return req.error(400, "Cannot create a bonus tranche as completed");
+      }
+
+      const isStatusValid = isTrancheStatusValid(status);
+
+      if (status !== undefined && !isStatusValid) {
+        return req.error(
+          400,
+          "Status can only be in Running, Locked or Completed."
+        );
       }
 
       if (beginDateFormated < now) {
@@ -95,15 +109,15 @@ export class BonusTrancheHandler {
     });
 
     job.on("succeeded", async () => {
-      await UPDATE(BonusTranche.name)
-        .where({ ID: newBonusTranche.ID })
-        .with({ participantCreationStatus: "Done" });
+      await UPDATE(BonusTranche.name).where({ ID: newBonusTranche.ID }).with({
+        participantCreationStatus: ParticipantCreationStatusEnum.DONE,
+      });
     });
 
     job.on("failed", async (error) => {
-      await UPDATE(BonusTranche.name)
-        .where({ ID: newBonusTranche.ID })
-        .with({ participantCreationStatus: "Failed" });
+      await UPDATE(BonusTranche.name).where({ ID: newBonusTranche.ID }).with({
+        participantCreationStatus: ParticipantCreationStatusEnum.FAILED,
+      });
 
       logger.error("Error in participant creation Job: \n", error);
       throw error;
