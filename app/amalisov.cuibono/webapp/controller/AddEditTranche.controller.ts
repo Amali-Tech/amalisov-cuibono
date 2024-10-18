@@ -66,10 +66,34 @@ export default class AddEditTranche extends BaseController {
             const trancheWeightValue = trancheWeight.getValue();
 
             // Validate inputs
-            if (!trancheNameValue || !trancheLocationValue || !beginDateValue || !endDateValue || !trancheWeightValue) {
-                MessageToast.show(this.getI18nText("fillInAllFields"));
+            if (!trancheNameValue) {
+                MessageToast.show(this.getI18nText("trancheNameRequired"));
                 return;
             }
+            
+            if (!trancheLocationValue) {
+                MessageToast.show(this.getI18nText("trancheLocationRequired"));
+                return;
+            }
+    
+            if (!beginDateValue) {
+                MessageToast.show(this.getI18nText("beginDateRequired"));
+                return;
+            }
+    
+            if (!endDateValue) {
+                MessageToast.show(this.getI18nText("endDateRequired"));
+                return;
+            }
+
+            const totalWeight = this.calculateTotalTargetWeight();
+        
+            // Check if total weight exceeds 100%
+            if (totalWeight > 100) {
+                MessageToast.show(this.getI18nText("totalWeightExceeded"));
+                return;
+            }
+    
 
             const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
 
@@ -101,8 +125,9 @@ export default class AddEditTranche extends BaseController {
             this.getRouter().navTo("RouteMain");
             oModel.refresh();
         }
-        catch (error) {
-            MessageToast.show(error + this.getI18nText("cannotCreateTranche"));
+        catch (error) {   
+                MessageToast.show(error + this.getI18nText("cannotCreateTranche"));
+            
         }
         
     }
@@ -178,28 +203,29 @@ export default class AddEditTranche extends BaseController {
         });
         
         oContextBinding.requestObject().then((oData: Tranche) => {
-            console.log("Tranche Data Retrieved for Duplication:", oData);
+          
             
             const duplicateData: Partial<Tranche> = {
-                name: oData.name,
+                name: oData.name || '',
                 Location_ID: oData.Location_ID,
-                beginDate: oData.beginDate,
-                endDate: oData.endDate,
-                dateOfOrigin: oData.dateOfOrigin,
-                trancheWeight: oData.trancheWeight,
-                status: oData.status,
+                beginDate: oData.beginDate || this.formatDateWithoutTime(new Date()),
+                endDate: oData.endDate || this.formatDateWithoutTime(new Date()),
+               
+                dateOfOrigin: oData.dateOfOrigin  || this.formatDateWithoutTime(new Date()),
+                trancheWeight: oData.trancheWeight || "",
+                status: oData.status || '',
                 Target: oData.Target.map(target => ({
-                    name: target.name,
-                    weight: target.weight,
-                    achievement: target.achievement,
-                    description: target.description
+                    name: target.name || '',
+                    weight: target.weight || 0,
+                    achievement: target.achievement || '',
+                    description: target.description || ''
                 }))
             };
     
             this.updateModelData("trancheData", duplicateData, true);
             this.updateTotalWeightDisplay();
-        }).catch((error) => {
-            console.error("Error duplicating tranche data:", error);
+        }).catch(() => {
+          
             MessageToast.show(this.getI18nText("errorDuplicatingTranche"));
         });
     }
@@ -357,15 +383,11 @@ export default class AddEditTranche extends BaseController {
 
         // Get the model and the tranche data
         const oModel = this.getView()?.getModel("trancheData");
-
-        if (!oModel) {
-            console.error("Model not found.");
-            return;
-        }
+      
 
         // The data is already bound to the model, so changes will reflect automatically.
         // Just close the dialog and refresh the model binding to update the table.
-        oModel.refresh();
+        oModel?.refresh();
 
         // Close the dialog
         (this.byId("editTargetDialog") as Dialog)?.close();
@@ -388,27 +410,25 @@ export default class AddEditTranche extends BaseController {
         const oItem = <CustomListItem>oEvent.getSource(); // ColumnListItem or CustomListItem
         const oContext = oItem.getBindingContext("trancheData");
         // Ensure that oContext exists
-        if (!oContext) {
-            console.error("Binding context not found.");
-            return;
-        }
+        
         // Get the model and the data
         const oModel = this.getView()?.getModel("trancheData");
         const oTrancheData = oModel?.getObject("/");
-        const sPath = oContext.getPath();
-        const iIndex = parseInt(sPath.split("/").pop() || "-1", 10);
+        const sPath = oContext?.getPath();
+        const iIndex = parseInt(sPath?.split("/").pop() || "-1", 10);
 
         if (iIndex >= 0 && Array.isArray(oTrancheData?.Target)) {
             // Remove the selected target from the Target array
             oTrancheData.Target.splice(iIndex, 1);
             // Update the model with the new data
-            oModel?.refresh(); // Refresh to update the UI bindings
+            oModel?.refresh(); 
             // Display a success message
             
             MessageToast.show("Target deleted successfully.");
             this.updateTotalWeightDisplay()
         } else {
-            console.error("Invalid index or Target array not found.");
+            
+            MessageToast.show("Target deleted successfully.");
         }
         
     }
@@ -417,7 +437,7 @@ export default class AddEditTranche extends BaseController {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
         if (oModel) {
             oModel.setProperty("/totalWeight", totalWeight);
-            oModel.refresh(true); // Ensure refresh triggers any bindings
+            oModel.refresh(true); 
         }
     }
 

@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/bonus-tranche/",
+        "uri": "/api/v1/",
         "type": "OData",
         "settings": {
           "annotations": [],

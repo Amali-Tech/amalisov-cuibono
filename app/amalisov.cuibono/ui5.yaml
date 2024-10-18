@@ -17,10 +17,10 @@ framework:
 server:
   customMiddleware:
     - name: ui5-middleware-simpleproxy
-      mountPath: /odata
+      mountPath: /api/v1
       afterMiddleware: compression
       configuration:
-        baseUri: http://localhost:4004/odata
+        baseUri: http://localhost:4004/api/v1
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

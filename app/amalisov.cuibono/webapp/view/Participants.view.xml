@@ -209,96 +209,129 @@
             height="100%"
             vertical="true"
         >
-            <m:Table
-                id="idTranchesTable2"
-                inset="false"
-                items="{trancheModel>/tranches}"
-                width="auto"
-                class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
-                mode="MultiSelect"
-            >
-                <m:headerToolbar>
-                    <m:OverflowToolbar class="tableBar">
-                        <m:Title
-                            text="{i18n>bonusTranches}"
-                            level="H2"
-                        />
-                        <m:ToolbarSpacer />
-                        <m:Button
-                            text="{i18n>excludeTranche}"
-                            type="Emphasized"
-                            press="onCreateTranche"
-                        />
-                        <m:Button
-                            text="{i18n>overrideAmount}"
-                            type="Emphasized"
-                            press="onCreateTranche"
-                        />
-                        <m:OverflowToolbarButton
-                            icon="sap-icon://sort"
-                            text="{i18n>sort}"
-                            type="Transparent"
-                            press=".onSort"
-                        />
-                    </m:OverflowToolbar>
-                </m:headerToolbar>
-                <m:columns>
-                    <m:Column>
-                        <m:Text text="{i18n>localID}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>nameOfParticipant}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>department}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>trancheName}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>weights}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>calculatedAmount}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>finalAmount}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>excluded}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>justification}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>status}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>startDate}" />
-                    </m:Column>
-                    <m:Column>
-                        <m:Text text="{i18n>endDate}" />
-                    </m:Column>
-                </m:columns>
-                <m:items>
-                    <m:ColumnListItem>
-                        <m:cells>
-                            <m:ObjectIdentifier text="{trancheModel>localID}" />
-                            <m:Text text="{trancheModel>nameOfParticipant}" />
-                            <m:Text text="{trancheModel>department}" />
-                            <m:Text text="{trancheModel>trancheName}" />
-                            <m:Text text="{trancheModel>weight}" />
-                            <m:Text text="{trancheModel>calculatedAmount}" />
-                            <m:Text text="{trancheModel>finalAmount}" />
-                            <m:Text text="{trancheModel>excluded}" />
-                            <m:Text text="{trancheModel>justification}" />
-                            <m:Text text="{trancheModel>status}" />
-                            <m:Text text="{trancheModel>startDate}" />
-                            <m:Text text="{trancheModel>endDate}" />
-                        </m:cells>
-                    </m:ColumnListItem>
-                </m:items>
-            </m:Table>
+        <m:Table
+        id="idTranchesTable2"
+        inset="false"
+        growing="true"
+        growingThreshold="5"
+        items="{ path: 'trancheModel>/TrancheParticipation', parameters: { $expand: 'participant($expand=department),bonusTranche($expand=Location)' } }"
+        width="auto"
+        class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
+        mode="MultiSelect">
+        <m:headerToolbar>
+            <m:OverflowToolbar class="tableBar">
+                <m:Title
+                    text="{i18n>bonusTranches}"
+                    level="H2"
+                />
+                <m:ToolbarSpacer />
+                <m:Button
+                    text="{i18n>excludeTranche}"
+                    type="Emphasized"
+                    press="onCreateTranche"
+                />
+                <m:Button
+                    text="{i18n>overrideAmount}"
+                    type="Emphasized"
+                    press="onCreateTranche"
+                />
+                <m:OverflowToolbarButton
+                    icon="sap-icon://sort"
+                    text="{i18n>sort}"
+                    type="Transparent"
+                    press=".onSort"
+                />
+            </m:OverflowToolbar>
+        </m:headerToolbar>
+        <m:columns>
+            <m:Column>
+                <m:Text text="{i18n>localID}" />
+            </m:Column>
+           
+            <m:Column>
+                
+                <m:Text text="{i18n>nameOfParticipant}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>department}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>trancheName}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>status}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>location}" />
+            </m:Column>
+           
+            <m:Column>
+                <m:Text text="{i18n>startDate}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>endDate}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>weights}" />
+
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>calculatedAmount}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>finalAmount}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>excluded}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>justification}" />
+            </m:Column>
+           
+          
+        </m:columns>
+        <m:items>
+            <m:ColumnListItem>
+                <m:cells>
+                    <m:ObjectIdentifier text="{trancheModel>ID}" />
+                    <m:Text
+                        text="{trancheModel>participant/firstName}"
+                    />
+                    
+                    <m:Text text="{trancheModel>participant/department}"/>
+                    <m:Text text="{trancheModel>bonusTranche/name}" />
+                
+                    <m:Text text="{trancheModel>bonusTranche/status}" />
+                    <m:Text text="{trancheModel>bonusTranche/Location/name}"/>
+
+                    
+                    <m:Text
+                        text="{trancheModel>bonusTranche/trancheWeight}"
+                    />
+                    <m:Text
+                    text="{
+                        path: 'trancheModel>bonusTranche/beginDate',
+                        formatter: '.formatter.formatDate'
+                    }"
+                    />
+                    <m:Text
+                    text="{
+                        path: 'trancheModel>bonusTranche/endDate',
+                        formatter: '.formatter.formatDate'
+                    }"
+                    />
+                    <m:Text
+                        text="{trancheModel>calculatedPayoutAmount}"
+                    />
+                    <m:Text text="{trancheModel>finalPayoutAmount}" />
+                    <m:Text text="{trancheModel>excluded}" />
+                    <m:Text text="{trancheModel>justification}" />
+                  
+                    
+                </m:cells>
+            </m:ColumnListItem>
+        </m:items>
+    </m:Table>
         </m:ScrollContainer>
     </m:VBox>
 </mvc:View>

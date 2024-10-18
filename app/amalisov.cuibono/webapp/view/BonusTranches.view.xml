@@ -60,7 +60,8 @@
                                 id="searchHere"
                                 placeholder="Search"
                                 showSearchButton="true"
-                                search="onSearch"
+                                search=".handleSearch"
+
                             />
                         </fb:control>
                     </fb:FilterGroupItem>
