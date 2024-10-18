@@ -27,7 +27,6 @@ export default class AddEditTranche extends BaseController {
     private _pDialog: Promise<Dialog> | undefined;
     private initialOdata: InitializationHelper;
     private _trancheData: Tranche
-    private _currentEditTrancheID: string
     private _oEditContext: Context;
 
     public onInit(): void {
@@ -155,7 +154,6 @@ export default class AddEditTranche extends BaseController {
                 },
                 // failure in submit
                 (eer) => {
-                    console.error(eer)
                     MessageToast.show(eer + this.getI18nText("trancheEditFailed"));
                 }
             );
@@ -179,7 +177,6 @@ export default class AddEditTranche extends BaseController {
         const oContextBinding = oModel.bindContext(sBindingPath, undefined, { $expand: "Target" });
         // Fetch the data from the bound context
         oContextBinding.requestObject().then((oData: Tranche) => {
-            console.log(oData)
             const editTranche: Tranche = {
                 ID: oData.ID,
                 name: oData.name,

@@ -77,55 +77,7 @@ export default class BonusTranches extends BaseController {
         }
     }
     public onSearch(): void {
-        // Initialize an array to hold the filters
-        // const aFilters: Filter[] = [];
 
-        // Get all filter items from the FilterBar
-        // const aFilterItems = this._oFilterBar.getAllFilterItems();
-        // debugger
-        // aFilterItems.forEach((oItem) => {
-        //     const oControl = oItem.getControl(); // Get the control of the FilterGroupItem
-        //     if (oControl) {
-        //         let sValue: string | string[] | null;
-        //         let sPath: string = "";
-        //         const sOperator: FilterOperator = FilterOperator.Contains;
-
-        //         // Check if the control is a MultiComboBox and get selected keys
-        //         if ((oControl as MultiComboBox).getSelectedKeys) {
-        //             sValue = (oControl as MultiComboBox).getSelectedKeys();
-        //         } else if ((oControl as SearchField).getValue) {
-        //             sValue = (oControl as SearchField).getValue();
-        //         } else {
-        //             sValue = null;
-        //         }
-
-        //         // Check if the value is valid and create filters
-        //         if (sValue && ((Array.isArray(sValue) && sValue.length > 0) || (!Array.isArray(sValue) && sValue !== null))) {
-        //             sPath = this.getPathName(oItem); // Get the correct path
-        //             if (sPath) {
-        //                 if (Array.isArray(sValue)) {
-        //                     // Create filters for array values
-        //                     sValue.forEach((val) => {
-        //                         aFilters.push(new Filter(sPath, sOperator, val));
-        //                     });
-        //                 } else {
-        //                     // Create filters for single values
-        //                     aFilters.push(new Filter(sPath, sOperator, sValue));
-        //                 }
-        //             }
-        //         }
-        //     }
-        // });
-
-        // Apply filters to the table binding
-        // if (this._oTable1 && this._oTable1.getBinding) {
-        //     const oBinding = this._oTable1.getBinding("items") as ListBinding; // Use "items" instead of "rows"
-        //     if (oBinding) {
-        //         oBinding.filter(aFilters);
-        //     } else {
-        //         this.errorShow("tableBinding"); // Show error if table binding fails
-        //     }
-        // }
     }
 
     private getPathName(oItem: FilterGroupItem): string {
