@@ -5,8 +5,21 @@ service BonusTrancheService @(requires: 'authenticated-user') {
     entity BonusTranche         as projection on db.BonusTranche;
     entity TrancheParticipation as projection on db.TrancheParticipation;
     entity Target               as projection on db.Target;
+
     @readonly
-    entity Employee         as projection on db.Employee;
+    entity Employee             as projection on db.Employee;
+
     @readonly
     entity Location             as projection on db.Location;
+
+    action updateBonusTranche(bonusTrancheId : String @mandatory,
+                              name : String @mandatory,
+                              beginDate : DateTime @mandatory,
+                              endDate : DateTime @mandatory,
+                              dateOfOrigin : DateTime @mandatory,
+                              description : String,
+                              status : String,
+                              trancheWeight : Decimal,
+                              Location_ID : String @mandatory,
+                              targets : array of Target @mandatory ) returns BonusTranche;
 }
