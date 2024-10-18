@@ -35,6 +35,10 @@ const Formatter = {
     return totalWeight === 100 ? "totalWeightGreen" : "totalWeightRed";
 },
 
+formatNullValue: (value: string | null) => {
+  return value ? value : "-"; 
+},
+
 
   formatIconColorClass(totalWeight: number): string {
     return totalWeight === 100 ? "iconGreen" : "iconRed";

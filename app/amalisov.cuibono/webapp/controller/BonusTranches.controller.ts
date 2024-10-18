@@ -150,6 +150,10 @@ export default class BonusTranches extends BaseController {
         }
     }
 
+    private messageShow = (error: string): void => {
+        MessageToast.show(this.getI18nText(error));
+    };
+
     public onDeletePress(oEvent: Event): void {
         const oSource = oEvent.getSource() as Control;
         const oItem = oSource.getParent() as ColumnListItem;

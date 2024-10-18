@@ -20,7 +20,7 @@ server:
       mountPath: /api/v1
       afterMiddleware: compression
       configuration:
-        baseUri: http://localhost:4004/api/v1
+        baseUri: https://98e42161trial-dev-cuibono-srv.cfapps.us10-001.hana.ondemand.com/api/v1
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

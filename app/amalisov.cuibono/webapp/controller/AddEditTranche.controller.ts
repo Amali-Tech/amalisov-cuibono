@@ -88,6 +88,10 @@ export default class AddEditTranche extends BaseController {
                 MessageToast.show(this.getI18nText("endDateRequired"));
                 return;
             }
+            if (!originDate) {
+                MessageToast.show(this.getI18nText("originRequired"));
+                return;
+            }
 
             const totalWeight = this.calculateTotalTargetWeight();
         
@@ -221,7 +225,7 @@ export default class AddEditTranche extends BaseController {
                 Location_ID: oData.Location_ID,
                 beginDate: oData.beginDate || this.formatDateWithoutTime(new Date()),
                 endDate: oData.endDate || this.formatDateWithoutTime(new Date()),
-               
+                description: oData.description || '',
                 dateOfOrigin: oData.dateOfOrigin  || this.formatDateWithoutTime(new Date()),
                 trancheWeight: oData.trancheWeight || "",
                 status: oData.status || '',
@@ -409,9 +413,10 @@ export default class AddEditTranche extends BaseController {
         (this.byId("editTargetDialog") as Dialog)?.close();
 
        
-
+         
         // Show a success message
         MessageToast.show(this.getI18nText("targetUpdated"));
+        this.updateTotalWeightDisplay()
     }
     public onCancelEditTarget(): void {
         const oDialog = this.byId("editTargetDialog") as Dialog;
@@ -440,10 +445,15 @@ export default class AddEditTranche extends BaseController {
             // Update the model with the new data
             oModel?.refresh(); 
             // Display a success message
-            MessageToast.show("targetDeleted");
+            
+            this.messageShow("targetDeleted")
+            
         } else {
-            MessageToast.show("targetDeleted");
+            
+            this.messageShow("targetDeleted")
         }
+
+        this.updateTotalWeightDisplay()
         
     }
     private updateTotalWeightDisplay(): void {
@@ -499,6 +509,9 @@ export default class AddEditTranche extends BaseController {
             }
         }
     }
+    private messageShow = (error: string): void => {
+        MessageToast.show(this.getI18nText(error));
+    };
 
     public onLockTranche(): void {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
