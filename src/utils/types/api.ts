@@ -2,13 +2,13 @@ export type DeleteParam = {
   ID: string;
 };
 
-export enum TrancheStatusEnum {
+export const enum TrancheStatusEnum {
   RUNNING = "Running",
   LOCKED = "Locked",
   COMPLETED = "Completed",
 }
 
-export enum ParticipantCreationStatusEnum {
+export const enum ParticipantCreationStatusEnum {
   InPROCESS = "InProcess",
   FAILED = "Failed",
   DONE = "Done",

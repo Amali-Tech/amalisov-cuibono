@@ -80,7 +80,7 @@ export class UpdateBonusTranche {
       ) {
         return req.reject(
           400,
-          "you can't update a tranche status from running to complted."
+          "You can't update a tranche status from Running to Completed."
         );
       }
 
