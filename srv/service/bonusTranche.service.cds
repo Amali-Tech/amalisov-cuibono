@@ -12,6 +12,9 @@ service BonusTrancheService @(requires: 'authenticated-user') {
     @readonly
     entity Location             as projection on db.Location;
 
+    @readyonly
+    entity Department           as projection on db.Department;
+
     action updateBonusTranche(bonusTrancheId : String @mandatory,
                               name : String @mandatory,
                               beginDate : DateTime @mandatory,

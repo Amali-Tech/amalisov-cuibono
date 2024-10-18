@@ -2,6 +2,8 @@ import cds, { Request } from "@sap/cds";
 import { Action, Handler, ParamObj, Req } from "cds-routing-handlers";
 import { Service } from "typedi";
 import { BonusTranche, Target } from "../../@cds-models/BonusTrancheService";
+import { isTrancheStatusValid } from "../utils/helpers/isTrancheStatusValid";
+import { TrancheStatusEnum } from "../utils/types/api";
 
 const logger = cds.log("Update bonus tranche action.");
 
@@ -39,17 +41,26 @@ export class UpdateBonusTranche {
         return req.reject(404, "Bonus tranche with that ID doesn't exist.");
       }
 
-      if (trancheToUpdate.status === "Completed") {
+      const isStatusValid = isTrancheStatusValid(updatedTrancheData.status);
+
+      if (updatedTrancheData.status !== undefined && !isStatusValid) {
+        return req.reject(
+          400,
+          "Status can only be in Running, Locked or Completed."
+        );
+      }
+
+      if (trancheToUpdate.status === TrancheStatusEnum.COMPLETED) {
         return req.reject(400, "Completed bonus tranche can't be updated.");
       }
 
       if (
-        trancheToUpdate.status === "Locked" &&
-        updatedTrancheData.status === "Completed"
+        trancheToUpdate.status === TrancheStatusEnum.LOCKED &&
+        updatedTrancheData.status === TrancheStatusEnum.COMPLETED
       ) {
         await await UPDATE(BonusTranche.name)
           .where({ ID: bonusTrancheId })
-          .with({ status: "Completed" });
+          .with({ status: TrancheStatusEnum.COMPLETED });
 
         return await SELECT.from(BonusTranche.name).where({
           ID: bonusTrancheId,
@@ -57,15 +68,15 @@ export class UpdateBonusTranche {
       }
 
       if (
-        trancheToUpdate.status === "Locked" &&
-        updatedTrancheData.status !== "Running"
+        trancheToUpdate.status === TrancheStatusEnum.LOCKED &&
+        updatedTrancheData.status !== TrancheStatusEnum.RUNNING
       ) {
         return req.reject(400, "Locked bonus tranche can't be updated.");
       }
 
       if (
-        trancheToUpdate.status === "Running" &&
-        updatedTrancheData.status === "Completed"
+        trancheToUpdate.status === TrancheStatusEnum.RUNNING &&
+        updatedTrancheData.status === TrancheStatusEnum.COMPLETED
       ) {
         return req.reject(
           400,
@@ -90,7 +101,7 @@ export class UpdateBonusTranche {
       }
 
       if (
-        updatedTrancheData.status === "Locked" &&
+        updatedTrancheData.status === TrancheStatusEnum.LOCKED &&
         totalTargetsWeight !== 100
       ) {
         return req.reject(
