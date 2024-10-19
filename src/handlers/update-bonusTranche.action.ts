@@ -2,7 +2,6 @@ import cds, { Request } from "@sap/cds";
 import { Action, Handler, ParamObj, Req } from "cds-routing-handlers";
 import { Service } from "typedi";
 import { BonusTranche, Target } from "../../@cds-models/BonusTrancheService";
-import { isTrancheStatusValid } from "../utils/helpers/isTrancheStatusValid";
 import { TrancheStatusEnum } from "../utils/types/api";
 
 const logger = cds.log("Update bonus tranche action.");
@@ -39,15 +38,6 @@ export class UpdateBonusTranche {
 
       if (!trancheToUpdate) {
         return req.reject(404, "Bonus tranche with that ID doesn't exist.");
-      }
-
-      const isStatusValid = isTrancheStatusValid(updatedTrancheData.status);
-
-      if (updatedTrancheData.status !== undefined && !isStatusValid) {
-        return req.reject(
-          400,
-          "Status can only be in Running, Locked or Completed."
-        );
       }
 
       if (trancheToUpdate.status === TrancheStatusEnum.COMPLETED) {

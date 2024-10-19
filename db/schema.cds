@@ -2,6 +2,18 @@ namespace cuibono;
 
 using {managed} from '@sap/cds/common';
 
+type TrancheStatusEnum             : String not null @assert.range enum {
+  Running;
+  Locked;
+  Completed;
+};
+
+type ParticipantCreationStatusEnum : String not null @assert.range enum {
+  InProcess;
+  Failed;
+  Done;
+}
+
 entity Location {
   key ID   : UUID;
       name : String(50) not null;
@@ -11,7 +23,7 @@ entity Target {
   key ID           : UUID;
       name         : String(50) @mandatory;
       description  : String;
-      weight       : Decimal @mandatory;
+      weight       : Decimal    @mandatory;
       achievement  : Decimal;
       BonusTranche : Association to BonusTranche
 }
@@ -23,18 +35,9 @@ entity BonusTranche : managed {
       beginDate                 : DateTime   @mandatory;
       endDate                   : DateTime   @mandatory;
       dateOfOrigin              : DateTime   @mandatory;
-      status                    : String enum {
-        Running;
-        Locked;
-        Completed
-      } default 'Running';
-
+      status                    : TrancheStatusEnum default 'Running';
       trancheWeight             : Decimal;
-      participantCreationStatus : String enum {
-        InProcess;
-        Done;
-        Failed
-      } default 'InProcess';
+      participantCreationStatus : ParticipantCreationStatusEnum default 'InProcess';
 
       Target                    : Association to many Target
                                     on Target.BonusTranche = $self;
@@ -44,27 +47,27 @@ entity BonusTranche : managed {
 }
 
 entity Department {
-  key ID : UUID;
-      name : String;
+  key ID    : UUID;
+      name  : String;
       bonus : Decimal;
 }
 
 entity Employee {
-  key ID : UUID;
-      firstName : String;
-      lastName : String;
-      email : String;
-      bonusPercentage : Decimal;
-      department : Association to Department;
+  key ID                    : UUID;
+      firstName             : String;
+      lastName              : String;
+      email                 : String;
+      bonusPercentage       : Decimal;
+      department            : Association to Department;
       trancheParticipattion : Association to many TrancheParticipation
                                 on trancheParticipattion.participant = $self;
 }
 
 entity Attendance {
-  key ID : UUID;
+  key ID        : UUID;
       startDate : DateTime;
-  endDate: DateTime;
-  employee: Association to Employee
+      endDate   : DateTime;
+      employee  : Association to Employee
 }
 
 entity TrancheParticipation {

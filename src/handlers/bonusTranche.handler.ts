@@ -19,7 +19,6 @@ import {
   ParticipantCreationStatusEnum,
   TrancheStatusEnum,
 } from "../utils/types/api";
-import { isTrancheStatusValid } from "../utils/helpers/isTrancheStatusValid";
 
 const logger = cds.log("Bonus Tranche handler.");
 
@@ -54,15 +53,6 @@ export class BonusTrancheHandler {
 
       if (status === TrancheStatusEnum.COMPLETED) {
         return req.error(400, "Cannot create a bonus tranche as completed");
-      }
-
-      const isStatusValid = isTrancheStatusValid(status);
-
-      if (status !== undefined && !isStatusValid) {
-        return req.error(
-          400,
-          "Status can only be in Running, Locked or Completed."
-        );
       }
 
       if (beginDateFormated < now) {
