@@ -440,4 +440,9 @@ export default class AddEditTranche extends BaseController {
 
         return totalWeight;
     }
+
+
+    public onNavBack() {
+        this.getRouter().navTo("RouteMain")
+    }
 }
