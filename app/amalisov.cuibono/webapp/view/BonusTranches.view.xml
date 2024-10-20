@@ -7,33 +7,7 @@
     xmlns:m="sap.m"
     xmlns:fb="sap.ui.comp.filterbar"
 >
-    <m:VBox visible="{= ${currentView>/currentView}!=='default'?true:false}">
-        <m:Title
-            text="{= ${currentView>/currentView}==='edit'? 'Edit':'Create'} Bonus Tranche"
-            class="bonusTitle"
-        />
-        <m:IconTabBar
-            id="idIconTabBar"
-            class="sapUiResponsiveContentPadding"
-        >
-            <m:items>
-                <m:IconTabFilter
-                    id="detailsTrancheTab"
-                    text="{i18n>details}"
-                    key="bonusTranche"
-                >
-                    <mvc:XMLView
-                        id="detailsTrancheContent"
-                        viewName="amalisov.cuibono.view.AddEditTranche"
-                    />
-                </m:IconTabFilter>
-            </m:items>
-        </m:IconTabBar>
-    </m:VBox>
-    <m:VBox
-        height="100%"
-        visible="{= ${currentView>/currentView}==='default'?true:false}"
-    >
+    <m:VBox height="100%">
         <m:HBox width="100%">
             <fb:FilterBar
                 id="filterbar2"

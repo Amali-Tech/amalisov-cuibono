@@ -65,13 +65,15 @@ export default class BonusTranches extends BaseController {
         }
     }
     public onCreateTranche(): void {
+
         const oQuery: RouterArguments = {
             "?query": {
                 tab: "bonusTranches",
                 operation: "create"
             }
         }
-        this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+
+        this.getRouter().navTo("AddEditTranche", oQuery, true /*without history*/);
     }
     public onEditPress(oEvent: Event): void {
         const oSource = oEvent.getSource() as Control;
@@ -90,7 +92,7 @@ export default class BonusTranches extends BaseController {
                     trancheId: trancheId
                 }
             };
-            this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+            this.getRouter().navTo("AddEditTranche", oQuery, true);
         } else {
             MessageToast.show(this.getI18nText("noTrancheSelected"));
         }

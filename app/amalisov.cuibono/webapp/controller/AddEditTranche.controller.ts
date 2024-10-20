@@ -33,11 +33,49 @@ export default class AddEditTranche extends BaseController {
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
         this._trancheData = this.initialOdata.getdefaulTrancheData()
-        this.getRouter()?.getRoute("RouteMain")?.attachPatternMatched(this.onRouteMatched, this);
+        this.getRouter()?.getRoute("AddEditTranche")?.attachPatternMatched(this.onRouteMatched, this);
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
         const oModelTranche = new JSONModel(this._trancheData);
         this.getView()?.setModel(oModelTranche, "trancheData");
+    }
+    private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
+        const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
+        const oQuery = oArgs["?query"];
+
+        if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
+            this._loadTrancheDetails(oQuery.trancheId);
+        } else {
+            this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
+        }
+    };
+    private _loadTrancheDetails(trancheId: string): void {
+        // Get the OData V4 model
+        const oModel = this.getView()?.getModel("trancheModel") as ODataModel
+        const sBindingPath = `/BonusTranche('${trancheId}')`;
+        // Create a context binding (without binding it to the view)
+        const oContextBinding = oModel.bindContext(sBindingPath, undefined, { $expand: "Target" });
+        // Fetch the data from the bound context
+        oContextBinding.requestObject().then((oData: Tranche) => {
+            const editTranche: Tranche = {
+                ID: oData.ID,
+                name: oData.name,
+                beginDate: oData.beginDate,
+                dateOfOrigin: oData.dateOfOrigin,
+                modifiedBy: oData.modifiedBy,
+                status: oData.status,
+                endDate: oData.endDate,
+                Location_ID: oData.Location_ID,
+                Target: oData.Target,
+                trancheWeight: oData.trancheWeight,
+                description: oData.description
+            }
+            this.updateModelData("trancheData", editTranche, true)
+
+        }).catch(() => {
+            MessageToast.show(this.getI18nText("FetchError"))
+        });
+
     }
     public onSavePress() {
         const viewData: CurrentView = (this.getView()?.getModel("currentView") as JSONModel).getData()
@@ -178,44 +216,6 @@ export default class AddEditTranche extends BaseController {
                     MessageToast.show(eer + this.getI18nText("trancheEditFailed"));
                 }
             );
-    }
-    private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
-        const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
-        const oQuery = oArgs["?query"];
-
-        if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
-            this._loadTrancheDetails(oQuery.trancheId);
-        } else {
-            this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
-        }
-    };
-    private _loadTrancheDetails(trancheId: string): void {
-        // Get the OData V4 model
-        const oModel = this.getView()?.getModel("trancheModel") as ODataModel
-        const sBindingPath = `/BonusTranche('${trancheId}')`;
-        // Create a context binding (without binding it to the view)
-        const oContextBinding = oModel.bindContext(sBindingPath, undefined, { $expand: "Target" });
-        // Fetch the data from the bound context
-        oContextBinding.requestObject().then((oData: Tranche) => {
-            const editTranche: Tranche = {
-                ID: oData.ID,
-                name: oData.name,
-                beginDate: oData.beginDate,
-                dateOfOrigin: oData.dateOfOrigin,
-                modifiedBy: oData.modifiedBy,
-                status: oData.status,
-                endDate: oData.endDate,
-                Location_ID: oData.Location_ID,
-                Target: oData.Target,
-                trancheWeight: oData.trancheWeight,
-                description: oData.description
-            }
-            this.updateModelData("trancheData", editTranche, true)
-
-        }).catch(() => {
-            MessageToast.show(this.getI18nText("FetchError"))
-        });
-
     }
     private updateModelData(
         modelName: string,
