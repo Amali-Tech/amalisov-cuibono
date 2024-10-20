@@ -32,7 +32,6 @@
     </m:VBox>
     <m:VBox
         height="100%"
-        class="timeToCheck"
         visible="{= ${currentView>/currentView}==='default'?true:false}"
     >
         <m:HBox width="100%">
