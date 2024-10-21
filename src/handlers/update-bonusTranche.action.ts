@@ -62,13 +62,6 @@ export class UpdateBonusTranche {
       }
 
       if (
-        trancheToUpdate.status === TrancheStatusEnum.Locked &&
-        updatedTrancheData.status !== TrancheStatusEnum.Running
-      ) {
-        return req.reject(400, "Locked bonus tranche can't be updated.");
-      }
-
-      if (
         trancheToUpdate.status === TrancheStatusEnum.Running &&
         updatedTrancheData.status === TrancheStatusEnum.Completed
       ) {
