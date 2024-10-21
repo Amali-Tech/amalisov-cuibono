@@ -1,6 +1,7 @@
 <mvc:View
     controllerName="amalisov.cuibono.controller.Participants"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
     displayBlock="true"
     xmlns:m="sap.m"
     xmlns:fb="sap.ui.comp.filterbar"
@@ -40,7 +41,7 @@
                                 items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
-                                <Item
+                                <core:Item
                                     id="statusItems2"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
@@ -65,7 +66,7 @@
                                 items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
-                                <Item
+                                <core:Item
                                     id="locationItems2"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
@@ -89,7 +90,7 @@
                                 items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
-                                <Item
+                                <core:Item
                                     id="filterItems2"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
@@ -191,7 +192,7 @@
                                 items="{path: '',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
-                                <Item
+                                <core:Item
                                     id="selectItems2"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"

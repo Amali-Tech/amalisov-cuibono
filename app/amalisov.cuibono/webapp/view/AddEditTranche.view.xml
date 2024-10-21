@@ -9,7 +9,7 @@
     <m:Page id="addpage">
         <m:customHeader>
             <core:Fragment
-                id="custombar"
+                id="custombar2"
                 fragmentName="amalisov.cuibono.view.CustomBar"
                 type="XML"
             />
@@ -29,6 +29,29 @@
                 />
             </m:items>
         </m:IconTabBar>
+        <m:VBox>
+            <m:Title
+                text="{= ${currentView>/currentView}==='edit'? 'Edit':'Create'} Bonus Tranche"
+                class="bonusTitle"
+            />
+            <m:IconTabBar
+                id="idIconTabBar"
+                class="sapUiResponsiveContentPadding"
+            >
+                <m:items>
+                    <m:IconTabFilter
+                        id="detailsTrancheTab"
+                        text="{i18n>details}"
+                        key="bonusTranche"
+                    >
+                        <mvc:XMLView
+                            id="detailsTrancheContent"
+                            viewName="amalisov.cuibono.view.AddEditTranche"
+                        />
+                    </m:IconTabFilter>
+                </m:items>
+            </m:IconTabBar>
+        </m:VBox>
         <layout:SimpleForm
             class="table"
             editable="true"
@@ -71,7 +94,7 @@
                             <m:Label text="{i18n>location}" />
                             <m:ComboBox
                                 id="trancheLocation"
-                                m:items="{
+                                items="{
                                     path: 'trancheModel>/Location'
                                 }"
                                 class="customInputs"
@@ -150,7 +173,7 @@
 
         <m:Table
             id="targetTable"
-            m:items="{path: 'trancheData>/Target'}"
+            items="{path: 'trancheData>/Target'}"
             width="33%"
         >
             <m:headerToolbar>
@@ -224,42 +247,41 @@
                 <m:ToolbarSpacer />
             </m:HBox>
         </m:VBox>
-        <m:FlexBox
-            class="customBtn1"
-            width="99%"
-            justifyContent="End"
-        >
-            <m:Button
-                type="Emphasized"
-                text="{i18n>save}"
-                press="onSavePress"
-            />
-            <m:Button
-                type="Default"
-                text="{i18n>discard}"
-                press=".onNavBack"
-            />
+        <m:footer>
+            <m:OverflowToolbar>
+                <m:ToolbarSpacer />
+                <m:Button
+                    type="Emphasized"
+                    text="{i18n>save}"
+                    press="onSavePress"
+                />
+                <m:Button
+                    type="Default"
+                    text="{i18n>discard}"
+                    press=".onNavBack"
+                />
 
-            <m:Button
-                type="Ghost"
-                text="{i18n>lock}"
-                icon="sap-icon://locked"
-                visible="{= ${trancheData>/status}==='Running'?true:false}"
-            />
-            <m:Button
-                type="Accept"
-                text="{i18n>completed}"
-                icon="sap-icon://complete"
-                press=".onCompleteTranche"
-                visible="{= ${trancheData>/status}==='Locked'?true:false}"
-            />
-            <m:Button
-                type="Ghost"
-                text="{i18n>reopen}"
-                icon="sap-icon://unlocked"
-                press=".onReOpenTranche"
-                visible="{= ${trancheData>/status}==='Locked'?true:false}"
-            />
-        </m:FlexBox>
+                <m:Button
+                    type="Ghost"
+                    text="{i18n>lock}"
+                    icon="sap-icon://locked"
+                    visible="{= ${trancheData>/status}==='Running'?true:false}"
+                />
+                <m:Button
+                    type="Accept"
+                    text="{i18n>completed}"
+                    icon="sap-icon://complete"
+                    press=".onCompleteTranche"
+                    visible="{= ${trancheData>/status}==='Locked'?true:false}"
+                />
+                <m:Button
+                    type="Ghost"
+                    text="{i18n>reopen}"
+                    icon="sap-icon://unlocked"
+                    press=".onReOpenTranche"
+                    visible="{= ${trancheData>/status}==='Locked'?true:false}"
+                />
+            </m:OverflowToolbar>
+        </m:footer>
     </m:Page>
 </mvc:View>
