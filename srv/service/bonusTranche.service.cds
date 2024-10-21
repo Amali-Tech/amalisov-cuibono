@@ -21,7 +21,7 @@ service BonusTrancheService @(requires: 'authenticated-user') {
                               endDate : DateTime @mandatory,
                               dateOfOrigin : DateTime @mandatory,
                               description : String,
-                              status : String,
+                              status : db.TrancheStatusEnum,
                               trancheWeight : Decimal,
                               Location_ID : String @mandatory,
                               targets : array of Target @mandatory ) returns BonusTranche;
