@@ -375,8 +375,8 @@ export default class AddEditTranche extends BaseController {
         }
 
         // Close the dialog
-        (this.byId("createEditTargetDialog") as Dialog)?.close();
-
+        (this.byId("editTargetDialog") as Dialog)?.close();
+        this.updateTotalWeightDisplay()
         // Show a success message
         MessageToast.show(this.getI18nText("targetUpdated"));
     }
