@@ -139,7 +139,6 @@ export default class BonusTranches extends BaseController {
                         (!Array.isArray(sValue) && sValue !== null))
                 ) {
                     sPath = this.getPathName(oItem);
-                    console.log(sPath)
                     if (sPath) {
 
                         if (Array.isArray(sValue) && oItem.getName() === "fiscalYear") {
