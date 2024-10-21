@@ -6,7 +6,7 @@ import Dialog from "sap/m/Dialog";
 import MessageToast from "sap/m/MessageToast";
 import ComboBox from "sap/m/ComboBox";
 import DatePicker from "sap/m/DatePicker";
-import { InitializationHelper, Target, Tranche } from "../model/initialData";
+import { InitializationHelper, RouterArguments, Target, Tranche } from "../model/initialData";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
 import Event from "sap/ui/base/Event";
@@ -29,6 +29,7 @@ export default class AddEditTranche extends BaseController {
     private _trancheData: Tranche
     private _oEditContext: Context;
     private currentOperation: "Edit" | "Create" = "Create"
+    private currentTrancheID: string = ""
 
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
@@ -58,6 +59,7 @@ export default class AddEditTranche extends BaseController {
     private _loadTrancheDetails(trancheId: string): void {
         // Get the OData V4 model
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel
+        this.currentTrancheID = trancheId
         const sBindingPath = `/BonusTranche('${trancheId}')`;
         // Create a context binding (without binding it to the view)
         const oContextBinding = oModel.bindContext(sBindingPath, undefined, { $expand: "Target" });
@@ -83,6 +85,16 @@ export default class AddEditTranche extends BaseController {
         });
 
     }
+    public onTabSelect(oEvent: Event): void {
+        const selectedKey = oEvent.getParameter("selectedKey" as never);
+        const oQuery: RouterArguments = {
+            "?query": {
+                tab: selectedKey,
+                trancheId: this.currentTrancheID
+            }
+        }
+        this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+    }
     public onSavePress() {
 
         if (this.currentOperation === "Create") {
@@ -91,6 +103,7 @@ export default class AddEditTranche extends BaseController {
             this.onEditTranche()
         }
     }
+
     public async onCreatePress(): Promise<void> {
 
         try {

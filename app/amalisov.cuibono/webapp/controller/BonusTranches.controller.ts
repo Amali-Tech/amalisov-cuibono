@@ -85,7 +85,7 @@ export default class BonusTranches extends BaseController {
         if (trancheId) {
             const currentIdOBJ: CurrentEditID = { currentEditId: trancheId }
             this.updateModelData("currentID", currentIdOBJ)
-            const oQuery = {
+            const oQuery: RouterArguments = {
                 "?query": {
                     tab: "bonusTranches",
                     operation: "edit",
