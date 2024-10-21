@@ -1,4 +1,4 @@
 
 export type DeleteParam = {
-    ID: string
-  } 
+  ID: string
+} 

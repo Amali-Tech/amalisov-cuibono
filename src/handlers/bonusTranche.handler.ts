@@ -44,15 +44,15 @@ export class BonusTrancheHandler {
         return req.error(400, "Total weight of targets must not exceed 100%");
       }
 
+      if (status === null) {
+        return req.reject(400, "Bonus tranche Status can not be null.");
+      }
+
       if (totalTargetsWeight !== 100 && status === TrancheStatusEnum.Locked) {
         return req.error(
           400,
           "The target should have a total weight of 100% while the status in Locked"
         );
-      }
-
-      if (status === null) {
-        return req.reject(400, "Bonus tranche Status can not be null.");
       }
 
       if (status === TrancheStatusEnum.Completed) {
