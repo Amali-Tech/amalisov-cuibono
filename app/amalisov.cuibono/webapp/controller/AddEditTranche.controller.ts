@@ -142,7 +142,6 @@ export default class AddEditTranche extends BaseController {
                 trancheWeight: trancheWeightValue,
                 Target: oTrancheData.Target
             }
-
             const oBinding = oModel.bindList("/BonusTranche") as ODataListBinding;
             const oContext = oBinding.create(newTranche);
 
@@ -325,7 +324,6 @@ export default class AddEditTranche extends BaseController {
             weight: oData.weight,
             description: oData.description
         };
-
         this._pDialog?.then((oDialog) => {
             oDialog.open();
             // Get the new target details from the input fields
@@ -384,7 +382,7 @@ export default class AddEditTranche extends BaseController {
 
         // Close the dialog
         (this.byId("createEditTargetDialog") as Dialog)?.close();
-
+        this.updateTotalWeightDisplay()
         // Show a success message
         MessageToast.show(this.getI18nText("targetUpdated"));
     }
