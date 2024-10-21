@@ -35,7 +35,10 @@
                     justifyContent="SpaceBetween"
                 >
                     <VBox width="48%">
-                        <Label text="{i18n>name}" />
+                        <Label text="{i18n>name}"
+                        
+                        required="true"
+                        />
                         <Input
                             id="trancheName"
                             value="{trancheData>/name}"
@@ -45,7 +48,9 @@
                     </VBox>
 
                     <VBox width="48%">
-                        <Label text="{i18n>location}" />
+                        <Label text="{i18n>location}" 
+                        required="true"
+                        />
                         <ComboBox
                             id="trancheLocation"
                             items="{
@@ -78,21 +83,33 @@
                     justifyContent="SpaceBetween"
                 >
                     <VBox width="48%">
-                        <Label text="{i18n>startDate}" />
+                        <Label text="{i18n>startDate}"
+                        required="true"
+                        
+
+                        />
                         <DatePicker
                             id="beginDate"
                             value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
+                            
+                        
+                        
+                       
+                        change="onStartDateChange"
                         />
                     </VBox>
                     <VBox width="48%">
-                        <Label text="{i18n>endDate}" />
+                        <Label text="{i18n>endDate}" 
+                        required="true"
+                        />
                         <DatePicker
                             id="endDate"
                             value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
+                            change="onEndDateChange"
                         />
                     </VBox>
                 </FlexBox>
@@ -117,6 +134,8 @@
                             value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
+                            minDate="{/currentDate}"
+                            change="onOriginDateChange"
                         />
                     </VBox>
                 </FlexBox>
