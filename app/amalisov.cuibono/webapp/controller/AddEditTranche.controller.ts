@@ -26,11 +26,12 @@ import TextArea from "sap/m/TextArea";
  * @namespace amalisov.cuibono.controller
  */
 export default class AddEditTranche extends BaseController {
-  public formatter = Formatter;
-  private _pDialog: Promise<Dialog> | undefined;
-  private initialOdata: InitializationHelper;
-  private _trancheData: Tranche;
-  private _oEditContext: Context;
+    public formatter = Formatter;
+    private _pDialog: Promise<Dialog> | undefined;
+    private initialOdata: InitializationHelper;
+    private _trancheData: Tranche
+    private _oEditContext: Context;
+    private currentOperation: "Edit" | "Create" = "Create"
 
   public onInit(): void {
     this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
@@ -294,218 +295,237 @@ export default class AddEditTranche extends BaseController {
   public onNavBack() {
     this.getRouter().navTo("RouteMain");
   }
+
   public onAddTarget(): void {
-    const oView = this.getView() as View;
-
-    if (!this.byId("createTargetDialog")) {
-      this._pDialog = Fragment.load({
-        id: oView.getId(),
-        name: "amalisov.cuibono.view.fragment.createTarget",
-        controller: this,
-      }).then((oDialog) => {
-        if (!Array.isArray(oDialog) && oDialog instanceof Dialog) {
-          oView.addDependent(oDialog);
-          return oDialog;
-        } else {
-          throw new Error(this.getI18nText("dialogNotLoaded"));
-        }
-      });
-    }
-
-    this._pDialog
-      ?.then((oDialog) => {
+    this.currentOperation = "Create"
+    this.checkDialog()
+    this._pDialog?.then((oDialog) => {
         oDialog.open();
-      })
-      .catch(() => {
-        MessageToast.show(this.getI18nText("errorDialog"));
-      });
-  }
-  private updateModelData(
-    modelName: string,
-    data: object,
-    refresh?: boolean
-  ): void {
-    const model = this.getView()?.getModel(modelName) as JSONModel;
-    model.setData(data);
-    if (refresh) {
-      model.refresh();
-    }
-  }
-  public onCancelCreateTarget(): void {
-    const oDialog = this.byId("createTargetDialog") as Dialog;
-    if (oDialog) {
-      oDialog.close();
-    } else {
-      //
-      MessageToast.show(this.getI18nText("dialogNotFound"));
-    }
-  }
-  public onCreateTarget() {
-    // Get the new target details from the input fields
-    const sTargetName = (this.byId("targetNameInput") as Input)?.getValue();
-    const iTargetWeight = parseFloat(
-      (this.byId("targetWeightInput") as Input)?.getValue()
-    );
-    const sTargetAchievement = (
-      this.byId("targetAchievementInput") as Input
-    )?.getValue();
-    const sTargetDescription = (
-      this.byId("targetDescriptionInput") as Input
-    )?.getValue();
-
-    // Get the model and the current data for the Target array from the binding context
-    const oModel = this.getView()?.getModel("trancheData");
-
-    // Get the current tranche data object (including the Target array)
-    const oTrancheData = oModel?.getObject("/");
-
-    // Add the new target entry to the Target array
-    oTrancheData.Target.push({
-      name: sTargetName,
-      weight: iTargetWeight,
-      achievement: sTargetAchievement,
-      description: sTargetDescription,
+        (this.byId("targetNameInput") as Input)?.setValue("");
+        (this.byId("targetAchievementInput") as Input)?.setValue("");
+        (this.byId("targetWeightInput") as Input)?.setValue("");
+        (this.byId("targetDescriptionInput") as TextArea)?.setValue("");
+    }).catch(() => {
+        MessageToast.show(this.getI18nText("errorDialog"))
     });
-
-    this.updateModelData("trancheData", oTrancheData);
-
-    this._pDialog
-      ?.then((oDialog) => {
-        oDialog.destroy();
-      })
-      .catch(() => {
-        MessageToast.show(this.getI18nText("errorDialog"));
-      });
-
-    // Show a success message
-    MessageToast.show(this.getI18nText("targetAdded"));
-
-    // Close the dialog
-    this.onCancelCreateTarget();
-    this.updateTotalWeightDisplay();
-  }
-  public onEditTargetPress(oEvent: Event) {
-    // Get the item and its binding context
-    const oItem = <CustomListItem>oEvent.getSource();
-    const oContext = oItem.getBindingContext("trancheData") as Context;
-
-    // Save the binding context for later use (when saving the edits)
-    this._oEditContext = oContext;
-
-    // Open the edit dialog
-    if (!this.byId("editTargetDialog")) {
-      Fragment.load({
-        id: this.getView()?.getId(),
-        name: "amalisov.cuibono.view.fragment.editTarget", // replace with your fragment's path
-        controller: this,
-      }).then((oDialog) => {
-        this.getView()?.addDependent(oDialog as Dialog);
-        (oDialog as Dialog).bindElement({
-          path: oContext.getPath(),
-          model: "trancheData",
-        }); // Bind dialog to selected item
-        (oDialog as Dialog).open();
-      });
-    } else {
-      const oDialog = this.byId("editTargetDialog");
-      (oDialog as Dialog).bindElement({
-        path: oContext.getPath(),
-        model: "trancheData",
-      });
-      (oDialog as Dialog).open();
+}
+  
+    
+ 
+   
+    private updateModelData(
+        modelName: string,
+        data: object,
+        refresh?: boolean
+    ): void {
+        const model = this.getView()?.getModel(modelName) as JSONModel;
+        model.setData(data);
+        if (refresh) {
+            model.refresh();
+        }
     }
-  }
-  public onSaveEditTarget() {
-    // Check if we have the context of the item being edited
-    if (!this._oEditContext) {
-      MessageToast.show(this.getI18nText("targetEditFailed"));
-      return;
+    private checkDialog(): void {
+        const oView = this.getView() as View;
+        if (!this.byId("createEditTargetDialog")) {
+            this._pDialog = Fragment.load({
+                id: oView.getId(),
+                name: "amalisov.cuibono.view.fragment.createEditTarget",
+                controller: this
+            }).then((oDialog) => {
+                if (!Array.isArray(oDialog) && oDialog instanceof Dialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                } else {
+                    throw new Error(this.getI18nText("dialogNotLoaded"));
+                }
+            });
+        }
     }
 
-    // Get the model and the tranche data
-    const oModel = this.getView()?.getModel("trancheData");
 
-    if (!oModel) {
-      MessageToast.show(this.getI18nText("targetAdded"));
-      return;
+ 
+    public CreateTarget() {
+
+        // Get the new target details from the input fields
+        const sTargetName = (this.byId("targetNameInput") as Input)?.getValue();
+        const iTargetWeight = parseFloat((this.byId("targetWeightInput") as Input)?.getValue());
+        const sTargetAchievement = (this.byId("targetAchievementInput") as Input)?.getValue();
+        const sTargetDescription = (this.byId("targetDescriptionInput") as Input)?.getValue();
+
+        // Get the model and the current data for the Target array from the binding context
+        const oModel = this.getView()?.getModel("trancheData");
+
+        // Get the current tranche data object (including the Target array)
+        const oTrancheData = oModel?.getObject("/");
+
+        // Add the new target entry to the Target array
+        oTrancheData.Target.push({
+            name: sTargetName,
+            weight: iTargetWeight,
+            achievement: sTargetAchievement,
+            description: sTargetDescription
+        });
+
+        this.updateModelData("trancheData", oTrancheData)
+
+        this.updateTotalWeightDisplay()
+
+        // Show a success message
+        MessageToast.show(this.getI18nText("targetAdded"));
+
+        // Close the dialog
+        this.onCancelTarget();
+    }
+    public onCancelTarget(): void {
+        const oDialog = this.byId("createEditTargetDialog") as Dialog;
+        if (oDialog) {
+            oDialog.close();
+        } else {
+            //
+            MessageToast.show(this.getI18nText("dialogNotFound"))
+
+        }
+    }
+    public onEditTargetPress(oEvent: Event) {
+        this.currentOperation = "Edit"
+        this.checkDialog()
+        // Get the item and its binding context
+        const oItem = <CustomListItem>oEvent.getSource();
+        const oContext = oItem.getBindingContext("trancheData") as Context;
+
+        // Save the binding context for later use (when saving the edits)
+        this._oEditContext = oContext;
+
+        const oData = this.getView()?.getModel("trancheData")?.getObject(oContext.getPath()) as Target;
+        const targetData: Target = {
+            name: oData.name,
+            achievement: oData.achievement,
+            weight: oData.weight,
+            description: oData.description
+        };
+        this._pDialog?.then((oDialog) => {
+            oDialog.open();
+            // Get the new target details from the input fields
+            (this.byId("targetNameInput") as Input)?.setValue(targetData.name);
+            (this.byId("targetAchievementInput") as Input)?.setValue(targetData.achievement);
+            (this.byId("targetWeightInput") as Input)?.setValue(targetData.weight.toString());
+            (this.byId("targetDescriptionInput") as TextArea)?.setValue(targetData.description || "");
+        }).catch(() => {
+
+            MessageToast.show(this.getI18nText("errorDialog"))
+
+        });
+    }
+    public onSaveTarget() {
+        if (this.currentOperation === "Create") {
+            this.CreateTarget();
+        } else {
+            this.EditTarget();
+        }
+    }
+    public EditTarget() {
+
+        // Check if we have the context of the item being edited
+        if (!this._oEditContext) {
+            MessageToast.show(this.getI18nText("targetEditFailed"));
+            return;
+        }
+        // Get the new target details from the input fields
+        const sTargetName = (this.byId("targetNameInput") as Input)?.getValue();
+        const iTargetWeight = parseFloat((this.byId("targetWeightInput") as Input)?.getValue());
+        const sTargetAchievement = (this.byId("targetAchievementInput") as Input)?.getValue();
+        const sTargetDescription = (this.byId("targetDescriptionInput") as Input)?.getValue();
+        const path = this._oEditContext.getPath()
+        // Retrieve the model
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+
+        // Get the target object using the path
+        const oTarget = oModel?.getProperty(path) as Target;
+
+
+
+        // Check if the target exists
+        if (oTarget) {
+            // Modify the target's fields as needed
+            oTarget.name = sTargetName; // Example: updating the name
+            oTarget.achievement = sTargetAchievement; // Example: updating the achievement
+            oTarget.weight = iTargetWeight; // Example: updating the weight
+            oTarget.description = sTargetDescription; // Example: updating the description
+
+            // Set the updated target back to the model
+            oModel.setProperty(path, oTarget);
+
+            // Optionally, refresh the model to ensure the UI is updated
+            oModel.refresh(true);
+        }
+
+        // Close the dialog
+        (this.byId("createEditTargetDialog") as Dialog)?.close();
+        this.updateTotalWeightDisplay()
+        // Show a success message
+        MessageToast.show(this.getI18nText("targetUpdated"));
+    }
+    public onCancelEditTarget(): void {
+        const oDialog = this.byId("createEditTargetDialog") as Dialog;
+        if (oDialog) {
+            oDialog.close();
+            oDialog.destroy();
+        }
     }
 
-    // The data is already bound to the model, so changes will reflect automatically.
-    // Just close the dialog and refresh the model binding to update the table.
-    oModel?.refresh();
-
-    // Close the dialog
-    (this.byId("editTargetDialog") as Dialog)?.close();
-
-    // Show a success message
-    MessageToast.show(this.getI18nText("targetUpdated"));
-    this.updateTotalWeightDisplay();
-  }
-  public onCancelEditTarget(): void {
-    const oDialog = this.byId("editTargetDialog") as Dialog;
-    if (oDialog) {
-      oDialog.close();
-    }
-  }
-  public onDeleteTargetPress(oEvent: Event) {
-    // Get the row/context binding where the delete button was pressed
-    const oItem = <CustomListItem>oEvent.getSource(); // ColumnListItem or CustomListItem
-    const oContext = oItem.getBindingContext("trancheData");
-    // Ensure that oContext exists
-    if (!oContext) {
-      MessageToast.show(this.getI18nText("trancheDeletionFailed"));
-      return;
-    }
-    // Get the model and the data
-    const oModel = this.getView()?.getModel("trancheData");
-    const oTrancheData = oModel?.getObject("/");
-    const sPath = oContext?.getPath();
-    const iIndex = parseInt(sPath?.split("/").pop() || "-1", 10);
-
-    if (iIndex >= 0 && Array.isArray(oTrancheData?.Target)) {
-      // Remove the selected target from the Target array
-      oTrancheData.Target.splice(iIndex, 1);
-      // Update the model with the new data
-      oModel?.refresh();
-      // Display a success message
-
-      this.messageShow("targetDeleted");
-    } else {
-      this.messageShow("targetDeleted");
+    public onDeleteTargetPress(oEvent: Event) {
+        // Get the row/context binding where the delete button was pressed
+        const oItem = <CustomListItem>oEvent.getSource(); // ColumnListItem or CustomListItem
+        const oContext = oItem.getBindingContext("trancheData");
+        // Ensure that oContext exists
+        if (!oContext) {
+            MessageToast.show(this.getI18nText("trancheDeletionFailed"));
+            return;
+        }
+        // Get the model and the data
+        const oModel = this.getView()?.getModel("trancheData");
+        const oTrancheData = oModel?.getObject("/");
+        const sPath = oContext.getPath();
+        const iIndex = parseInt(sPath.split("/").pop() || "-1", 10);
+        if (iIndex >= 0 && Array.isArray(oTrancheData?.Target)) {
+            // Remove the selected target from the Target array
+            oTrancheData.Target.splice(iIndex, 1);
+            // Update the model with the new data
+            oModel?.refresh(); // Refresh to update the UI bindings
+            // Display a success message
+            MessageToast.show("targetDeleted");
+        } else {
+            MessageToast.show("targetDeleted");
+        }
+        this.updateTotalWeightDisplay()
     }
 
-    this.updateTotalWeightDisplay();
-  }
-  private updateTotalWeightDisplay(): void {
-    const totalWeight = this.calculateTotalTargetWeight();
-    const oModel = this.getView()?.getModel("trancheData") as JSONModel;
-    if (oModel) {
-      oModel.setProperty("/totalWeight", totalWeight);
-      oModel.refresh(true);
+        
+    private updateTotalWeightDisplay(): void {
+        const totalWeight = this.calculateTotalTargetWeight();
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;;
+        if (oModel) {
+            oModel?.setProperty("/totalWeight", totalWeight);
+            oModel.refresh();
+        }
     }
-  }
+    private calculateTotalTargetWeight(): number {
+        const oModel = this.getView()?.getModel("trancheData") as JSONModel;
 
-  private calculateTotalTargetWeight(): number {
-    const oModel = this.getView()?.getModel("trancheData") as JSONModel;
+        const oTrancheData: { Target: Target[] } = oModel?.getObject("/") || { Target: [] };
 
-    const oTrancheData: { Target: Target[] } = oModel?.getObject("/") || {
-      Target: [],
-    };
+        let totalWeight = 0;
 
-    let totalWeight = 0;
+        if (Array.isArray(oTrancheData.Target)) {
+            totalWeight = oTrancheData.Target.reduce((acc: number, target: Target) => {
+                const weight = parseFloat(target.weight?.toString() || "0");
+                return acc + weight;
+            }, 0);
+        }
 
-    if (Array.isArray(oTrancheData.Target)) {
-      totalWeight = oTrancheData.Target.reduce(
-        (acc: number, target: Target) => {
-          const weight = parseFloat(target.weight?.toString() || "0");
-          return acc + weight;
-        },
-        0
-      );
+        return totalWeight;
     }
-
-    return totalWeight;
-  }
+  
 
   public onReOpenTranche(): void {
     const oModel = this.getView()?.getModel("trancheData") as JSONModel;
