@@ -288,7 +288,7 @@
                                 text="{trancheModel>participant/firstName}"
                             />
                             <m:Text
-                                text="{trancheModel>participant/department_ID}"
+                                text="{trancheModel>participant/department}"
                             />
                             <m:Text text="{trancheModel>bonusTranche/name}" />
                             <m:Text
