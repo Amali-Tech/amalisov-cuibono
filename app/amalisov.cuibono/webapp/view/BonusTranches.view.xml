@@ -32,7 +32,8 @@
                                 id="searchHere"
                                 placeholder="Search"
                                 showSearchButton="true"
-                                search="onSearch"
+                                search=".handleSearch"
+
                             />
                         </fb:control>
                     </fb:FilterGroupItem>
@@ -113,6 +114,7 @@
                 items="{ path: 'trancheModel>/BonusTranche' ,parameters: {$expand: 'Location'}}"
                 class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
                 width="auto"
+                growing="true"
             >
                 <m:headerToolbar>
                     <m:OverflowToolbar class="tableBar">

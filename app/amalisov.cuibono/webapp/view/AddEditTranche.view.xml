@@ -78,7 +78,10 @@
                         </m:VBox>
 
                         <m:VBox width="48%">
-                            <m:Label text="{i18n>location}" />
+                            <m:Label
+                                text="{i18n>location}"
+                                required="true"
+                            />
                             <m:ComboBox
                                 id="trancheLocation"
                                 items="{
@@ -111,22 +114,29 @@
                         justifyContent="SpaceBetween"
                     >
                         <m:VBox width="48%">
-                            <m:Label text="{i18n>startDate}" />
+                            <m:Label
+                                text="{i18n>startDate}"
+                                required="true"
+                            />
                             <m:DatePicker
                                 id="beginDate"
                                 value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
                                 class="customInput"
                                 required="true"
-                                minDate=""
+                                change="onStartDateChange"
                             />
                         </m:VBox>
                         <m:VBox width="48%">
-                            <m:Label text="{i18n>endDate}" />
+                            <m:Label
+                                text="{i18n>endDate}"
+                                required="true"
+                            />
                             <m:DatePicker
                                 id="endDate"
                                 value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
                                 class="customInput"
                                 required="true"
+                                change="onEndDateChange"
                             />
                         </m:VBox>
                     </m:FlexBox>
@@ -151,6 +161,8 @@
                                 value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
                                 class="customInput"
                                 required="true"
+                                minDate="{/currentDate}"
+                                change="onOriginDateChange"
                             />
                         </m:VBox>
                     </m:FlexBox>
@@ -240,32 +252,34 @@
                     type="Emphasized"
                     text="{i18n>save}"
                     press="onSavePress"
-                />
-                <m:Button
-                    type="Default"
-                    text="{i18n>discard}"
-                    press=".onNavBack"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
                 />
 
                 <m:Button
                     type="Ghost"
                     text="{i18n>lock}"
                     icon="sap-icon://locked"
-                    visible="{= ${trancheData>/status}==='Running'?true:false}"
+                    press=".onLockTranche"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatLockedVisibility'}"
                 />
                 <m:Button
                     type="Accept"
                     text="{i18n>completed}"
                     icon="sap-icon://complete"
                     press=".onCompleteTranche"
-                    visible="{= ${trancheData>/status}==='Locked'?true:false}"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
                 />
                 <m:Button
                     type="Ghost"
                     text="{i18n>reopen}"
                     icon="sap-icon://unlocked"
                     press=".onReOpenTranche"
-                    visible="{= ${trancheData>/status}==='Locked'?true:false}"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
+                />
+                <m:Button
+                    press=".onNavBack"
+                    type="Default"
+                    text="{i18n>discard}"
                 />
             </m:OverflowToolbar>
         </m:footer>
