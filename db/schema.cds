@@ -2,13 +2,13 @@ namespace cuibono;
 
 using {managed} from '@sap/cds/common';
 
-type TrancheStatusEnum             : String not null @assert.range enum {
+type TrancheStatusEnum             : String @assert.range enum {
   Running;
   Locked;
   Completed;
 };
 
-type ParticipantCreationStatusEnum : String not null @assert.range enum {
+type ParticipantCreationStatusEnum : String @assert.range enum {
   InProcess;
   Failed;
   Done;

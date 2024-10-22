@@ -40,10 +40,6 @@ export class UpdateBonusTranche {
         return req.reject(404, "Bonus tranche with that ID doesn't exist.");
       }
 
-      if (updatedTrancheData.status === null) {
-        return req.reject(400, "Bonus tranche Status can not be null.");
-      }
-
       if (trancheToUpdate.status === TrancheStatusEnum.Completed) {
         return req.reject(400, "Completed bonus tranche can't be updated.");
       }
