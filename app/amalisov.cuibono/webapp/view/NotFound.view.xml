@@ -9,14 +9,14 @@
     >
         <content>
             <m:IllustratedMessage
-                title="Page Not Found"
-                description="The page you are looking for doesn't exist or an error occurred."
+                title="{i18n>Pagenotfound}"
+                description="{i18n>notFoundDescription}"
                 illustrationType="sapIllus-PageNotFound"
                 illustrationSize="Auto"
             >
                 <m:items>
                     <Button
-                        text="Go Back"
+                        text="{i18n>goback}"
                         press="onNavBack"
                     />
                 </m:items>
