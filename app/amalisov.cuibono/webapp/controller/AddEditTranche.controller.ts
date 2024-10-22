@@ -504,18 +504,12 @@ export default class AddEditTranche extends BaseController {
 
         return totalWeight;
     }
-
-
-    public onNavBack() {
-        this.getRouter().navTo("RouteMain")
+    public onDiscardPress() {
+        this.navTo("RouteMain")
     }
-
     public onLogoClick() {
-        this.onNavBack()
+        this.navTo("RouteMain")
     }
-
-
-
     public onReOpenTranche(): void {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
         if (oModel) {

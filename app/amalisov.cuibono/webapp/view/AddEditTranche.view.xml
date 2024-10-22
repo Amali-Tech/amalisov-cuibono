@@ -278,7 +278,7 @@
                     visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
                 />
                 <m:Button
-                    press=".onNavBack"
+                    press=".onDiscardPress"
                     type="Default"
                     text="{i18n>discard}"
                 />
