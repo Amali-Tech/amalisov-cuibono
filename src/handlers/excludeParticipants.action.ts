@@ -21,8 +21,7 @@ export class ExcludeParticipants {
   ) {
     logger.info("Exclude Participants action handler.");
     try {
-      const participationToExcludeIDs = exclusionData.trancheParticipationIds;
-      const justification = exclusionData.justification;
+      const { trancheParticipationIds, justification } = exclusionData;
 
       const participationToExcludeData: TrancheParticipation[] = await SELECT(
         TrancheParticipation,
@@ -35,7 +34,7 @@ export class ExcludeParticipants {
           extendedTrancheParticipation.bonusTranche("*");
         }
       ).where({
-        ID: { in: participationToExcludeIDs },
+        ID: { in: trancheParticipationIds },
       });
 
       const completedParticipations = participationToExcludeData.filter(
@@ -49,7 +48,7 @@ export class ExcludeParticipants {
         );
       }
 
-      for (const participationID of participationToExcludeIDs) {
+      for (const participationID of trancheParticipationIds) {
         await UPDATE(TrancheParticipation.name)
           .where({ ID: participationID })
           .with({
