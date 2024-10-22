@@ -5,7 +5,7 @@ import Dialog from "sap/m/Dialog";
 import MessageToast from "sap/m/MessageToast";
 import ComboBox from "sap/m/ComboBox";
 import DatePicker from "sap/m/DatePicker";
-import { InitializationHelper, Target, Tranche } from "../model/initialData";
+import { InitializationHelper, RouterArguments, Target, Tranche } from "../model/initialData";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
 import Event from "sap/ui/base/Event";
@@ -26,7 +26,8 @@ export default class AddEditTranche extends BaseController {
     private initialOdata: InitializationHelper;
     private _trancheData: Tranche
     private _oEditContext: Context;
-    private currentOperation: "Edit" | "Create" = "Create"
+    private currentOperation: "edit" | "create" | null = null
+    private targetCurrentOperation: "edit" | "create"
 
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
@@ -40,27 +41,28 @@ export default class AddEditTranche extends BaseController {
         this.getView()?.setModel(currentView, "currentView");
     }
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
-        const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
+        const oArgs = oEvent.getParameter("arguments") as RouterArguments;
         const oQuery = oArgs["?query"];
 
         if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
-            this.currentOperation = "Edit"
+            this.currentOperation = "edit"
             this.updateModelData("currentView", { currentView: "edit" })
             this._loadTrancheDetails(oQuery.trancheId);
         } else if (oQuery && oQuery.operation === "create" && oQuery.trancheId) {
-            // This is for the copy operation
+            this.currentOperation = "create"
             this._duplicateTranche(oQuery.trancheId);
-        } else {
-            this.currentOperation = "Create"
+        } else if (oQuery && oQuery.operation === "create") {
+            this.currentOperation = "create"
             this.updateModelData("currentView", { currentView: "create" })
             this.updateModelData("trancheData", this.initialOdata.getdefaulTrancheData(), true)
+        } else {
+            this.messageShow("LoadingError")
         }
     };
     public onSavePress() {
-
-        if (this.currentOperation === "Create") {
+        if (this.currentOperation === "create") {
             this.onCreatePress()
-        } else if (this.currentOperation === "Edit") {
+        } else if (this.currentOperation === "edit") {
             this.onEditTranche()
         }
     }
@@ -85,12 +87,12 @@ export default class AddEditTranche extends BaseController {
 
             // Validate inputs
             if (!trancheNameValue) {
-                MessageToast.show(this.getI18nText("trancheNameRequired"));
+                this.messageShow("trancheNameRequired")
                 return;
             }
 
             if (!trancheLocationValue) {
-                MessageToast.show(this.getI18nText("trancheLocationRequired"));
+                this.messageShow("trancheLocationRequired")
                 return;
             }
 
@@ -152,10 +154,6 @@ export default class AddEditTranche extends BaseController {
 
         return `${year}-${month}-${day}`;
     }
-
-
-
-
 
     public async onEditTranche(): Promise<void> {
 
@@ -281,7 +279,7 @@ export default class AddEditTranche extends BaseController {
 
 
     public onAddTarget(): void {
-        this.currentOperation = "Create"
+        this.targetCurrentOperation = "create"
         this.checkDialog()
         this._pDialog?.then((oDialog) => {
             oDialog.open();
@@ -326,8 +324,6 @@ export default class AddEditTranche extends BaseController {
         }
     }
 
-
-
     public CreateTarget() {
 
         // Get the new target details from the input fields
@@ -371,7 +367,7 @@ export default class AddEditTranche extends BaseController {
         }
     }
     public onEditTargetPress(oEvent: Event) {
-        this.currentOperation = "Edit"
+        this.targetCurrentOperation = "edit"
         this.checkDialog()
         // Get the item and its binding context
         const oItem = <CustomListItem>oEvent.getSource();
@@ -401,9 +397,9 @@ export default class AddEditTranche extends BaseController {
         });
     }
     public onSaveTarget() {
-        if (this.currentOperation === "Create") {
+        if (this.targetCurrentOperation === "create") {
             this.CreateTarget();
-        } else {
+        } else if (this.targetCurrentOperation === "edit") {
             this.EditTarget();
         }
     }
@@ -425,8 +421,6 @@ export default class AddEditTranche extends BaseController {
 
         // Get the target object using the path
         const oTarget = oModel?.getProperty(path) as Target;
-
-
 
         // Check if the target exists
         if (oTarget) {
@@ -477,9 +471,10 @@ export default class AddEditTranche extends BaseController {
             // Update the model with the new data
             oModel?.refresh(); // Refresh to update the UI bindings
             // Display a success message
-            MessageToast.show("targetDeleted");
+            this.messageShow("targetDeleted")
+
         } else {
-            MessageToast.show("targetDeleted");
+            this.messageShow("targetDeleted")
         }
         this.updateTotalWeightDisplay()
     }

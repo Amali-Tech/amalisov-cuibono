@@ -110,7 +110,6 @@ export default class BonusTranches extends BaseController {
         const oContext = oItem.getBindingContext("trancheModel");
 
         const trancheId = oContext?.getProperty("ID");
-
         if (trancheId) {
             const oQuery = {
                 "?query": {
@@ -119,7 +118,7 @@ export default class BonusTranches extends BaseController {
                     trancheId: trancheId
                 }
             };
-            this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+            this.getRouter().navTo("AddEditTranche", oQuery, true /*without history*/);
         } else {
             MessageToast.show(this.getI18nText("noTrancheSelected"));
         }

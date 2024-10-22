@@ -1,7 +1,7 @@
 export interface CurrentView { currentView: "default" | "edit" | "create" }
 export interface CurrentEditID { currentEditId: string }
 export interface RouterArguments {
-    "?query"?: { tab?: string, operation?: "default" | "edit" | "create" };
+    "?query"?: { tab?: string, operation?: "default" | "edit" | "create", trancheId?: string };
 }
 export interface Tranche {
     ID: string
