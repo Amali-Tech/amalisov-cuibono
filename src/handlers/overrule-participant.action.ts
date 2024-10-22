@@ -1,8 +1,41 @@
-import { Handler } from "cds-routing-handlers";
+import cds, { __UUID } from '@sap/cds'
+import { Action, Handler, ParamObj } from "cds-routing-handlers";
+import { Service } from "typedi";
+import { TrancheParticipation } from '../../@cds-models/BonusTrancheService';
 
-@Handler(TrancheParticipation.name)
-export class OverruleParticipantHandler {
-  async handle() {
-    throw new Error('Not implemented');
+const logger = cds.log("Overrule participant action.");
+interface IParticipant {
+  participants: __UUID[];
+  justification: string;
+}
+@Handler()
+@Service()
+export class OverruleParticipantAction {
+  @Action("overruleParticipant")
+  public async overruleParticipant(
+    @ParamObj() participantData: IParticipant
+  ) {
+    logger.info("Overrule participant action Handler!");
+
+    const { participants, justification } = participantData;      
+    try {
+      for (const participant of participants) {
+        await UPDATE(TrancheParticipation.name)
+          .where({ ID: participant })
+          .with({
+            overRuled: true,
+            justification: justification
+          })
+      }
+      return {
+        message: "Participants overruled successfully"
+      };
+    } catch (error) {
+      logger.error(error);
+      throw error
+    }
+    
   }
 }
+
+
