@@ -17,6 +17,7 @@ import Context from "sap/ui/model/odata/v4/Context";
 import CustomListItem from "sap/m/CustomListItem";
 import Formatter from "../model/formatter";
 import TextArea from "sap/m/TextArea";
+import IconTabBar from "sap/m/IconTabBar";
 
 
 /**
@@ -43,9 +44,15 @@ export default class AddEditTranche extends BaseController {
         this.getView()?.setModel(currentView, "currentView");
     }
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
-        const oArgs = oEvent.getParameter("arguments") as { "?query"?: { operation?: string; trancheId?: string } };
+        const oArgs = oEvent.getParameter("arguments") as RouterArguments;
         const oQuery = oArgs["?query"];
+        // Access the IconTabBar control
+        const iconTabBar = this.byId("IconTabBarNoIcons") as IconTabBar;
 
+        // Set the selected tab based on tabKey from URL
+        if (iconTabBar) {
+            iconTabBar.setSelectedKey(oQuery?.tab || "bonusTranche");
+        }
         if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
             this.currentOperation = "Edit"
             this.updateModelData("currentView", { currentView: "edit" })
@@ -83,7 +90,6 @@ export default class AddEditTranche extends BaseController {
         }).catch(() => {
             MessageToast.show(this.getI18nText("FetchError"))
         });
-
     }
     public onTabSelect(oEvent: Event): void {
         const selectedKey = oEvent.getParameter("selectedKey" as never);
@@ -93,7 +99,7 @@ export default class AddEditTranche extends BaseController {
                 trancheId: this.currentTrancheID
             }
         }
-        this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+        this.getRouter().navTo("RouteMain", oQuery, true);
     }
     public onSavePress() {
 

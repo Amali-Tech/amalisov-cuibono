@@ -33,7 +33,7 @@ export default class BonusTranches extends BaseController {
         oRouter.getRoute("RouteMain")?.attachMatched(this.onRouteMatched, this);
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
-        this._oFilterBar = this.byId("filterbar2") as FilterBar;
+        this._oFilterBar = this.byId("bonusFilterBar") as FilterBar;
         this._oTable1 = this.byId("idTranchesTable") as Table;
         const oIdModel = new JSONModel({ currentEditId: "" });
         this.getView()?.setModel(oIdModel, "currentID");
@@ -110,14 +110,15 @@ export default class BonusTranches extends BaseController {
                 let sPath: string = "";
                 const sOperator: FilterOperator = FilterOperator.Contains;
 
-                // Check if the control is a MultiComboBox and get selected keys
-                if ((oControl as ComboBox).getSelectedKey && oItem.getName() === "fiscalYear") {
+                // Check if the control is a ComboBox and get selected key
+                if ((oControl as ComboBox).getSelectedKey && (oControl as ComboBox).getSelectedKey() && oItem.getName() === "fiscalYear") {
                     const fiscalYear = (oControl as ComboBox).getSelectedKey();
                     const [startYear, endYear] = fiscalYear.trim().split('-').map(year => parseInt(year, 10));
 
                     // Generate the start and end dates dynamically (e.g., 22 October for both years)
                     const startDate = new Date(startYear, 9, 22);  // October is month 9 (0-based index)
-                    const endDate = new Date(endYear, 9, 22);      // October for the end year
+                    const endDate = new Date(endYear, 9, 22);
+                    // October for the end year
 
                     // Use the dynamically generated dates (formatted as "YYYY-MM-DD")
                     sValue = [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
@@ -158,17 +159,16 @@ export default class BonusTranches extends BaseController {
                     }
                 }
             }
-
-            // Apply filters to the table binding
-            if (this._oTable1 && this._oTable1.getBinding) {
-                const oBinding = this._oTable1.getBinding("items") as ListBinding;
-                if (oBinding) {
-                    oBinding.filter(aFilters);
-                }
-            } else {
-                this.messageShow("tableBinding"); // Show error if table binding fails
-            }
         })
+        // Apply filters to the table binding
+        if (this._oTable1 && this._oTable1.getBinding) {
+            const oBinding = this._oTable1.getBinding("items") as ListBinding;
+            if (oBinding) {
+                oBinding.filter(aFilters);
+            }
+        } else {
+            this.messageShow("tableBinding"); // Show error if table binding fails
+        }
     }
     private getPathName(oItem: FilterItem): string {
         switch (oItem.getName()) {

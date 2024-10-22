@@ -10,7 +10,7 @@
     <m:VBox height="100%">
         <m:HBox width="100%">
             <fb:FilterBar
-                id="filterbar2"
+                id="bonusFilterBar"
                 persistencyKey="myPersKey"
                 useToolbar="false"
                 search=".onSearch"

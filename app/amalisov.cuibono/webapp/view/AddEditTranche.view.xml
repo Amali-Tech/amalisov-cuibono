@@ -43,12 +43,7 @@
                         id="detailsTrancheTab"
                         text="{i18n>details}"
                         key="bonusTranche"
-                    >
-                        <mvc:XMLView
-                            id="detailsTrancheContent"
-                            viewName="amalisov.cuibono.view.AddEditTranche"
-                        />
-                    </m:IconTabFilter>
+                    />
                 </m:items>
             </m:IconTabBar>
         </m:VBox>
