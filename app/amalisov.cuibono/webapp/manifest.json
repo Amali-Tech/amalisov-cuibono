@@ -97,9 +97,8 @@
     "routing": {
       "config": {
         "routerClass": "sap.m.routing.Router",
-        "type": "View",
         "viewType": "XML",
-        "path": "amalisov.cuibono.view",
+        "viewPath": "amalisov.cuibono.view",
         "controlId": "app",
         "transition": "slide",
         "async": true,
@@ -113,32 +112,42 @@
           "name": "RouteMain",
           "pattern": "tranches:?query:",
           "target": "TargetMain"
+        },
+        {
+          "name": "AddEditTranche",
+          "pattern": "addEdit:?query:",
+          "target": "AddEditTranche"
         }
       ],
       "targets": {
         "TargetMain": {
-          "id": "TargetMain",
+          "viewId": "TargetMain",
           "transition": "slide",
-          "name": "Main",
-          "level": 0
+          "viewName": "Main",
+          "viewLevel": 0
+        },
+        "AddEditTranche": {
+          "viewId": "AddEditTranche",
+          "transition": "slide",
+          "viewName": "AddEditTranche"
         },
         "BonusTranches": {
-          "id": "bonusTranches",
+          "viewId": "bonusTranches",
           "parent": "TargetMain",
-          "name": "BonusTranches",
+          "viewName": "BonusTranches",
           "controlId": "bonusTranchesTab",
           "controlAggregation": "content"
         },
         "Participants": {
-          "id": "participants",
+          "viewId": "participants",
           "parent": "TargetMain",
-          "name": "Participants",
+          "viewName": "Participants",
           "controlId": "participantsTab",
           "controlAggregation": "content"
         },
         "notFound": {
-          "id": "notFound",
-          "name": "NotFound",
+          "viewId": "notFound",
+          "viewName": "NotFound",
           "transition": "show"
         }
       }

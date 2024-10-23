@@ -1,279 +1,287 @@
 <mvc:View
     controllerName="amalisov.cuibono.controller.AddEditTranche"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
+    xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.f"
     xmlns:layout="sap.ui.layout.form"
 >
-    <layout:SimpleForm
-        class="table"
-        editable="true"
-        layout="ResponsiveGridLayout"
-        labelSpanL="12"
-        labelSpanM="12"
-        labelSpanS="12"
-        columnsL="2"
-        columnsM="2"
-        width="33%"
-    >
-        <layout:content>
-            <VBox>
-                <FlexBox
-                    width="48%"
-                    alignItems="Center"
-                >
-                    <Label text="{i18n>status}:" />
-                    <Label
-                        id="trancheStatus"
-                        text="{trancheData>/status}"
-                        class="customInputs"
+    <m:Page>
+        <m:customHeader>
+            <core:Fragment
+                fragmentName="amalisov.cuibono.view.CustomBar"
+                type="XML"
+            />
+        </m:customHeader>
+        <m:IconTabBar select="onTabSelect">
+            <m:items>
+                <m:IconTabFilter
+                    text="{i18n>bonusTranches}"
+                    key="bonusTranches"
+                />
+                <m:IconTabFilter
+                    text="{i18n>participants}"
+                    key="participants"
+                />
+            </m:items>
+        </m:IconTabBar>
+        <m:VBox>
+            <m:Title
+                text="{= ${currentView>/currentView}==='edit'? 'Edit':'Create'} Bonus Tranche"
+                class="bonusTitle"
+            />
+            <m:IconTabBar>
+                <m:items>
+                    <m:IconTabFilter
+                        text="{i18n>details}"
+                        key="bonusTranche"
                     />
-                </FlexBox>
-                <FlexBox
-                    class="spaceAbove"
-                    justifyContent="SpaceBetween"
-                >
-                    <VBox width="48%">
-                        <Label text="{i18n>name}"
-                        
-                        required="true"
-                        />
-                        <Input
-                            id="trancheName"
-                            value="{trancheData>/name}"
-                            class="customInputs "
-                            required="true"
-                        />
-                    </VBox>
+                </m:items>
+            </m:IconTabBar>
+        </m:VBox>
+        <m:VBox
+            width="33%"
+            class="sapUiTinyMarginBegin"
+        >
+            <layout:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+                width="100%"
+            >
+                <layout:content>
+                    <m:VBox>
+                        <m:FlexBox
+                            width="48%"
+                            alignItems="Center"
+                        >
+                            <m:Label text="{i18n>status}:" />
+                            <m:Label
+                                id="trancheStatus"
+                                text="{trancheData>/status}"
+                                class="customInputs"
+                            />
+                        </m:FlexBox>
+                        <m:FlexBox
+                            class="sapUiMediumMarginTop"
+                            justifyContent="SpaceBetween"
+                        >
+                            <m:VBox width="48%">
+                                <m:Label text="{i18n>name}" />
+                                <m:Input
+                                    id="trancheName"
+                                    value="{trancheData>/name}"
+                                    class="customInputs "
+                                    required="true"
+                                />
+                            </m:VBox>
 
-                    <VBox width="48%">
-                        <Label text="{i18n>location}" 
-                        required="true"
-                        />
-                        <ComboBox
-                            id="trancheLocation"
-                            items="{
+                            <m:VBox width="48%">
+                                <m:Label
+                                    text="{i18n>location}"
+                                    required="true"
+                                />
+                                <m:ComboBox
+                                    id="trancheLocation"
+                                    items="{
                                     path: 'trancheModel>/Location'
                                 }"
-                            class="customInputs"
-                            selectedKey="{trancheData>/Location_ID}"
-                            required="true"
-                        >
-                            <core:Item
-                                key="{trancheModel>ID}"
-                                text="{trancheModel>name}"
+                                    class="customInputs"
+                                    selectedKey="{trancheData>/Location_ID}"
+                                    required="true"
+                                >
+                                    <core:Item
+                                        key="{trancheModel>ID}"
+                                        text="{trancheModel>name}"
+                                    />
+                                </m:ComboBox>
+                            </m:VBox>
+                        </m:FlexBox>
+
+                        <m:VBox class="spaceAbove">
+                            <m:Label text="{i18n>description}" />
+                            <m:TextArea
+                                id="trancheDescription"
+                                value="{trancheData>/description}"
+                                rows="4"
+                                class="customInput"
                             />
-                        </ComboBox>
-                    </VBox>
-                </FlexBox>
+                        </m:VBox>
 
-                <VBox class="spaceAbove">
-                    <Label text="{i18n>description}" />
-                    <TextArea
-                        id="trancheDescription"
-                        value="{trancheData>/description}"
-                        rows="4"
-                        class="customInput"
+                        <m:FlexBox
+                            class="spaceAbove"
+                            justifyContent="SpaceBetween"
+                        >
+                            <m:VBox width="48%">
+                                <m:Label
+                                    text="{i18n>startDate}"
+                                    required="true"
+                                />
+                                <m:DatePicker
+                                    id="beginDate"
+                                    value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
+                                    class="customInput"
+                                    required="true"
+                                    change="onStartDateChange"
+                                />
+                            </m:VBox>
+                            <m:VBox width="48%">
+                                <m:Label
+                                    text="{i18n>endDate}"
+                                    required="true"
+                                />
+                                <m:DatePicker
+                                    id="endDate"
+                                    value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
+                                    class="customInput"
+                                    required="true"
+                                    change="onEndDateChange"
+                                />
+                            </m:VBox>
+                        </m:FlexBox>
+
+                        <m:FlexBox
+                            class="spaceAbove"
+                            justifyContent="SpaceBetween"
+                        >
+                            <m:VBox width="48%">
+                                <m:Label text="{i18n>trancheWeight}" />
+                                <m:Input
+                                    id="trancheWeight"
+                                    value="{trancheData>/trancheWeight}"
+                                    class="customInput"
+                                    required="true"
+                                />
+                            </m:VBox>
+                            <m:VBox width="48%">
+                                <m:Label text="{i18n>originDate}" />
+                                <m:DatePicker
+                                    id="trancheOriginDate"
+                                    value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
+                                    class="customInput"
+                                    width="100%"
+                                    required="true"
+                                    minDate="{/currentDate}"
+                                    change="onOriginDateChange"
+                                />
+                            </m:VBox>
+                        </m:FlexBox>
+                    </m:VBox>
+                </layout:content>
+            </layout:SimpleForm>
+
+            <m:Table
+                id="targetTable"
+                items="{path: 'trancheData>/Target'}"
+            >
+                <m:headerToolbar>
+                    <m:OverflowToolbar class="tableBar">
+                        <m:Title
+                            text="{i18n>targetWeight}"
+                            level="H2"
+                        />
+                        <m:ToolbarSpacer />
+                        <m:Button
+                            type="Emphasized"
+                            text="{i18n>addNewTarget}"
+                            press="onAddTarget"
+                        />
+                    </m:OverflowToolbar>
+                </m:headerToolbar>
+                <m:columns>
+                    <m:Column>
+                        <m:Text text="{i18n>name}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>targetWeight}" />
+                    </m:Column>
+                    <m:Column hAlign="End">
+                        <m:Text text="{i18n>achievements}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="" />
+                    </m:Column>
+                </m:columns>
+                <m:items>
+                    <m:ColumnListItem>
+                        <m:cells>
+                            <m:Text text="{trancheData>name}" />
+                            <m:Text text="{trancheData>weight}" />
+                            <m:Text text="{trancheData>achievement}" />
+
+                            <m:HBox class="trancheButtonBox">
+                                <m:Button
+                                    type="Unstyled"
+                                    icon="sap-icon://edit"
+                                    press="onEditTargetPress"
+                                    class="editButton"
+                                />
+
+                                <m:Button
+                                    type="Unstyled"
+                                    icon="sap-icon://delete"
+                                    press="onDeleteTargetPress"
+                                    class="deleteButton"
+                                />
+                            </m:HBox>
+                        </m:cells>
+                    </m:ColumnListItem>
+                </m:items>
+            </m:Table>
+            <m:VBox class="totalTrancheWeight sapUiLargeMarginBottom">
+                <m:HBox class="totalBox">
+                    <m:Title
+                        text="{i18n>total}"
+                        class="totalTitle"
                     />
-                </VBox>
 
-                <FlexBox
-                    class="spaceAbove"
-                    justifyContent="SpaceBetween"
-                >
-                    <VBox width="48%">
-                        <Label text="{i18n>startDate}"
-                        required="true"
-                        
+                    <m:ToolbarSpacer />
+                    <m:Text
+                        text="{trancheData>/totalWeight}"
+                        class="totalTrancheWeightText"
+                    />
 
-                        />
-                        <DatePicker
-                            id="beginDate"
-                            value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
-                            class="customInput"
-                            required="true"
-                            
-                        
-                        
-                       
-                        change="onStartDateChange"
-                        />
-                    </VBox>
-                    <VBox width="48%">
-                        <Label text="{i18n>endDate}" 
-                        required="true"
-                        />
-                        <DatePicker
-                            id="endDate"
-                            value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
-                            class="customInput"
-                            required="true"
-                            change="onEndDateChange"
-                        />
-                    </VBox>
-                </FlexBox>
+                    <m:ToolbarSpacer />
+                </m:HBox>
+            </m:VBox>
+        </m:VBox>
 
-                <FlexBox
-                    class="spaceAbove"
-                    justifyContent="SpaceBetween"
-                >
-                    <VBox width="48%">
-                        <Label text="{i18n>trancheWeight}" />
-                        <Input
-                            id="trancheWeight"
-                            value="{trancheData>/trancheWeight}"
-                            class="customInput"
-                            required="true"
-                        />
-                    </VBox>
-                    <VBox width="48%">
-                        <Label text="{i18n>originDate}" />
-                        <DatePicker
-                            id="trancheOriginDate"
-                            value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
-                            class="customInput"
-                            required="true"
-                            minDate="{/currentDate}"
-                            change="onOriginDateChange"
-                        />
-                    </VBox>
-                </FlexBox>
-            </VBox>
-        </layout:content>
-    </layout:SimpleForm>
-
-    <Table
-        id="targetTable"
-        items="{path: 'trancheData>/Target'}"
-        width="33%"
-    >
-        <headerToolbar>
-            <OverflowToolbar class="tableBar">
-                <Title
-                    text="{i18n>targetWeight}"
-                    level="H2"
-                />
-                <ToolbarSpacer />
-                <Button
+        <m:footer>
+            <m:OverflowToolbar>
+                <m:ToolbarSpacer />
+                <m:Button
                     type="Emphasized"
-                    text="{i18n>addNewTarget}"
-                    press="onAddTarget"
+                    text="{i18n>save}"
+                    press="onSavePress"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
                 />
-            </OverflowToolbar>
-        </headerToolbar>
-        <columns>
-            <Column hAlign="Begin">
-                <Text text="{i18n>name}" />
-            </Column>
-            <Column hAlign="Begin">
-                <Text text="{i18n>targetWeight}" />
-            </Column>
-            <Column hAlign="Begin">
-                <Text text="{i18n>achievements}" />
-            </Column>
-            <Column>
-                <Text text="" />
-            </Column>
-        </columns>
-        <items>
-            <ColumnListItem>
-                <cells>
-                    <Text text="{trancheData>name}" />
-                    <Text
-                        text="{ 
-                        path: 'trancheData>weight', 
-                        formatter: '.formatter.formatPercentage' }"
-                    />
-                    <Text
-                        text="{ 
-                        path: 'trancheData>achievement', 
-                        formatter: '.formatter.formatPercentage' }"
-                    />
 
-                    <HBox class="trancheButtonBox">
-                        <Button
-                            type="Unstyled"
-                            icon="sap-icon://edit"
-                            press="onEditTargetPress"
-                            class="editButton"
-                        />
-
-                        <Button
-                            type="Unstyled"
-                            icon="sap-icon://delete"
-                            press="onDeleteTargetPress"
-                            class="deleteButton"
-                        />
-                    </HBox>
-                </cells>
-            </ColumnListItem>
-        </items>
-    </Table>
-
-    <FlexBox class="totalTrancheWeight sapUiLargeMarginBottom  ">
-        <Title
-            text="{i18n>total}"
-            class="totalTitle"
-        />
-        <HBox class="totalBox">
-            <core:Icon
-                color="red"
-                src="sap-icon://alert"
-                visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
-                class="iconAlert"
-            />
-
-            <!-- Total Weight Text -->
-            <Text
-                text="{ 
-                    path: 'trancheData>/totalWeight', 
-                    formatter: '.formatter.formatPercentage' 
-                }"
-                class="{ 
-                    path: 'trancheData>/totalWeight', 
-                    formatter: '.formatter.formatTextClass'
-                }"
-            />
-        </HBox>
-    </FlexBox>
-    <FlexBox
-        class="customBtn1"
-        width="99%"
-        justifyContent="End"
-    >
-        <Button
-            type="Emphasized"
-            text="{i18n>save}"
-            press="onSavePress"
-            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
-        />
-
-        <Button
-            type="Ghost"
-            text="{i18n>lock}"
-            icon="sap-icon://locked"
-            press=".onLockTranche"
-            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatLockedVisibility'}"
-        />
-        <Button
-            type="Accept"
-            text="{i18n>completed}"
-            icon="sap-icon://complete"
-            press=".onCompleteTranche"
-            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
-        />
-        <Button
-            type="Ghost"
-            text="{i18n>reopen}"
-            icon="sap-icon://unlocked"
-            press=".onReOpenTranche"
-            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
-        />
-        <Button
-            press=".onNavBack"
-            type="Default"
-            text="{i18n>discard}"
-        />
-    </FlexBox>
+                <m:Button
+                    type="Ghost"
+                    text="{i18n>lock}"
+                    icon="sap-icon://locked"
+                    press=".onLockTranche"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatLockedVisibility'}"
+                />
+                <m:Button
+                    type="Accept"
+                    text="{i18n>completed}"
+                    icon="sap-icon://complete"
+                    press=".onCompleteTranche"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
+                />
+                <m:Button
+                    type="Ghost"
+                    text="{i18n>reopen}"
+                    icon="sap-icon://unlocked"
+                    press=".onReOpenTranche"
+                    visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
+                />
+                <m:Button
+                    press=".onDiscardPress"
+                    type="Default"
+                    text="{i18n>discard}"
+                />
+            </m:OverflowToolbar>
+        </m:footer>
+    </m:Page>
 </mvc:View>
