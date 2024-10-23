@@ -259,13 +259,7 @@ export default class BonusTranches extends BaseController {
                 return "";
         }
     }
-
-   
     
-
-
-    
-  
 
  
     public onOpenSortDialog(): void {
@@ -277,8 +271,8 @@ export default class BonusTranches extends BaseController {
                 const oDialog = Array.isArray(dialog) ? dialog[0] as Dialog : dialog as Dialog;
                 this._oSortDialog = oDialog;
                 this._oSortDialog.open();
-            }).catch((error: Error) => {
-                console.error("Failed to load sort dialog fragment:", error);
+            }).catch((err) => {
+                MessageBox.show(err + this.getI18nText("faileToLoad"));
             });
         } else {
             this._oSortDialog.open();
