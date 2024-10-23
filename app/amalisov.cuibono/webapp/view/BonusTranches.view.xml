@@ -129,11 +129,11 @@
                             press="onCreateTranche"
                         />
                         <m:OverflowToolbarButton
-                            icon="sap-icon://sort"
-                            text="{i18n>sort}"
-                            type="Transparent"
-                            press=".onSort"
-                        />
+                        icon="sap-icon://sort"
+                        text="{i18n>sort}"
+                        type="Transparent"
+                        press=".onOpenSortDialog"
+                    />
                     </m:OverflowToolbar>
                 </m:headerToolbar>
                 <m:columns>
