@@ -129,7 +129,7 @@
                             <m:MultiInput
                                 name="participantName"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpParticipantRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputParticipantName"
                                 showValueHelp="true"
                             />
@@ -148,7 +148,7 @@
                             <m:MultiInput
                                 name="department"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpDepartmentRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputDepartment"
                                 showValueHelp="true"
                             />
@@ -167,7 +167,7 @@
                             <m:MultiInput
                                 name="trancheName"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpTrancheRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputTaxAmount"
                                 showValueHelp="true"
                             />
@@ -294,7 +294,7 @@
                                 text="{trancheModel>participant/firstName}  {trancheModel>participant/lastName}"
                             />
                             <m:Text
-                                text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"
+                                text="{ path: 'trancheModel>/participant/department', formatter: '.formatter.formatNullValue' }"
                             />
 
                             <m:Text text="{trancheModel>bonusTranche/name}" />

@@ -4,17 +4,20 @@
 >
     <Dialog
         id="localIdDialog"
-        title="{i18n>dialogTitle}"
+        title="{dialogInfo>/title}"
         type="Message"
         draggable="true"
         resizable="true"
     >
         <VBox>
-            <Label text="{i18n>LocalID}" />
+            <Label
+                id="valueHelpDiagID"
+                text="{dialogInfo>/label}"
+            />
             <TextArea
                 id="localIdInputArea"
                 width="100%"
-                placeholder="e.g., 1001, 1002, 1003"
+                value="{dialogInfo>/searchValues}"
                 rows="5"
             />
         </VBox>

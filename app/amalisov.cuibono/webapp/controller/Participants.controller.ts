@@ -1,7 +1,7 @@
 import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
 import Formatter from "../model/formatter";
 import BaseController from "./BaseController";
-import { InitializationHelper, RouterArguments } from "../model/initialData";
+import { DialogInfo, InitializationHelper, RouterArguments } from "../model/initialData";
 import MessageToast from "sap/m/MessageToast";
 import Table from "sap/m/Table";
 import Filter from "sap/ui/model/Filter";
@@ -18,6 +18,8 @@ import Fragment from "sap/ui/core/Fragment";
 import Token from "sap/m/Token";
 import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
+import Event from "sap/ui/base/Event";
+import Control from "sap/ui/core/Control";
 
 /**
  * @namespace amalisov.cuibono.controller
@@ -29,6 +31,7 @@ export default class Participants extends BaseController {
     private initialOdata: InitializationHelper;
     private _oFilterBar: FilterBar;
     private _oDialog: Dialog | null = null;
+    private _oCurrentMultiInput: MultiInput;
 
 
     public onInit(): void {
@@ -38,6 +41,8 @@ export default class Participants extends BaseController {
         this._oFilterBar = this.byId("participantFilterbar") as FilterBar;
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
+        const oDialogModel = new JSONModel({ title: "Filter By Value", label: "Enter values", searchValues: "" } as DialogInfo);
+        this.getView()?.setModel(oDialogModel, "dialogInfo");
     }
 
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
@@ -78,34 +83,7 @@ export default class Participants extends BaseController {
                 let sPath: string = "";
                 const sOperator: FilterOperator = FilterOperator.Contains;
 
-                // Check if the control is a MultiComboBox and get selected keys
-                if ((oControl as ComboBox).getSelectedKey && (oControl as ComboBox).getSelectedKey() && oItem.getName() === "fiscalYear") {
-                    const fiscalYear = (oControl as ComboBox).getSelectedKey();
-                    const [startYear, endYear] = fiscalYear.trim().split('-').map(year => parseInt(year, 10));
-
-                    // Generate the start and end dates dynamically (e.g., 22 October for both years)
-                    const startDate = new Date(startYear, 9, 22);  // October is month 9 (0-based index)
-                    const endDate = new Date(endYear, 9, 22);      // October for the end year
-
-                    // Use the dynamically generated dates (formatted as "YYYY-MM-DD")
-                    sValue = [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
-                }
-                else if (
-                    (oControl as MultiComboBox).getSelectedKeys
-                ) {
-                    sValue = (oControl as MultiComboBox).getSelectedKeys();
-
-                } else if ((oControl as MultiInput).getTokens && (oControl as MultiInput).getTokens().length) {
-                    if ((oControl as MultiInput).getTokens().length) {
-                        const tokenTexts: string[] = []
-                        const tokens = (oControl as MultiInput).getTokens()
-                        tokens.forEach(item => { tokenTexts.push(item.getText()) })
-                        sValue = tokenTexts
-                    }
-                }
-                else {
-                    sValue = null
-                }
+                sValue = this.getControlValue(oControl, oItem)
 
                 if (
                     sValue &&
@@ -113,17 +91,33 @@ export default class Participants extends BaseController {
                         (!Array.isArray(sValue) && sValue !== null))
                 ) {
                     sPath = this.getPathName(oItem);
+
                     if (sPath) {
 
                         if (Array.isArray(sValue) && oItem.getName() === "fiscalYear") {
                             aFilters.push(new Filter("bonusTranche/beginDate", FilterOperator.GE, sValue[0]))
                             aFilters.push(new Filter("bonusTranche/endDate", FilterOperator.LE, sValue[1]))
                         }
+                        else if (Array.isArray(sValue) && oItem.getName() === "participantName") {
+                            // Create filters for other array values
+                            const combinedFilters: Filter[] = []
+                            sValue.forEach((val) => {
+
+                                combinedFilters.push(new Filter({ path: "participant/firstName", operator: sOperator, value1: val, caseSensitive: false }));
+                                combinedFilters.push(new Filter({ path: "participant/lastName", operator: sOperator, value1: val, caseSensitive: false }));
+
+                            });
+                            const oCombinedFilter = new Filter({
+                                filters: combinedFilters,
+                                and: false // "and: false" ensures it's an OR condition
+                            });
+                            aFilters.push(oCombinedFilter);
+                        }
                         else if (Array.isArray(sValue)) {
                             // Create filters for other array values
 
                             sValue.forEach((val) => {
-                                aFilters.push(new Filter(sPath, sOperator, val));
+                                aFilters.push(new Filter({ path: sPath, operator: sOperator, value1: val, caseSensitive: false }));
                             });
 
                         } else {
@@ -145,6 +139,36 @@ export default class Participants extends BaseController {
             this.messageShow("tableBinding"); // Show error if table binding fails
         }
     }
+    private getControlValue(oControl: Control, oItem: FilterItem): string | string[] | null {
+        // Check if the control is a MultiComboBox and get selected keys
+        if ((oControl as ComboBox).getSelectedKey && (oControl as ComboBox).getSelectedKey() && oItem.getName() === "fiscalYear") {
+            const fiscalYear = (oControl as ComboBox).getSelectedKey();
+            const [startYear, endYear] = fiscalYear.trim().split('-').map(year => parseInt(year, 10));
+
+            // Generate the start and end dates dynamically (e.g., 22 October for both years)
+            const startDate = new Date(startYear, 9, 22);  // October is month 9 (0-based index)
+            const endDate = new Date(endYear, 9, 22);      // October for the end year
+
+            // Use the dynamically generated dates (formatted as "YYYY-MM-DD")
+            return [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
+        }
+        else if (
+            (oControl as MultiComboBox).getSelectedKeys
+        ) {
+            return (oControl as MultiComboBox).getSelectedKeys();
+
+        } else if ((oControl as MultiInput).getTokens && (oControl as MultiInput).getTokens().length) {
+            if ((oControl as MultiInput).getTokens().length) {
+                const tokenTexts: string[] = []
+                const tokens = (oControl as MultiInput).getTokens()
+                tokens.forEach(item => { tokenTexts.push(item.getText()) })
+                return tokenTexts
+            }
+        }
+        else {
+            return null
+        } return null
+    }
     private getPathName(oItem: FilterItem): string {
         switch (oItem.getName()) {
             case "status":
@@ -158,7 +182,7 @@ export default class Participants extends BaseController {
             case "participantName":
                 return "participant/firstName";
             case "department":
-                return "department/name";
+                return "participant/department";
             case "trancheName":
                 return "bonusTranche/name";
             case "excluded":
@@ -167,9 +191,34 @@ export default class Participants extends BaseController {
                 return "";
         }
     }
+
     // Event handler for valueHelpRequest on the MultiInput
-    public onDialogRequested(): void {
-        //const oSourceControl = oEvent.getSource() as MultiInput;
+    public onDialogRequested(oEvent: Event): void {
+        const oSourceControl = oEvent.getSource() as MultiInput;
+        // Get the control's id or name to determine the title
+        const sFieldName = oSourceControl.getName();  // Could also use getId() if you prefer
+
+        // Determine the title based on the field name
+        let sDialogTitle = "Filter By Value";  // Default title
+        let fieldLabel = "Enter values"
+        if (sFieldName === "localId") {
+            sDialogTitle = "Filter by Local ID";
+            fieldLabel = "Local ID"
+
+        } else if (sFieldName === "participantName") {
+            sDialogTitle = "Filter by Participant Names";
+            fieldLabel = "Partcipant Names"
+        }
+        else if (sFieldName === "department") {
+            sDialogTitle = "Filter by Department";
+            fieldLabel = "Departments"
+        } else if (sFieldName === "trancheName") {
+            sDialogTitle = "Filter by Tranche Name";
+            fieldLabel = "Tranche Names"
+        }
+        this.updateModelData("dialogInfo", { title: sDialogTitle, label: fieldLabel, searchValues: "" } as DialogInfo)
+        // Store the reference to the MultiInput that triggered the dialog
+        this._oCurrentMultiInput = oSourceControl;
         if (!this._oDialog) {
             // Load the fragment asynchronously
             Fragment.load({
@@ -193,22 +242,19 @@ export default class Participants extends BaseController {
         const oTextArea = this.byId("localIdInputArea") as TextArea;
         const sInputValue = oTextArea.getValue().trim();
 
-        if (sInputValue) {
+        if (sInputValue && this._oCurrentMultiInput) {
             // Split the input by commas and trim any extra spaces
-            const aLocalIDs = sInputValue.split(",").map(id => id.trim());
-
-            // Reference to the MultiInput field
-            const oMultiInput = this.byId("multiInputGLocalId") as MultiInput;
+            const aValues = sInputValue.split(",").map(id => id.trim());
 
             // Clear existing tokens in the MultiInput
-            oMultiInput.setTokens([]);
+            this._oCurrentMultiInput.setTokens([]);
 
-            // Add new tokens to MultiInput for each local ID
-            aLocalIDs.forEach((localID: string) => {
-                if (localID) {
-                    oMultiInput.addToken(new Token({
-                        key: localID,
-                        text: localID
+            // Add new tokens to MultiInput for each value
+            aValues.forEach((value: string) => {
+                if (value) {
+                    this._oCurrentMultiInput.addToken(new Token({
+                        key: value,
+                        text: value
                     }));
                 }
             });
@@ -217,6 +263,18 @@ export default class Participants extends BaseController {
         // Close the dialog
         this._oDialog!.close();
     }
+    private updateModelData(
+        modelName: string,
+        data: object,
+        refresh?: boolean
+    ): void {
+        const model = this.getView()?.getModel(modelName) as JSONModel;
+        model.setData(data);
+        if (refresh) {
+            model.refresh();
+        }
+    }
+
     // Event handler when the "Cancel" button is pressed in ValueHelpDialog
     public onDialogCancelPress(): void {
         this._oDialog!.close();

@@ -32,6 +32,11 @@ export enum FilterItemName {
     LOCATION = "locationID",
     FISCAL = "fiscalYear"
 }
+export interface DialogInfo {
+    title: string,
+    label: string,
+    searchValues: string
+}
 
 export class InitializationHelper {
     constructor(private getI18nText: (textPath: string) => string) { }
