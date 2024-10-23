@@ -1,26 +1,30 @@
 <mvc:View
-    controllerName="sap.ui.demo.basicTemplate.controller.NotFound"
-    xmlns="sap.m"
+    controllerName="amalisov.cuibono.controller.NotFound"
     xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    height="100%"
 >
-    <Page
-        showHeader="false"
-        class="sapUiContentPadding"
-    >
-        <content>
-            <m:IllustratedMessage
-                title="{i18n>Pagenotfound}"
-                description="{i18n>notFoundDescription}"
-                illustrationType="sapIllus-PageNotFound"
-                illustrationSize="Auto"
-            >
-                <m:items>
-                    <Button
-                        text="{i18n>goback}"
-                        press="onNavBack"
-                    />
-                </m:items>
-            </m:IllustratedMessage>
-        </content>
-    </Page>
+    <m:Page class="sapUiContentPadding">
+        <m:customHeader>
+            <core:Fragment
+                fragmentName="amalisov.cuibono.view.CustomBar"
+                type="XML"
+            />
+        </m:customHeader>
+        <m:IllustratedMessage
+            title="{i18n>Pagenotfound}"
+            description="{i18n>notFoundDescription}"
+            illustrationType="sapIllus-PageNotFound"
+            illustrationSize="Auto"
+        >
+            <m:additionalContent>
+                <m:Button
+                    text="{i18n>goback}"
+                    press=".onNavBack"
+                />
+            </m:additionalContent>
+        </m:IllustratedMessage>
+    </m:Page>
 </mvc:View>
