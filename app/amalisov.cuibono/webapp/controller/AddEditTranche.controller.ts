@@ -16,6 +16,7 @@ import Context from "sap/ui/model/odata/v4/Context";
 import CustomListItem from "sap/m/CustomListItem";
 import Formatter from "../model/formatter";
 import TextArea from "sap/m/TextArea";
+import IconTabBar from "sap/m/IconTabBar";
 
 /**
  * @namespace amalisov.cuibono.controller
@@ -28,6 +29,7 @@ export default class AddEditTranche extends BaseController {
     private _oEditContext: Context;
     private currentOperation: "edit" | "create" | null = null
     private targetCurrentOperation: "edit" | "create"
+    private currentTrancheID: string = ""
 
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
@@ -43,6 +45,14 @@ export default class AddEditTranche extends BaseController {
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
         const oArgs = oEvent.getParameter("arguments") as RouterArguments;
         const oQuery = oArgs["?query"];
+
+        // Access the IconTabBar control
+        const iconTabBar = this.byId("IconTabBarNoIcons") as IconTabBar;
+
+        // Set the selected tab based on tabKey from URL
+        if (iconTabBar) {
+            iconTabBar.setSelectedKey(oQuery?.tab || "bonusTranche");
+        }
 
         if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
             this.currentOperation = "edit"
@@ -66,7 +76,6 @@ export default class AddEditTranche extends BaseController {
             this.onEditTranche()
         }
     }
-
     public async onCreatePress(): Promise<void> {
         try {
             const trancheName = this.byId("trancheName") as Input;
@@ -154,7 +163,6 @@ export default class AddEditTranche extends BaseController {
 
         return `${year}-${month}-${day}`;
     }
-
     public async onEditTranche(): Promise<void> {
 
         const trancheLocation = this.byId("trancheLocation") as ComboBox;
@@ -202,9 +210,6 @@ export default class AddEditTranche extends BaseController {
                 }
             );
     }
-
-
-
     private _duplicateTranche(trancheId: string): void {
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
         const sBindingPath = `/BonusTranche('${trancheId}')`;
@@ -241,10 +246,10 @@ export default class AddEditTranche extends BaseController {
                 MessageToast.show(this.getI18nText("errorDuplicatingTranche"));
             });
     }
-
     private _loadTrancheDetails(trancheId: string): void {
         // Get the OData V4 model
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
+        this.currentTrancheID = trancheId
         const sBindingPath = `/BonusTranche('${trancheId}')`;
         // Create a context binding (without binding it to the view)
         const oContextBinding = oModel.bindContext(sBindingPath, undefined, {
@@ -275,9 +280,6 @@ export default class AddEditTranche extends BaseController {
                 MessageToast.show(this.getI18nText("FetchError"));
             });
     }
-
-
-
     public onAddTarget(): void {
         this.targetCurrentOperation = "create"
         this.checkDialog()
@@ -291,10 +293,6 @@ export default class AddEditTranche extends BaseController {
             MessageToast.show(this.getI18nText("errorDialog"))
         });
     }
-
-
-
-
     private updateModelData(
         modelName: string,
         data: object,
@@ -323,7 +321,6 @@ export default class AddEditTranche extends BaseController {
             });
         }
     }
-
     public CreateTarget() {
 
         // Get the new target details from the input fields
@@ -450,7 +447,6 @@ export default class AddEditTranche extends BaseController {
             oDialog.destroy();
         }
     }
-
     public onDeleteTargetPress(oEvent: Event) {
         // Get the row/context binding where the delete button was pressed
         const oItem = <CustomListItem>oEvent.getSource(); // ColumnListItem or CustomListItem
@@ -478,8 +474,6 @@ export default class AddEditTranche extends BaseController {
         }
         this.updateTotalWeightDisplay()
     }
-
-
     private updateTotalWeightDisplay(): void {
         const totalWeight = this.calculateTotalTargetWeight();
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;;
@@ -504,18 +498,12 @@ export default class AddEditTranche extends BaseController {
 
         return totalWeight;
     }
-
-
     public onNavBack() {
         this.getRouter().navTo("RouteMain")
     }
-
     public onLogoClick() {
         this.onNavBack()
     }
-
-
-
     public onReOpenTranche(): void {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
         if (oModel) {
@@ -526,7 +514,6 @@ export default class AddEditTranche extends BaseController {
             MessageToast.show(this.getI18nText("trancheReopened"));
         }
     }
-
     public onCompleteTranche(): void {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
         if (oModel) {
@@ -546,7 +533,6 @@ export default class AddEditTranche extends BaseController {
     private messageShow = (error: string): void => {
         MessageToast.show(this.getI18nText(error));
     };
-
     public onLockTranche(): void {
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;
         if (oModel) {
@@ -557,7 +543,6 @@ export default class AddEditTranche extends BaseController {
             MessageToast.show(this.getI18nText("trancheLocked"));
         }
     }
-
     public onStartDateChange(oEvent: Event): void {
         // Get the DatePicker that triggered the event
         const oStartDatePicker = oEvent.getSource() as DatePicker;
@@ -582,7 +567,6 @@ export default class AddEditTranche extends BaseController {
             oStartDatePicker.setValueState("None");
         }
     }
-
     public onEndDateChange(oEvent: Event): void {
         const oEndDatePicker = oEvent.getSource() as DatePicker;
         const oEndDate = oEndDatePicker.getDateValue();
@@ -597,7 +581,6 @@ export default class AddEditTranche extends BaseController {
             oOriginDatePicker.setValueState("None");
         }
     }
-
     public onOriginDateChange(oEvent: Event): void {
         const oOriginDatePicker = oEvent.getSource() as DatePicker;
         const oOriginDate = oOriginDatePicker.getDateValue();
@@ -617,5 +600,15 @@ export default class AddEditTranche extends BaseController {
                 oOriginDatePicker.setValueState("None");
             }
         }
+    }
+    public onTabSelect(oEvent: Event): void {
+        const selectedKey = oEvent.getParameter("selectedKey" as never);
+        const oQuery: RouterArguments = {
+            "?query": {
+                tab: selectedKey,
+                trancheId: this.currentTrancheID
+            }
+        }
+        this.getRouter().navTo("RouteMain", oQuery, true);
     }
 }

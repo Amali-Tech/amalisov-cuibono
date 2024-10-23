@@ -13,10 +13,10 @@
     >
         <m:HBox width="100%">
             <fb:FilterBar
-                id="filterbar"
+                id="participantFilterbar"
                 persistencyKey="myPersKey"
                 useToolbar="false"
-                search=""
+                search="onSearchParticipants"
                 dragDropConfig="move"
                 class="_filterBarClass"
             >
@@ -36,7 +36,7 @@
                         <fb:control>
                             <m:MultiComboBox
                                 id="statusMultiCombo2"
-                                name="bonusTrancheFilter"
+                                name="status"
                                 class="filtersStyle"
                                 items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
@@ -61,15 +61,14 @@
                         <fb:control>
                             <m:MultiComboBox
                                 id="locationMultiCombo2"
-                                name="bonusTrancheFilter"
+                                name="location"
                                 class="filtersStyle"
-                                items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
+                                items="{path: 'trancheModel>/Location',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
-                                    id="locationItems2"
-                                    key="{dropdownModel>key}"
-                                    text="{dropdownModel>text}"
+                                    key="{trancheModel>ID}"
+                                    text="{trancheModel>name}"
                                 />
                             </m:MultiComboBox>
                         </fb:control>
@@ -78,15 +77,15 @@
                     <!-- Fiscal Year Filter -->
                     <fb:FilterGroupItem
                         id="fiscalYearID2"
-                        name="fiscal"
+                        name="fiscalYear"
                         label="{i18n>fiscal}"
                         groupName="Group1"
                         visibleInFilterBar="true"
                     >
                         <fb:control>
-                            <m:MultiComboBox
+                            <m:ComboBox
                                 id="fiscalMultiCombo2"
-                                name="bonusTrancheFilter"
+                                name="fiscalYear"
                                 items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
@@ -95,7 +94,7 @@
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
                                 />
-                            </m:MultiComboBox>
+                            </m:ComboBox>
                         </fb:control>
                     </fb:FilterGroupItem>
 
@@ -111,7 +110,7 @@
                             <m:MultiInput
                                 name="localId"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpIdRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputGLocalId"
                                 showValueHelp="true"
                             />
@@ -121,14 +120,14 @@
                     <!-- Name Filter -->
                     <fb:FilterGroupItem
                         id="nameFilter2"
-                        name="name"
+                        name="participantName"
                         label="{i18n>nameOfParticipant}"
                         groupName="Group1"
                         visibleInFilterBar="true"
                     >
                         <fb:control>
                             <m:MultiInput
-                                name="partipantName"
+                                name="participantName"
                                 class="filtersStyle"
                                 valueHelpRequest=".onValueHelpParticipantRequested"
                                 id="multiInputParticipantName"
@@ -159,7 +158,7 @@
                     <!-- Tranche Filter -->
                     <fb:FilterGroupItem
                         id="trancheFilter2"
-                        name="tranche"
+                        name="trancheName"
                         label="{i18n>trancheName}"
                         groupName="Group1"
                         visibleInFilterBar="true"
@@ -187,7 +186,7 @@
                         <fb:control>
                             <m:MultiComboBox
                                 id="excludedSelect"
-                                name="bonusTrancheFilter"
+                                name="excluded"
                                 class="filtersStyle"
                                 items="{path: '',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
@@ -207,132 +206,132 @@
             height="100%"
             vertical="true"
         >
-        <m:Table
-        id="idTranchesTable2"
-        inset="false"
-        growing="true"
-        growingThreshold="5"
-        items="{ path: 'trancheModel>/TrancheParticipation', parameters: { $expand: 'participant($expand=department),bonusTranche($expand=Location)' } }"
-        width="auto"
-        class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
-        mode="MultiSelect">
-        <m:headerToolbar>
-            <m:OverflowToolbar class="tableBar">
-                <m:Title
-                    text="{i18n>bonusTranches}"
-                    level="H2"
-                />
-                <m:ToolbarSpacer />
-                <m:Button
-                    text="{i18n>excludeTranche}"
-                    type="Emphasized"
-                    press="onCreateTranche"
-                />
-                <m:Button
-                    text="{i18n>overrideAmount}"
-                    type="Emphasized"
-                    press="onCreateTranche"
-                />
-                <m:OverflowToolbarButton
-                    icon="sap-icon://sort"
-                    text="{i18n>sort}"
-                    type="Transparent"
-                    press=".onSort"
-                />
-            </m:OverflowToolbar>
-        </m:headerToolbar>
-        <m:columns>
-            <m:Column>
-                <m:Text text="{i18n>localID}" />
-            </m:Column>
-           
-            <m:Column>
-                
-                <m:Text text="{i18n>nameOfParticipant}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>department}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>trancheName}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>status}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>location}" />
-            </m:Column>
-           
-            <m:Column>
-                <m:Text text="{i18n>startDate}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>endDate}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>weights}" />
+            <m:Table
+                id="idPartcipantTable2"
+                inset="false"
+                growing="true"
+                growingThreshold="10"
+                items="{ path: 'trancheModel>/TrancheParticipation', parameters: { $expand: 'participant($expand=department),bonusTranche($expand=Location)' } }"
+                width="auto"
+                class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
+                mode="MultiSelect"
+            >
+                <m:headerToolbar>
+                    <m:OverflowToolbar class="tableBar">
+                        <m:Title
+                            text="{i18n>bonusTranches}"
+                            level="H2"
+                        />
+                        <m:ToolbarSpacer />
+                        <m:Button
+                            text="{i18n>excludeTranche}"
+                            type="Emphasized"
+                            press="onCreateTranche"
+                        />
+                        <m:Button
+                            text="{i18n>overrideAmount}"
+                            type="Emphasized"
+                            press="onCreateTranche"
+                        />
+                        <m:OverflowToolbarButton
+                            icon="sap-icon://sort"
+                            text="{i18n>sort}"
+                            type="Transparent"
+                            press=".onSort"
+                        />
+                    </m:OverflowToolbar>
+                </m:headerToolbar>
+                <m:columns>
+                    <m:Column>
+                        <m:Text text="{i18n>localID}" />
+                    </m:Column>
 
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>calculatedAmount}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>finalAmount}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>excluded}" />
-            </m:Column>
-            <m:Column>
-                <m:Text text="{i18n>justification}" />
-            </m:Column>
-           
-          
-        </m:columns>
-        <m:items>
-            <m:ColumnListItem>
-                <m:cells>
-                    <m:ObjectIdentifier text="{trancheModel>ID}" />
-                    <m:Text
-                        text="{trancheModel>participant/firstName}"
-                    />
-                    <m:Text text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"/>
-           
-                    <m:Text text="{trancheModel>bonusTranche/name}" />
-                
-                    <m:Text text="{trancheModel>bonusTranche/status}" />
-                    <m:Text text="{trancheModel>bonusTranche/Location/name}"/>
+                    <m:Column>
+                        <m:Text text="{i18n>nameOfParticipant}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>department}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>trancheName}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>status}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>location}" />
+                    </m:Column>
 
-                    
-                   
-                    <m:Text
-                    text="{
+                    <m:Column>
+                        <m:Text text="{i18n>startDate}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>endDate}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>weights}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>calculatedAmount}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>finalAmount}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>excluded}" />
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="{i18n>justification}" />
+                    </m:Column>
+                </m:columns>
+                <m:items>
+                    <m:ColumnListItem>
+                        <m:cells>
+                            <m:ObjectIdentifier
+                                text="{trancheModel>participant/ID}"
+                            />
+                            <m:Text
+                                text="{trancheModel>participant/firstName}  {trancheModel>participant/lastName}"
+                            />
+                            <m:Text
+                                text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"
+                            />
+
+                            <m:Text text="{trancheModel>bonusTranche/name}" />
+
+                            <m:Text text="{trancheModel>bonusTranche/status}" />
+                            <m:Text
+                                text="{trancheModel>bonusTranche/Location/name}"
+                            />
+                            <m:Text
+                                text="{
                         path: 'trancheModel>bonusTranche/beginDate',
                         formatter: '.formatter.formatDate'
                     }"
-                    />
-                    <m:Text
-                    text="{
+                            />
+                            <m:Text
+                                text="{
                         path: 'trancheModel>bonusTranche/endDate',
                         formatter: '.formatter.formatDate'
                     }"
-                    />
-                    <m:Text
-                    text="{trancheModel>bonusTranche/trancheWeight}"
-                />
-                    
-                    <m:Text text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"/>
-                    <m:Text text="{ path: 'trancheModel>finalPayoutAmount', formatter: '.formatter.formatNullValue' }"/>
-                   
-                    
+                            />
+                            <m:Text
+                                text="{trancheModel>bonusTranche/trancheWeight}"
+                            />
 
-                    <m:Text text="{trancheModel>excluded}" />
-                    <m:Text text="{trancheModel>justification}" />
-                  
-                    
-                </m:cells>
-            </m:ColumnListItem>
-        </m:items>
-    </m:Table>
+                            <m:Text
+                                text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"
+                            />
+                            <m:Text
+                                text="{ path: 'trancheModel>finalPayoutAmount', formatter: '.formatter.formatNullValue' }"
+                            />
+
+                            <m:Text text="{trancheModel>excluded}" />
+                            <m:Text text="{trancheModel>justification}" />
+                        </m:cells>
+                    </m:ColumnListItem>
+                </m:items>
+            </m:Table>
         </m:ScrollContainer>
     </m:VBox>
 </mvc:View>

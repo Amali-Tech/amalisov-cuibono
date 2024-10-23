@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="localIdDialog"
+        title="{i18n>dialogTitle}"
+        type="Message"
+        draggable="true"
+        resizable="true"
+    >
+        <VBox>
+            <Label text="{i18n>LocalID}" />
+            <TextArea
+                id="localIdInputArea"
+                width="100%"
+                placeholder="e.g., 1001, 1002, 1003"
+                rows="5"
+            />
+        </VBox>
+        <beginButton>
+            <Button
+                text="{i18n>Ok}"
+                press="onDialogOkPress"
+                type="Emphasized"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                text="{i18n>Close}"
+                press="onDialogCancelPress"
+                type="Default"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
