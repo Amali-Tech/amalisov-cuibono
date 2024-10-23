@@ -19,6 +19,11 @@ import ListBinding from "sap/ui/model/ListBinding";
 import ComboBox from "sap/m/ComboBox";
 import ODataModel from "sap/ui/model/odata/v4/ODataModel";
 import MessageBox from "sap/m/MessageBox";
+import Sorter from "sap/ui/model/Sorter";
+import Dialog from "sap/m/Dialog";
+import ViewSettingsItem from "sap/m/ViewSettingsItem";
+
+
 
 /**
  * @namespace amalisov.cuibono.controller
@@ -27,7 +32,7 @@ export default class BonusTranches extends BaseController {
     public formatter = Formatter;
     private _oFilterBar: FilterBar;
     private _oTable1: Table;
-
+    private _oSortDialog: Dialog | undefined;
     private initialOdata: InitializationHelper;
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
@@ -254,9 +259,80 @@ export default class BonusTranches extends BaseController {
         }
     }
 
-
+   
+    
 
 
     
+  
+
+ 
+    public onOpenSortDialog(): void {
+        if (!this._oSortDialog) {
+            this.loadFragment({
+                name: "amalisov.cuibono.view.fragment.sortDialog" // Replace with the correct fragment path
+            }).then((dialog: Control | Control[]) => {
+                // Properly cast the result to Dialog
+                const oDialog = Array.isArray(dialog) ? dialog[0] as Dialog : dialog as Dialog;
+                this._oSortDialog = oDialog;
+                this._oSortDialog.open();
+            }).catch((error: Error) => {
+                console.error("Failed to load sort dialog fragment:", error);
+            });
+        } else {
+            this._oSortDialog.open();
+        }
+    }
+    
+
+   
+
+    public onSortTranche(oEvent: Event): void {
+        const oTable = this.byId("idTranchesTable") as Table;
+      
+    const oBinding = oTable.getBinding("items") as ListBinding;
+
+    const oSortItem = oEvent.getParameter("sortItem" as never) as ViewSettingsItem;
+    const sSortKey = oSortItem.getKey();
+    const bDescending = oEvent.getParameter("sortDescending" as never) as boolean;
+
+        let oSorter: Sorter | undefined;
+
+        switch (sSortKey) {
+            case "sortName":
+                oSorter = new Sorter("name", bDescending);
+                break;
+            case "sortLocation":
+                oSorter = new Sorter("Location/name", bDescending);
+                break;
+            case "sortStatus":
+                oSorter = new Sorter("status", bDescending);
+                break;
+            default:
+                MessageBox.show("invalidCriteria");
+                return;
+        }
+
+        if (oSorter) {
+            oBinding.sort([oSorter]);
+        }
+    }
+
+      
+      public onSortOrderChange(): void {
+       
+    }
+    
+
+    public onSortDialogClose(): void {
+        this._oSortDialog?.destroy(); 
+        this._oSortDialog = undefined; 
+    }
+    
+ 
+    public onSortCancel(): void {
+        this._oSortDialog?.close(); 
+}
+
 }
 

@@ -89,28 +89,27 @@
 
                         />
                         <DatePicker
-                            id="beginDate"
-                            value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
-                            class="customInput"
-                            required="true"
-                            
-                        
-                        
-                       
-                        change="onStartDateChange"
-                        />
+    id="beginDate"
+    value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
+    class="customInput"
+    required="true"
+    change="onStartDateChange"
+    liveChange="onStartDateInput"
+    minDate="{trancheData>/currentDate}"
+/>
                     </VBox>
                     <VBox width="48%">
                         <Label text="{i18n>endDate}" 
                         required="true"
                         />
                         <DatePicker
-                            id="endDate"
-                            value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
-                            class="customInput"
-                            required="true"
-                            change="onEndDateChange"
-                        />
+    id="endDate"
+    value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
+    class="customInput"
+    required="true"
+    change="onEndDateChange"
+    liveChange="onEndDateInput"
+/>
                     </VBox>
                 </FlexBox>
 
@@ -130,13 +129,13 @@
                     <VBox width="48%">
                         <Label text="{i18n>originDate}" />
                         <DatePicker
-                            id="trancheOriginDate"
-                            value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
-                            class="customInput"
-                            required="true"
-                            minDate="{/currentDate}"
-                            change="onOriginDateChange"
-                        />
+                        id="trancheOriginDate"
+                        value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
+                        class="customInput"
+                        required="true"
+                        change="onOriginDateChange"
+                        liveChange="onOriginDateInput"
+                    />
                     </VBox>
                 </FlexBox>
             </VBox>
@@ -245,6 +244,8 @@
         <Button
             type="Emphasized"
             text="{i18n>save}"
+              icon="sap-icon://save"
+            
             press="onSavePress"
             visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
         />
@@ -271,8 +272,10 @@
             visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
         />
         <Button
+        
             press=".onNavBack"
             type="Default"
+           
             text="{i18n>discard}"
         />
     </FlexBox>
