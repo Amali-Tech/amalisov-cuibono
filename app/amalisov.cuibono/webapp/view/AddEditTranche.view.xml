@@ -1,5 +1,4 @@
 <mvc:View
-    xmlns:macros="sap.fe.macros"
     controllerName="amalisov.cuibono.controller.AddEditTranche"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:m="sap.m"
