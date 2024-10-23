@@ -23,5 +23,8 @@ service BonusTrancheService @(requires: 'authenticated-user') {
                               Location_ID : String @mandatory,
                               targets : array of Target @mandatory ) returns BonusTranche;
 
-    action overruleParticipant(participants: array of UUID, justification: String) returns TrancheParticipation;
+    action overruleParticipant(
+        participants: array of UUID @mandatory,
+        justification: String,
+        amount: Decimal @mandatory)returns {message: String};
 }

@@ -7,6 +7,7 @@ const logger = cds.log("Overrule participant action.");
 interface IParticipant {
   participants: __UUID[];
   justification: string;
+  amount: number;
 }
 @Handler()
 @Service()
@@ -17,14 +18,15 @@ export class OverruleParticipantAction {
   ) {
     logger.info("Overrule participant action Handler!");
 
-    const { participants, justification } = participantData;      
+    const { participants, justification, amount } = participantData;      
     try {
       for (const participant of participants) {
         await UPDATE(TrancheParticipation.name)
           .where({ ID: participant })
           .with({
             overRuled: true,
-            justification: justification
+            justification: justification,
+            finalAmount: amount
           })
       }
       return {
