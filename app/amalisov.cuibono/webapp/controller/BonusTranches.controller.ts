@@ -60,7 +60,7 @@ export default class BonusTranches extends BaseController {
                 parameters: {
                     expand: "Target"
                 }
-               
+
             });
         }
     };
@@ -76,13 +76,15 @@ export default class BonusTranches extends BaseController {
         }
     }
     public onCreateTranche(): void {
+
         const oQuery: RouterArguments = {
             "?query": {
                 tab: "bonusTranches",
                 operation: "create"
             }
         }
-        this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+
+        this.getRouter().navTo("AddEditTranche", oQuery, true /*without history*/);
     }
     public onEditPress(oEvent: Event): void {
         const oSource = oEvent.getSource() as Control;
@@ -101,7 +103,7 @@ export default class BonusTranches extends BaseController {
                     trancheId: trancheId
                 }
             };
-            this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+            this.getRouter().navTo("AddEditTranche", oQuery, true);
         } else {
             MessageToast.show(this.getI18nText("noTrancheSelected"));
         }
@@ -111,9 +113,8 @@ export default class BonusTranches extends BaseController {
         const oSource = oEvent.getSource() as Control;
         const oItem = oSource.getParent() as ColumnListItem;
         const oContext = oItem.getBindingContext("trancheModel");
-    
+
         const trancheId = oContext?.getProperty("ID");
-    
         if (trancheId) {
             const oQuery = {
                 "?query": {
@@ -122,7 +123,7 @@ export default class BonusTranches extends BaseController {
                     trancheId: trancheId
                 }
             };
-            this.getRouter().navTo("RouteMain", oQuery, true /*without history*/);
+            this.getRouter().navTo("AddEditTranche", oQuery, true /*without history*/);
         } else {
             MessageToast.show(this.getI18nText("noTrancheSelected"));
         }
@@ -136,20 +137,20 @@ export default class BonusTranches extends BaseController {
         const oSource = oEvent.getSource() as Control;
         const oItem = oSource.getParent() as ColumnListItem;
         const oContext = oItem.getBindingContext("trancheModel");
-    
+
         if (!oContext) {
             MessageToast.show(this.getI18nText("noTrancheSelected"));
             return;
         }
-    
+
         const trancheId = oContext.getProperty("ID");
         const trancheName = oContext.getProperty("name");
-    
+
         // Show a confirmation dialog
         MessageBox.confirm(
             this.getI18nText("deleteConfirmation", [trancheName]),
             {
-                
+
                 title: this.getI18nText("deleteTitle"),
                 actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                 emphasizedAction: MessageBox.Action.OK,
@@ -162,18 +163,18 @@ export default class BonusTranches extends BaseController {
             }
         );
     }
-    
+
     private _deleteTranche(trancheId: string): void {
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
         const sPath = `/BonusTranche('${trancheId}')`;
-    
+
         oModel.delete(sPath)
             .then(() => {
                 MessageToast.show(this.getI18nText("deleteSuccess"));
                 oModel.refresh();
             })
             .catch(() => {
-               
+
                 MessageBox.error(this.getI18nText("deleteError"));
             });
     }
