@@ -65,3 +65,20 @@ Authorization: Basic <YOUR_AUTH_TOKEN>
         }
     ]
 }
+
+### Get all Bonus Tranches participations
+GET {{baseUrl}}/TrancheParticipation?$expand=participant($expand=department),bonusTranche($expand=Location)
+# Authorization: Basic <YOUR_AUTH_TOKEN>
+
+### Exclude selected participants
+POST {{baseUrl}}/excludeParticipants
+Content-Type: application/json
+# Authorization: Basic <YOUR_AUTH_TOKEN>
+
+{
+    "trancheParticipationIds": [
+        "660ed93c-6966-4c42-b7a5-2aa2c0058a7a",
+        "0a1bdfda-b42a-4628-8692-f8327bc9de41"
+    ],
+    "justification": "Mandatory justification"
+}

@@ -35,7 +35,10 @@
                     justifyContent="SpaceBetween"
                 >
                     <VBox width="48%">
-                        <Label text="{i18n>name}" />
+                        <Label text="{i18n>name}"
+                        
+                        required="true"
+                        />
                         <Input
                             id="trancheName"
                             value="{trancheData>/name}"
@@ -45,7 +48,9 @@
                     </VBox>
 
                     <VBox width="48%">
-                        <Label text="{i18n>location}" />
+                        <Label text="{i18n>location}" 
+                        required="true"
+                        />
                         <ComboBox
                             id="trancheLocation"
                             items="{
@@ -78,21 +83,33 @@
                     justifyContent="SpaceBetween"
                 >
                     <VBox width="48%">
-                        <Label text="{i18n>startDate}" />
+                        <Label text="{i18n>startDate}"
+                        required="true"
+                        
+
+                        />
                         <DatePicker
                             id="beginDate"
                             value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
+                            
+                        
+                        
+                       
+                        change="onStartDateChange"
                         />
                     </VBox>
                     <VBox width="48%">
-                        <Label text="{i18n>endDate}" />
+                        <Label text="{i18n>endDate}" 
+                        required="true"
+                        />
                         <DatePicker
                             id="endDate"
                             value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
+                            change="onEndDateChange"
                         />
                     </VBox>
                 </FlexBox>
@@ -117,6 +134,8 @@
                             value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
                             class="customInput"
                             required="true"
+                            minDate="{/currentDate}"
+                            change="onOriginDateChange"
                         />
                     </VBox>
                 </FlexBox>
@@ -144,13 +163,13 @@
             </OverflowToolbar>
         </headerToolbar>
         <columns>
-            <Column>
+            <Column hAlign="Begin">
                 <Text text="{i18n>name}" />
             </Column>
-            <Column>
+            <Column hAlign="Begin">
                 <Text text="{i18n>targetWeight}" />
             </Column>
-            <Column hAlign="End">
+            <Column hAlign="Begin">
                 <Text text="{i18n>achievements}" />
             </Column>
             <Column>
@@ -161,8 +180,16 @@
             <ColumnListItem>
                 <cells>
                     <Text text="{trancheData>name}" />
-                    <Text text="{trancheData>weight}" />
-                    <Text text="{trancheData>achievement}" />
+                    <Text
+                        text="{ 
+                        path: 'trancheData>weight', 
+                        formatter: '.formatter.formatPercentage' }"
+                    />
+                    <Text
+                        text="{ 
+                        path: 'trancheData>achievement', 
+                        formatter: '.formatter.formatPercentage' }"
+                    />
 
                     <HBox class="trancheButtonBox">
                         <Button
@@ -184,22 +211,32 @@
         </items>
     </Table>
 
-    <VBox class="totalTrancheWeight sapUiLargeMarginBottom">
+    <FlexBox class="totalTrancheWeight sapUiLargeMarginBottom  ">
+        <Title
+            text="{i18n>total}"
+            class="totalTitle"
+        />
         <HBox class="totalBox">
-            <Title
-                text="{i18n>total}"
-                class="totalTitle"
+            <core:Icon
+                color="red"
+                src="sap-icon://alert"
+                visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
+                class="iconAlert"
             />
 
-            <ToolbarSpacer />
+            <!-- Total Weight Text -->
             <Text
-                text="{trancheData>/totalWeight}"
-                class="totalTrancheWeightText"
+                text="{ 
+                    path: 'trancheData>/totalWeight', 
+                    formatter: '.formatter.formatPercentage' 
+                }"
+                class="{ 
+                    path: 'trancheData>/totalWeight', 
+                    formatter: '.formatter.formatTextClass'
+                }"
             />
-
-            <ToolbarSpacer />
         </HBox>
-    </VBox>
+    </FlexBox>
     <FlexBox
         class="customBtn1"
         width="99%"
@@ -209,31 +246,34 @@
             type="Emphasized"
             text="{i18n>save}"
             press="onSavePress"
-        />
-        <Button
-            type="Default"
-            text="{i18n>discard}"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
         />
 
         <Button
             type="Ghost"
             text="{i18n>lock}"
             icon="sap-icon://locked"
-            visible="{= ${trancheData>/status}==='Running'?true:false}"
+            press=".onLockTranche"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatLockedVisibility'}"
         />
         <Button
             type="Accept"
             text="{i18n>completed}"
             icon="sap-icon://complete"
             press=".onCompleteTranche"
-            visible="{= ${trancheData>/status}==='Locked'?true:false}"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
         />
         <Button
             type="Ghost"
             text="{i18n>reopen}"
             icon="sap-icon://unlocked"
             press=".onReOpenTranche"
-            visible="{= ${trancheData>/status}==='Locked'?true:false}"
+            visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatCompleteVisibility'}"
+        />
+        <Button
+            press=".onNavBack"
+            type="Default"
+            text="{i18n>discard}"
         />
     </FlexBox>
 </mvc:View>

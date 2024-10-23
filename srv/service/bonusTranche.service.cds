@@ -27,4 +27,7 @@ service BonusTrancheService @(requires: 'authenticated-user') {
         participants: array of UUID @mandatory,
         justification: String,
         amount: Decimal @mandatory)returns {message: String};
+        
+    action excludeParticipants(trancheParticipationIds : array of UUID @mandatory,
+                               justification : String @mandatory )   returns {};
 }

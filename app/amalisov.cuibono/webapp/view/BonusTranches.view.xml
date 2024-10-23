@@ -32,7 +32,6 @@
     </m:VBox>
     <m:VBox
         height="100%"
-        class="timeToCheck"
         visible="{= ${currentView>/currentView}==='default'?true:false}"
     >
         <m:HBox width="100%">
@@ -60,7 +59,8 @@
                                 id="searchHere"
                                 placeholder="Search"
                                 showSearchButton="true"
-                                search="onSearch"
+                                search=".handleSearch"
+
                             />
                         </fb:control>
                     </fb:FilterGroupItem>
@@ -96,40 +96,36 @@
                     >
                         <fb:control>
                             <m:MultiComboBox
-                                id="locationMultiCombo"
                                 name="bonusTrancheFilter"
                                 class="filtersStyle"
-                                items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
+                                items="{path: 'trancheModel>/Location',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
-                                    id="locationItems"
-                                    key="{dropdownModel>key}"
-                                    text="{dropdownModel>text}"
+                                    key="{trancheModel>ID}"
+                                    text="{trancheModel>name}"
                                 />
                             </m:MultiComboBox>
                         </fb:control>
                     </fb:FilterGroupItem>
                     <fb:FilterGroupItem
-                        id="fiscalYearID"
                         name="fiscalYear"
                         label="{i18n>fiscal}"
                         groupName="Group1"
                         visibleInFilterBar="true"
                     >
                         <fb:control>
-                            <m:MultiComboBox
+                            <m:ComboBox
                                 id="fiscalMultiCombo"
                                 name="bonusTrancheFilter"
                                 items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
-                                    id="filterItems"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
                                 />
-                            </m:MultiComboBox>
+                            </m:ComboBox>
                         </fb:control>
                     </fb:FilterGroupItem>
                 </fb:filterGroupItems>
@@ -145,6 +141,7 @@
                 items="{ path: 'trancheModel>/BonusTranche' ,parameters: {$expand: 'Location'}}"
                 class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
                 width="auto"
+                growing="true"
             >
                 <m:headerToolbar>
                     <m:OverflowToolbar class="tableBar">
@@ -200,8 +197,14 @@
                 <m:items>
                     <m:ColumnListItem>
                         <m:cells>
-                            <m:ObjectIdentifier text="{trancheModel>status}" />
-                            <m:Text text="{trancheModel>name}" />
+                            <m:ObjectIdentifier
+                                id="status"
+                                text="{trancheModel>status}"
+                            />
+                            <m:Text
+                                id="name"
+                                text="{trancheModel>name}"
+                            />
                             <m:Text text="{trancheModel>Location/name}" />
                             <m:Text
                                 text="{

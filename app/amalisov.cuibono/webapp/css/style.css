@@ -85,13 +85,7 @@
     font-weight: bold;
 }
 
-.totalBox {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 10px;
-    padding-right: 10px;
 
-}
 
 .totalTitle {
     margin-left: 15px;
@@ -145,7 +139,6 @@
     opacity: 0.5;
 }
 
-.customPageContainer {}
 
 .customBtn1 {
     position: sticky;
@@ -159,4 +152,28 @@
 
     border-radius: 10px;
     border-top: 1px solid #d9d9d9;
+}
+
+.sapMText.totalWeightRed {
+    color: red !important;
+}
+
+.sapMText.totalWeightGreen {
+    color: green !important;
+}
+
+.iconRed {
+    color: red !important;
+}
+
+.iconGreen {
+    color: green !important;
+}
+
+.iconAlert{
+    color: red;
+}
+
+.totalBox{
+    margin-left: 50px;
 }

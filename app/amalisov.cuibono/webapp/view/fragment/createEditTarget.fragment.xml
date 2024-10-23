@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core"
 >
     <Dialog
-        id="createTargetDialog"
+        id="createEditTargetDialog"
         title="{i18n>addNewTarget}"
         class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer"
     >
@@ -30,11 +30,11 @@
             <Button
                 text="{i18n>save}"
                 type="Emphasized"
-                press="onCreateTarget"
+                press="onSaveTarget"
             />
             <Button
                 text="{i18n>discard}"
-                press="onCancelCreateTarget"
+                press="onCancelTarget"
             />
         </buttons>
     </Dialog>
