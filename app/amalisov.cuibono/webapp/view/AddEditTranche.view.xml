@@ -117,11 +117,13 @@
                                     required="true"
                                 />
                                 <m:DatePicker
-                                    id="beginDate"
-                                    value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
-                                    class="customInput"
-                                    required="true"
-                                    change="onStartDateChange"
+                                id="beginDate"
+                                value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
+                                class="customInput"
+                                required="true"
+                                change="onStartDateChange"
+                                liveChange="onStartDateInput"
+                                minDate="{trancheData>/currentDate}"
                                 />
                             </m:VBox>
                             <m:VBox width="48%">
@@ -130,11 +132,13 @@
                                     required="true"
                                 />
                                 <m:DatePicker
-                                    id="endDate"
-                                    value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
-                                    class="customInput"
-                                    required="true"
-                                    change="onEndDateChange"
+                                id="endDate"
+                                value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
+                                class="customInput"
+                                required="true"
+                                change="onEndDateChange"
+                                liveChange="onEndDateInput"
+                            
                                 />
                             </m:VBox>
                         </m:FlexBox>
@@ -155,13 +159,12 @@
                             <m:VBox width="48%">
                                 <m:Label text="{i18n>originDate}" />
                                 <m:DatePicker
-                                    id="trancheOriginDate"
-                                    value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
-                                    class="customInput"
-                                    width="100%"
-                                    required="true"
-                                    minDate="{/currentDate}"
-                                    change="onOriginDateChange"
+                                id="trancheOriginDate"
+                                value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
+                                class="customInput"
+                                required="true"
+                                change="onOriginDateChange"
+                                liveChange="onOriginDateInput"
                                 />
                             </m:VBox>
                         </m:FlexBox>
@@ -205,8 +208,14 @@
                     <m:ColumnListItem>
                         <m:cells>
                             <m:Text text="{trancheData>name}" />
-                            <m:Text text="{trancheData>weight}" />
-                            <m:Text text="{trancheData>achievement}" />
+                            <m:Text text="{
+                             path: 'trancheData>weight', 
+                        formatter: '.formatter.formatPercentage' 
+                            }" />
+                            <m:Text text="{
+                            path: 'trancheData>achievement', 
+                        formatter: '.formatter.formatPercentage'
+                            }" />
 
                             <m:HBox class="trancheButtonBox">
                                 <m:Button
@@ -236,8 +245,14 @@
 
                     <m:ToolbarSpacer />
                     <m:Text
-                        text="{trancheData>/totalWeight}"
-                        class="totalTrancheWeightText"
+                    text="{ 
+                        path: 'trancheData>/totalWeight', 
+                        formatter: '.formatter.formatPercentage' 
+                    }"
+                    class="{ 
+                        path: 'trancheData>/totalWeight', 
+                        formatter: '.formatter.formatTextClass'
+                    }"
                     />
 
                     <m:ToolbarSpacer />
