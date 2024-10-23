@@ -73,10 +73,10 @@ entity Attendance {
 entity TrancheParticipation {
   key ID                     : UUID;
       calculatedPayoutAmount : Decimal;
-      excluded               : Boolean;
+      excluded               : Boolean default false;
       finalPayoutAmount      : Decimal;
       justification          : String;
-      overRuled              : Boolean;
+      overRuled              : Boolean default false;
       participant            : Association to Employee;
       bonusTranche           : Association to BonusTranche
 }

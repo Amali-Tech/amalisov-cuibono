@@ -4,46 +4,335 @@
     displayBlock="true"
     xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
-    xmlns:f="sap.f"
     xmlns:fb="sap.ui.comp.filterbar"
+    height="100%"
 >
-    <f:DynamicPage
-        id="dynamicPageId2"
-        headerExpanded="true"
+    <m:VBox
+        height="100%"
+        visible="{= ${currentView>/currentView}==='default'?true:false}"
     >
-        <f:header>
-            <f:DynamicPageHeader
-                id="filterHeader2"
-                pinnable="true"
+        <m:HBox width="100%">
+            <fb:FilterBar
+                id="filterbar"
+                persistencyKey="myPersKey"
+                useToolbar="false"
+                search=""
+                dragDropConfig="move"
+                class="_filterBarClass"
             >
-                <f:content>
-                    <fb:FilterBar
-                        id="filterbar"
-                        persistencyKey="myPersKey"
-                        useToolbar="false"
-                        search=""
-                        dragDropConfig="move"
+                <fb:layoutData>
+                    <m:FlexItemData growFactor="1" />
+                    <!-- Make the FilterBar grow to full width -->
+                </fb:layoutData>
+                <fb:filterGroupItems>
+                    <!-- Status Filter -->
+                    <fb:FilterGroupItem
+                        id="statusID2"
+                        name="status"
+                        label="{i18n>status}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
                     >
-                        <fb:filterGroupItems>
-                            <fb:FilterGroupItem
-                                id="SearchItem"
-                                name="search"
-                                label="{i18n>search}"
-                                groupName="group1"
+                        <fb:control>
+                            <m:MultiComboBox
+                                id="statusMultiCombo2"
+                                name="bonusTrancheFilter"
+                                class="filtersStyle"
+                                items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
+                                selectionChange=".onFilterFieldChange"
                             >
-                                <fb:control>
-                                    <m:Input
-                                        id="search"
-                                        name="SearchItems"
-                                    />
-                                </fb:control>
-                            </fb:FilterGroupItem>
-                        </fb:filterGroupItems>
-                    </fb:FilterBar>
-                </f:content>
-            </f:DynamicPageHeader>
-        </f:header>
-        
-        <f:content />
-    </f:DynamicPage>
+                                <core:Item
+                                    id="statusItems2"
+                                    key="{dropdownModel>key}"
+                                    text="{dropdownModel>text}"
+                                />
+                            </m:MultiComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+
+                    <!-- Location Filter -->
+                    <fb:FilterGroupItem
+                        id="locationID2"
+                        name="location"
+                        label="{i18n>location}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiComboBox
+                                id="locationMultiCombo2"
+                                name="bonusTrancheFilter"
+                                class="filtersStyle"
+                                items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
+                                selectionChange=".onFilterFieldChange"
+                            >
+                                <core:Item
+                                    id="locationItems2"
+                                    key="{dropdownModel>key}"
+                                    text="{dropdownModel>text}"
+                                />
+                            </m:MultiComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+
+                    <!-- Fiscal Year Filter -->
+                    <fb:FilterGroupItem
+                        id="fiscalYearID2"
+                        name="fiscal"
+                        label="{i18n>fiscal}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiComboBox
+                                id="fiscalMultiCombo2"
+                                name="bonusTrancheFilter"
+                                items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
+                                selectionChange=".onFilterFieldChange"
+                            >
+                                <core:Item
+                                    id="filterItems2"
+                                    key="{dropdownModel>key}"
+                                    text="{dropdownModel>text}"
+                                />
+                            </m:MultiComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+
+                    <!-- Local ID Filter -->
+                    <fb:FilterGroupItem
+                        id="localIDFilter2"
+                        name="localID"
+                        label="{i18n>localID}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiInput
+                                name="localId"
+                                class="filtersStyle"
+                                valueHelpRequest=".onValueHelpIdRequested"
+                                id="multiInputGLocalId"
+                                showValueHelp="true"
+                            />
+                        </fb:control>
+                    </fb:FilterGroupItem>
+
+                    <!-- Name Filter -->
+                    <fb:FilterGroupItem
+                        id="nameFilter2"
+                        name="name"
+                        label="{i18n>nameOfParticipant}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiInput
+                                name="partipantName"
+                                class="filtersStyle"
+                                valueHelpRequest=".onValueHelpParticipantRequested"
+                                id="multiInputParticipantName"
+                                showValueHelp="true"
+                            />
+                        </fb:control>
+                    </fb:FilterGroupItem>
+
+                    <!-- Department Filter -->
+                    <fb:FilterGroupItem
+                        id="departmentFilter2"
+                        name="department"
+                        label="{i18n>department}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiInput
+                                name="department"
+                                class="filtersStyle"
+                                valueHelpRequest=".onValueHelpDepartmentRequested"
+                                id="multiInputDepartment"
+                                showValueHelp="true"
+                            />
+                        </fb:control>
+                    </fb:FilterGroupItem>
+
+                    <!-- Tranche Filter -->
+                    <fb:FilterGroupItem
+                        id="trancheFilter2"
+                        name="tranche"
+                        label="{i18n>trancheName}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:MultiInput
+                                name="trancheName"
+                                class="filtersStyle"
+                                valueHelpRequest=".onValueHelpTrancheRequested"
+                                id="multiInputTaxAmount"
+                                showValueHelp="true"
+                            />
+                        </fb:control>
+                    </fb:FilterGroupItem>
+
+                    <!-- Excluded Filter -->
+                    <fb:FilterGroupItem
+                        id="excludedFilter2"
+                        name="excluded"
+                        label="{i18n>excluded}"
+                        groupName="Group1"
+                        visibleInFilterBar="true"
+                        class="filtersStyle"
+                    >
+                        <fb:control>
+                            <m:MultiComboBox
+                                id="excludedSelect"
+                                name="bonusTrancheFilter"
+                                class="filtersStyle"
+                                items="{path: '',templateShareable: true}"
+                                selectionChange=".onFilterFieldChange"
+                            >
+                                <core:Item
+                                    id="selectItems2"
+                                    key="{dropdownModel>key}"
+                                    text="{dropdownModel>text}"
+                                />
+                            </m:MultiComboBox>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                </fb:filterGroupItems>
+            </fb:FilterBar>
+        </m:HBox>
+        <m:ScrollContainer
+            height="100%"
+            vertical="true"
+        >
+        <m:Table
+        id="idTranchesTable2"
+        inset="false"
+        growing="true"
+        growingThreshold="5"
+        items="{ path: 'trancheModel>/TrancheParticipation', parameters: { $expand: 'participant($expand=department),bonusTranche($expand=Location)' } }"
+        width="auto"
+        class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
+        mode="MultiSelect">
+        <m:headerToolbar>
+            <m:OverflowToolbar class="tableBar">
+                <m:Title
+                    text="{i18n>bonusTranches}"
+                    level="H2"
+                />
+                <m:ToolbarSpacer />
+                <m:Button
+                    text="{i18n>excludeTranche}"
+                    type="Emphasized"
+                    press="onCreateTranche"
+                />
+                <m:Button
+                    text="{i18n>overrideAmount}"
+                    type="Emphasized"
+                    press="onCreateTranche"
+                />
+                <m:OverflowToolbarButton
+                    icon="sap-icon://sort"
+                    text="{i18n>sort}"
+                    type="Transparent"
+                    press=".onSort"
+                />
+            </m:OverflowToolbar>
+        </m:headerToolbar>
+        <m:columns>
+            <m:Column>
+                <m:Text text="{i18n>localID}" />
+            </m:Column>
+           
+            <m:Column>
+                
+                <m:Text text="{i18n>nameOfParticipant}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>department}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>trancheName}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>status}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>location}" />
+            </m:Column>
+           
+            <m:Column>
+                <m:Text text="{i18n>startDate}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>endDate}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>weights}" />
+
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>calculatedAmount}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>finalAmount}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>excluded}" />
+            </m:Column>
+            <m:Column>
+                <m:Text text="{i18n>justification}" />
+            </m:Column>
+           
+          
+        </m:columns>
+        <m:items>
+            <m:ColumnListItem>
+                <m:cells>
+                    <m:ObjectIdentifier text="{trancheModel>ID}" />
+                    <m:Text
+                        text="{trancheModel>participant/firstName}"
+                    />
+                    <m:Text text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"/>
+           
+                    <m:Text text="{trancheModel>bonusTranche/name}" />
+                
+                    <m:Text text="{trancheModel>bonusTranche/status}" />
+                    <m:Text text="{trancheModel>bonusTranche/Location/name}"/>
+
+                    
+                   
+                    <m:Text
+                    text="{
+                        path: 'trancheModel>bonusTranche/beginDate',
+                        formatter: '.formatter.formatDate'
+                    }"
+                    />
+                    <m:Text
+                    text="{
+                        path: 'trancheModel>bonusTranche/endDate',
+                        formatter: '.formatter.formatDate'
+                    }"
+                    />
+                    <m:Text
+                    text="{trancheModel>bonusTranche/trancheWeight}"
+                />
+                    
+                    <m:Text text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"/>
+                    <m:Text text="{ path: 'trancheModel>finalPayoutAmount', formatter: '.formatter.formatNullValue' }"/>
+                   
+                    
+
+                    <m:Text text="{trancheModel>excluded}" />
+                    <m:Text text="{trancheModel>justification}" />
+                  
+                    
+                </m:cells>
+            </m:ColumnListItem>
+        </m:items>
+    </m:Table>
+        </m:ScrollContainer>
+    </m:VBox>
 </mvc:View>

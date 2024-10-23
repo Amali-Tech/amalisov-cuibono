@@ -16,15 +16,11 @@ framework:
     - name: sap.ui.fl
 server:
   customMiddleware:
-    - name: fiori-tools-proxy
+    - name: ui5-middleware-simpleproxy
+      mountPath: /api/v1
       afterMiddleware: compression
       configuration:
-        ignoreCertError: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
-        ui5:
-          path:
-            - /odata
-            - /test-resources
-          url: http://localhost:49217/odata
+        baseUri: http://localhost:4004/api/v1
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
