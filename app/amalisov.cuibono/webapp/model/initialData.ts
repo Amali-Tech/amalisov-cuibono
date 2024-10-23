@@ -74,7 +74,6 @@ export class InitializationHelper {
                 { key: "Rwanda", text: this.getI18nText("rwanda") },
             ],
             fiscalYear: [
-                { key: "", text: this.getI18nText("none") },
                 { key: "2019-2020", text: this.getI18nText("2019-2020") },
                 { key: "2020-2021", text: this.getI18nText("2020-2021") },
                 { key: "2021-2022", text: this.getI18nText("2021-2022") },

@@ -41,7 +41,7 @@ export default class Participants extends BaseController {
         this._oFilterBar = this.byId("participantFilterbar") as FilterBar;
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
-        const oDialogModel = new JSONModel({ title: "Filter By Value", label: "Enter values", searchValues: "" } as DialogInfo);
+        const oDialogModel = new JSONModel({ title: this.getI18nText("filterbyvalue"), label: this.getI18nText("entervalues"), searchValues: "" } as DialogInfo);
         this.getView()?.setModel(oDialogModel, "dialogInfo");
     }
 
@@ -206,15 +206,15 @@ export default class Participants extends BaseController {
             fieldLabel = "Local ID"
 
         } else if (sFieldName === "participantName") {
-            sDialogTitle = "Filter by Participant Names";
-            fieldLabel = "Partcipant Names"
+            sDialogTitle = this.getI18nText("byParticipant");
+            fieldLabel = this.getI18nText("participantLabel")
         }
         else if (sFieldName === "department") {
-            sDialogTitle = "Filter by Department";
-            fieldLabel = "Departments"
+            sDialogTitle = this.getI18nText("bydepartment");
+            fieldLabel = this.getI18nText("departmentLabel")
         } else if (sFieldName === "trancheName") {
-            sDialogTitle = "Filter by Tranche Name";
-            fieldLabel = "Tranche Names"
+            sDialogTitle = this.getI18nText("byTrancheName");
+            fieldLabel = this.getI18nText("trancheNameLabel")
         }
         this.updateModelData("dialogInfo", { title: sDialogTitle, label: fieldLabel, searchValues: "" } as DialogInfo)
         // Store the reference to the MultiInput that triggered the dialog
@@ -229,8 +229,8 @@ export default class Participants extends BaseController {
                 this._oDialog = oDialog as ValueHelpDialog;
                 this.getView()?.addDependent(this._oDialog);
                 this._oDialog.open();
-            }).catch((oError) => {
-                console.error("Error loading fragment:", oError);
+            }).catch(() => {
+                this.messageShow("Error loading fragment")
             });
         } else {
             this._oDialog.open();
