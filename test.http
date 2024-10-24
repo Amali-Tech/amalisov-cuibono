@@ -82,3 +82,17 @@ Content-Type: application/json
     ],
     "justification": "Mandatory justification"
 }
+
+### Overrule the final amount for selected participants
+POST {{baseUrl}}/overruleParticipant
+Content-Type: application/json
+# Authorization: Basic <YOUR_AUTH_TOKEN>
+
+{
+    "participants": [
+        "660ed93c-6966-4c42-b7a5-2aa2c0058a7a",
+        "0a1bdfda-b42a-4628-8692-f8327bc9de41"
+    ],
+    "justification": "Just justification",
+    "amount": 400
+}

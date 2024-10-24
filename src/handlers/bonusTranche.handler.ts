@@ -19,6 +19,7 @@ import {
   ParticipantCreationStatusEnum,
   TrancheStatusEnum,
 } from "../../@cds-models/cuibono";
+import { isWithinFiscalYear } from "../utils/helpers/isWithinFiscalYear";
 
 const logger = cds.log("Bonus Tranche handler.");
 
@@ -65,6 +66,20 @@ export class BonusTrancheHandler {
           "Bonus Tranche end date should be after begin date"
         );
       }
+
+      const result = isWithinFiscalYear({
+        beginDate: beginDateFormated,
+        endDate: endDateFormated,
+      });
+
+      if (!result.isValid) {
+        return req.reject(
+          400,
+          "Dates of the tranche must fall within a fiscal year (from October to September of the next year)"
+        );
+      }
+
+      req.data.fiscalYear = result.fiscalYear;
 
       for (const target of targets) {
         target.BonusTranche_ID = bonusTrancheId;
