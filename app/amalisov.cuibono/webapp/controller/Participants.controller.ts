@@ -41,7 +41,11 @@ export default class Participants extends BaseController {
         this._oFilterBar = this.byId("participantFilterbar") as FilterBar;
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
-        const oDialogModel = new JSONModel({ title: this.getI18nText("filterbyvalue"), label: this.getI18nText("entervalues"), searchValues: "" } as DialogInfo);
+        const oDialogModel = new JSONModel({
+            title: this.getI18nText("filterbyvalue"),
+            label: this.getI18nText("entervalues"),
+            searchValues: ""
+        } as DialogInfo);
         this.getView()?.setModel(oDialogModel, "dialogInfo");
     }
 
@@ -49,10 +53,6 @@ export default class Participants extends BaseController {
         const oArgs = oEvent.getParameter("arguments") as RouterArguments;
         const sTrancheId: string = oArgs["?query"]?.trancheId || "";
         if (oArgs["?query"]?.tab === "participants" && sTrancheId) {
-            this.currentTrancheId = sTrancheId
-            this.filterDueToTrancheId()
-        }
-        else if (oArgs["?query"]?.tab === "participants" && !sTrancheId) {
             this.currentTrancheId = sTrancheId
             this.filterDueToTrancheId()
         }
@@ -145,11 +145,9 @@ export default class Participants extends BaseController {
             const fiscalYear = (oControl as ComboBox).getSelectedKey();
             const [startYear, endYear] = fiscalYear.trim().split('-').map(year => parseInt(year, 10));
 
-            // Generate the start and end dates dynamically (e.g., 22 October for both years)
-            const startDate = new Date(startYear, 9, 22);  // October is month 9 (0-based index)
-            const endDate = new Date(endYear, 9, 22);      // October for the end year
+            const startDate = new Date(startYear, 9, 22);
+            const endDate = new Date(endYear, 9, 22);
 
-            // Use the dynamically generated dates (formatted as "YYYY-MM-DD")
             return [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
         }
         else if (

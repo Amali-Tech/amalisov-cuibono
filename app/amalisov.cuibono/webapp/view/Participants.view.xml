@@ -88,6 +88,7 @@
                                 name="fiscalYear"
                                 items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
+                                selectedKey="2024-2025"
                             >
                                 <core:Item
                                     id="filterItems2"
