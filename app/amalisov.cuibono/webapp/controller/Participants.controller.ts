@@ -199,11 +199,11 @@ export default class Participants extends BaseController {
         const sFieldName = oSourceControl.getName();  // Could also use getId() if you prefer
 
         // Determine the title based on the field name
-        let sDialogTitle = "Filter By Value";  // Default title
-        let fieldLabel = "Enter values"
+        let sDialogTitle: string;  // Default title
+        let fieldLabel: string;
         if (sFieldName === "localId") {
-            sDialogTitle = "Filter by Local ID";
-            fieldLabel = "Local ID"
+            sDialogTitle = this.getI18nText("byLocalID");
+            fieldLabel = this.getI18nText("localIDLabel")
 
         } else if (sFieldName === "participantName") {
             sDialogTitle = this.getI18nText("byParticipant");
@@ -215,8 +215,13 @@ export default class Participants extends BaseController {
         } else if (sFieldName === "trancheName") {
             sDialogTitle = this.getI18nText("byTrancheName");
             fieldLabel = this.getI18nText("trancheNameLabel")
+        } else {
+            sDialogTitle = ""
+            fieldLabel = ""
         }
-        this.updateModelData("dialogInfo", { title: sDialogTitle, label: fieldLabel, searchValues: "" } as DialogInfo)
+        if (sDialogTitle && fieldLabel) {
+            this.updateModelData("dialogInfo", { title: sDialogTitle, label: fieldLabel, searchValues: "" } as DialogInfo)
+        }
         // Store the reference to the MultiInput that triggered the dialog
         this._oCurrentMultiInput = oSourceControl;
         if (!this._oDialog) {
