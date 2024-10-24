@@ -81,6 +81,7 @@ export default class AddEditTranche extends BaseController {
         }
     }
     public async createTarget(): Promise<void> {
+
         try {
             const trancheName = this.byId("trancheName") as Input;
             const trancheLocation = this.byId("trancheLocation") as ComboBox;
@@ -147,15 +148,11 @@ export default class AddEditTranche extends BaseController {
             };
 
             const oBinding = oModel.bindList("/BonusTranche") as ODataListBinding;
-            const oContext = oBinding.create(newTranche);
-
-            // Wait for the creation to complete
-            await oContext.created();
-
+            oBinding.create(newTranche);
             // Show success message and navigate to the overview
-            MessageToast.show(this.getI18nText("trancheCreateSuccess"));
-            this.getRouter().navTo("RouteMain");
+            this.messageShow("trancheCreateSuccess")
             oModel.refresh();
+            this.getRouter().navTo("RouteMain");
         } catch (error) {
             MessageToast.show(error + this.getI18nText("cannotCreateTranche"));
         }
@@ -390,7 +387,7 @@ export default class AddEditTranche extends BaseController {
             oDialog.open();
             // Get the new target details from the input fields
             (this.byId("targetNameInput") as Input)?.setValue(targetData.name);
-            (this.byId("targetAchievementInput") as Input)?.setValue(targetData.achievement);
+            (this.byId("targetAchievementInput") as Input)?.setValue(targetData.achievement.toString());
             (this.byId("targetWeightInput") as Input)?.setValue(targetData.weight.toString());
             (this.byId("targetDescriptionInput") as TextArea)?.setValue(targetData.description || "");
         }).catch(() => {
@@ -416,7 +413,7 @@ export default class AddEditTranche extends BaseController {
         // Get the new target details from the input fields
         const sTargetName = (this.byId("targetNameInput") as Input)?.getValue();
         const iTargetWeight = parseFloat((this.byId("targetWeightInput") as Input)?.getValue());
-        const sTargetAchievement = (this.byId("targetAchievementInput") as Input)?.getValue();
+        const sTargetAchievement = parseFloat((this.byId("targetAchievementInput") as Input)?.getValue());
         const sTargetDescription = (this.byId("targetDescriptionInput") as Input)?.getValue();
         const path = this._oEditContext.getPath()
         // Retrieve the model

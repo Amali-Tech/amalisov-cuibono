@@ -1,7 +1,7 @@
 import { Route$MatchedEvent } from "sap/ui/core/routing/Route";
 import Formatter from "../model/formatter";
 import BaseController from "./BaseController";
-import { DialogInfo, InitializationHelper, RouterArguments } from "../model/initialData";
+import { DialogInfo, InitializationHelper, RouterArguments, Tranche } from "../model/initialData";
 import MessageToast from "sap/m/MessageToast";
 import Table from "sap/m/Table";
 import Filter from "sap/ui/model/Filter";
@@ -13,13 +13,13 @@ import FilterBar from "sap/ui/comp/filterbar/FilterBar";
 import ComboBox from "sap/m/ComboBox";
 import MultiComboBox from "sap/m/MultiComboBox";
 import MultiInput from "sap/m/MultiInput";
-import ValueHelpDialog from "sap/ui/comp/valuehelpdialog/ValueHelpDialog";
 import Fragment from "sap/ui/core/Fragment";
 import Token from "sap/m/Token";
 import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
 import Event from "sap/ui/base/Event";
 import Control from "sap/ui/core/Control";
+import ODataModel from "sap/ui/model/odata/v4/ODataModel";
 
 /**
  * @namespace amalisov.cuibono.controller
@@ -32,6 +32,7 @@ export default class Participants extends BaseController {
     private _oFilterBar: FilterBar;
     private _oDialog: Dialog | null = null;
     private _oCurrentMultiInput: MultiInput;
+    private _oDialogExclude: Dialog | null = null;
 
 
     public onInit(): void {
@@ -41,7 +42,10 @@ export default class Participants extends BaseController {
         this._oFilterBar = this.byId("participantFilterbar") as FilterBar;
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
-        const oDialogModel = new JSONModel({ title: this.getI18nText("filterbyvalue"), label: this.getI18nText("entervalues"), searchValues: "" } as DialogInfo);
+        const oDialogModel = new JSONModel({
+            title: this.getI18nText("filterbyvalue"),
+            label: this.getI18nText("entervalues"), searchValues: ""
+        } as DialogInfo);
         this.getView()?.setModel(oDialogModel, "dialogInfo");
     }
 
@@ -70,7 +74,6 @@ export default class Participants extends BaseController {
         }
     }
     public onSearchParticipants(): void {
-
         // Initialize an array to hold the filters
         const aFilters: Filter[] = [];
         // Get all filter items, including hidden ones
@@ -79,7 +82,7 @@ export default class Participants extends BaseController {
         aFilterItems.forEach((oItem) => {
             const oControl = oItem.getControl();
             if (oControl) {
-                let sValue: string | string[] | Date[] | null = "";
+                let sValue: string | string[] | Date[] | boolean[] | null = "";
                 let sPath: string = "";
                 const sOperator: FilterOperator = FilterOperator.Contains;
 
@@ -113,6 +116,14 @@ export default class Participants extends BaseController {
                             });
                             aFilters.push(oCombinedFilter);
                         }
+                        else if (Array.isArray(sValue) && oItem.getName() === "excluded") {
+                            // Create filters for other array values
+
+                            sValue.forEach((val) => {
+                                aFilters.push(new Filter({ path: sPath, operator: FilterOperator.EQ, value1: val }));
+                            });
+
+                        }
                         else if (Array.isArray(sValue)) {
                             // Create filters for other array values
 
@@ -139,7 +150,7 @@ export default class Participants extends BaseController {
             this.messageShow("tableBinding"); // Show error if table binding fails
         }
     }
-    private getControlValue(oControl: Control, oItem: FilterItem): string | string[] | null {
+    private getControlValue(oControl: Control, oItem: FilterItem): string | string[] | boolean[] | null {
         // Check if the control is a MultiComboBox and get selected keys
         if ((oControl as ComboBox).getSelectedKey && (oControl as ComboBox).getSelectedKey() && oItem.getName() === "fiscalYear") {
             const fiscalYear = (oControl as ComboBox).getSelectedKey();
@@ -151,6 +162,19 @@ export default class Participants extends BaseController {
 
             // Use the dynamically generated dates (formatted as "YYYY-MM-DD")
             return [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
+        }
+        else if (
+            (oControl as MultiComboBox).getSelectedKeys && oItem.getName() === "excluded"
+        ) {
+            const values: boolean[] = [];
+            (oControl as MultiComboBox).getSelectedKeys().forEach((oItem) => {
+                if (oItem === "Yes") {
+                    values.push(true)
+                } else {
+                    values.push(false)
+                }
+            })
+            return values
         }
         else if (
             (oControl as MultiComboBox).getSelectedKeys
@@ -182,7 +206,7 @@ export default class Participants extends BaseController {
             case "participantName":
                 return "participant/firstName";
             case "department":
-                return "participant/department";
+                return "participant/department/name";
             case "trancheName":
                 return "bonusTranche/name";
             case "excluded":
@@ -226,11 +250,11 @@ export default class Participants extends BaseController {
                 name: "amalisov.cuibono.view.fragment.LocalID",  // Update the path to your fragment
                 controller: this
             }).then((oDialog) => {
-                this._oDialog = oDialog as ValueHelpDialog;
+                this._oDialog = oDialog as Dialog;
                 this.getView()?.addDependent(this._oDialog);
                 this._oDialog.open();
             }).catch(() => {
-                this.messageShow("Error loading fragment")
+                this.messageShow("Errorloadingfragment")
             });
         } else {
             this._oDialog.open();
@@ -282,4 +306,55 @@ export default class Participants extends BaseController {
     private messageShow = (error: string): void => {
         MessageToast.show(this.getI18nText(error));
     };
+    public onExcludePress(): void {
+        if (!this._oDialogExclude) {
+            // Load the fragment asynchronously
+            Fragment.load({
+                id: this.getView()?.getId(),
+                name: "amalisov.cuibono.view.fragment.excludeParticipant",  // Update the path to your fragment
+                controller: this
+            }).then((oDialog) => {
+                this._oDialogExclude = oDialog as Dialog;
+                this.getView()?.addDependent(this._oDialogExclude);
+                this._oDialogExclude.open();
+            }).catch(() => {
+                this.messageShow("Errorloadingfragment")
+            });
+        } else {
+            this._oDialogExclude.open();
+        }
+    }
+    public onExcludeDialogCancelPress(): void {
+        this._oDialogExclude!.close();
+    }
+    public onExcludeDialogOkPress(): void {
+
+        const oTextField = this.byId("justificationMessage") as TextArea
+        const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
+        const oSelecteditems = this._oTable1.getSelectedItems()
+        const trancheParticipationIDs: string[] = []
+        const justificationMessage: string = oTextField.getValue()
+        if (!justificationMessage) {
+            this.messageShow("justificationEmpty")
+            return
+        }
+        oSelecteditems.forEach((oItem) => {
+            const oContext = oItem.getBindingContext("trancheModel");
+            const oData = oContext?.getObject() as Tranche;
+            trancheParticipationIDs.push(oData.ID)
+        })
+        const sBindingPath = '/excludeParticipants(...)';
+
+        oModel?.bindContext(sBindingPath)
+            .setParameter('trancheParticipationIds', trancheParticipationIDs)
+            .setParameter('justification', justificationMessage)
+            .invoke().then(() => {
+                oModel.refresh();
+                this.messageShow("excludeSuccess")
+                this.onExcludeDialogCancelPress()
+            })
+            .catch(() => {
+                this.messageShow("excludeFailed")
+            });
+    }
 }

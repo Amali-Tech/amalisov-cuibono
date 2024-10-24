@@ -199,7 +199,7 @@
                     <m:Column>
                         <m:Text text="{i18n>targetWeight}" />
                     </m:Column>
-                    <m:Column hAlign="End">
+                    <m:Column hAlign="Left">
                         <m:Text text="{i18n>achievements}" />
                     </m:Column>
                     <m:Column>
@@ -243,26 +243,41 @@
                 </m:items>
             </m:Table>
             <m:VBox class="totalTrancheWeight sapUiLargeMarginBottom">
-                <m:HBox class="totalBox">
-                    <m:Title
-                        text="{i18n>total}"
-                        class="totalTitle"
-                    />
+                <m:FlexBox
+                    class="totalBox"
+                    justifyContent="SpaceAround"
+                >
+                    <m:FlexBox
+                        width="25%"
+                        justifyContent="Start"
+                    >
+                        <m:Title
+                            text="{i18n>total}"
+                            class="totalTitle"
+                        />
+                    </m:FlexBox>
 
-                    <m:ToolbarSpacer />
-                    <m:Text
-                        text="{ 
-                        path: 'trancheData>/totalWeight', 
-                        formatter: '.formatter.formatPercentage' 
-                    }"
-                        class="{ 
-                        path: 'trancheData>/totalWeight', 
-                        formatter: '.formatter.formatTextClass'
-                    }"
-                    />
-
-                    <m:ToolbarSpacer />
-                </m:HBox>
+                    <m:FlexBox
+                        width="25%"
+                        justifyContent="Center"
+                    >
+                        <core:Icon
+                            color="red"
+                            src="sap-icon://alert"
+                            visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
+                            class="iconAlert"
+                        />
+                        <m:Text
+                            text="{ 
+                                path: 'trancheData>/totalWeight', 
+                                formatter: '.formatter.formatPercentage' 
+                            }"
+                            class=""
+                        />
+                    </m:FlexBox>
+                    <m:VBox width="25%" />
+                    <m:VBox width="25%" />
+                </m:FlexBox>
             </m:VBox>
         </m:VBox>
 
@@ -299,7 +314,7 @@
                 />
                 <m:Button
                     press=".onDiscardPress"
-                    type="Default"
+                    type="Reject"
                     text="{i18n>discard}"
                 />
             </m:OverflowToolbar>

@@ -18,7 +18,7 @@ export interface Tranche {
 }
 export interface Target {
     name: string
-    achievement: string
+    achievement: number
     weight: number
     description?: string
 }
@@ -80,6 +80,10 @@ export class InitializationHelper {
                 { key: "2022-2023", text: this.getI18nText("2022-2023") },
                 { key: "2023-2024", text: this.getI18nText("2023-2024") },
                 { key: "2024-2025", text: this.getI18nText("2024-2025") },
+            ],
+            excluded: [
+                { key: "Yes", text: this.getI18nText("Yes") },
+                { key: "No", text: this.getI18nText("No") },
             ]
         }
     }

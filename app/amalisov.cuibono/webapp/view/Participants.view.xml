@@ -38,7 +38,10 @@
                                 id="statusMultiCombo2"
                                 name="status"
                                 class="filtersStyle"
-                                items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
+                                items="{
+                                    path: 'dropdownModel>/trancheStatus',
+                                    templateShareable: true
+                                }"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
@@ -63,7 +66,10 @@
                                 id="locationMultiCombo2"
                                 name="location"
                                 class="filtersStyle"
-                                items="{path: 'trancheModel>/Location',templateShareable: true}"
+                                items="{
+                                    path: 'trancheModel>/Location',
+                                    templateShareable: true
+                                }"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
@@ -86,7 +92,10 @@
                             <m:ComboBox
                                 id="fiscalMultiCombo2"
                                 name="fiscalYear"
-                                items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
+                                items="{
+                                    path: 'dropdownModel>/fiscalYear',
+                                    templateShareable: true
+                                }"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
@@ -188,11 +197,13 @@
                                 id="excludedSelect"
                                 name="excluded"
                                 class="filtersStyle"
-                                items="{path: '',templateShareable: true}"
+                                items="{
+                                    path: 'dropdownModel>/excluded',
+                                    templateShareable: true
+                                }"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
-                                    id="selectItems2"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
                                 />
@@ -211,7 +222,12 @@
                 inset="false"
                 growing="true"
                 growingThreshold="10"
-                items="{ path: 'trancheModel>/TrancheParticipation', parameters: { $expand: 'participant($expand=department),bonusTranche($expand=Location)' } }"
+                items="{ 
+                    path: 'trancheModel>/TrancheParticipation', 
+                    parameters: { 
+                        $expand: 'participant($expand=department),bonusTranche($expand=Location)' 
+                    } 
+                }"
                 width="auto"
                 class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
                 mode="MultiSelect"
@@ -226,7 +242,7 @@
                         <m:Button
                             text="{i18n>excludeTranche}"
                             type="Emphasized"
-                            press="onCreateTranche"
+                            press=".onExcludePress"
                         />
                         <m:Button
                             text="{i18n>overrideAmount}"
@@ -294,7 +310,7 @@
                                 text="{trancheModel>participant/firstName}  {trancheModel>participant/lastName}"
                             />
                             <m:Text
-                                text="{ path: 'trancheModel>/participant/department', formatter: '.formatter.formatNullValue' }"
+                                text="{ path: 'trancheModel>participant/department/name', formatter: '.formatter.formatNullValue' }"
                             />
 
                             <m:Text text="{trancheModel>bonusTranche/name}" />
@@ -305,25 +321,31 @@
                             />
                             <m:Text
                                 text="{
-                        path: 'trancheModel>bonusTranche/beginDate',
-                        formatter: '.formatter.formatDate'
-                    }"
+                                    path: 'trancheModel>bonusTranche/beginDate',
+                                    formatter: '.formatter.formatDate'
+                                }"
                             />
                             <m:Text
                                 text="{
-                        path: 'trancheModel>bonusTranche/endDate',
-                        formatter: '.formatter.formatDate'
-                    }"
+                                    path: 'trancheModel>bonusTranche/endDate',
+                                    formatter: '.formatter.formatDate'
+                                }"
                             />
                             <m:Text
                                 text="{trancheModel>bonusTranche/trancheWeight}"
                             />
 
                             <m:Text
-                                text="{ path: 'trancheModel>calculatedPayoutAmount', formatter: '.formatter.formatNullValue' }"
+                                text="{ 
+                                    path: 'trancheModel>calculatedPayoutAmount', 
+                                    formatter: '.formatter.formatNullValue' 
+                                }"
                             />
                             <m:Text
-                                text="{ path: 'trancheModel>finalPayoutAmount', formatter: '.formatter.formatNullValue' }"
+                                text="{ 
+                                    path: 'trancheModel>finalPayoutAmount', 
+                                    formatter: '.formatter.formatNullValue' 
+                                }"
                             />
 
                             <m:Text text="{trancheModel>excluded}" />
