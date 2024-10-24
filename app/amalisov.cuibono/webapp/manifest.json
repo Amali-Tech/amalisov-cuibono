@@ -128,7 +128,7 @@
         },
         "AddEditTranche": {
           "viewId": "AddEditTranche",
-          "transition": "slide",
+          "transition": "show",
           "viewName": "AddEditTranche"
         },
         "BonusTranches": {
