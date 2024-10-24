@@ -77,6 +77,8 @@
 }
 
 .totalTrancheWeightText {
+    display: flex;
+    
 
     text-align: right;
 
@@ -85,9 +87,9 @@
 
 
 
-.totalTitle {
+/* .totalTitle {
     margin-left: 15px;
-}
+} */
 
 .ToolbarSpacer {
     min-width: 0;
@@ -174,4 +176,10 @@
 
 .totalBox {
     margin-left: 50px;
+}
+
+.disabledRow {
+    background-color: #f0f0f0; 
+    pointer-events: none; 
+    opacity: 0.6; 
 }

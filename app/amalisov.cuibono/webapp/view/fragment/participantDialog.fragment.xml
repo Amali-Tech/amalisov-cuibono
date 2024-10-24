@@ -1,0 +1,38 @@
+<core:FragmentDefinition xmlns:m="sap.m" xmlns:core="sap.ui.core">
+    <m:ViewSettingsDialog
+        class="sapUiResponsiveMargin"
+        id="participantSorter"
+        confirm=".onSortParticipant"
+        cancel=".onSortCancel"
+    >
+        <!-- Aggregation for sort items -->
+        <m:sortItems>
+            <m:ViewSettingsItem
+                text="{i18n>bonusTranche}"
+                key="sortName"
+                id="sortName"
+            />
+            <m:ViewSettingsItem
+                text="{i18n>location}"
+                key="sortLocation"
+                id="sortLocation"
+            />
+            <m:ViewSettingsItem
+                text="{i18n>status}"
+                key="sortStatus"
+                id="sortStatus"
+            />
+            <m:ViewSettingsItem
+            text="{i18n>fullName}"
+            key="sortFullName"
+            id="sortFullName"
+        />
+       
+        <m:ViewSettingsItem
+            text="{i18n>department}"
+            key="sortDepartment"
+            id="sortDepartment"
+        />
+        </m:sortItems>
+    </m:ViewSettingsDialog>
+</core:FragmentDefinition>

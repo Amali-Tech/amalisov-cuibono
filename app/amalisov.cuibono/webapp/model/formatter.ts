@@ -57,6 +57,34 @@ formatNullValue: (value: string | null) => {
 
     return percentage;
   },
+
+  formatTruncatedId: function (sId: string): string {
+    if (!sId) return "";
+    
+    return sId.substring(0, 8) + "...";
+},
+
+
+formatIdTooltip: function (sId: string): string {
+    return sId || "";
+},
+
+formatSelectionMode: (status: string) => {
+  return status === "Completed" ? "None" : "MultiSelect";
+},
+disableSelection: (status: string) => {
+  return status === "Completed";
+},
+isSelectionEnabled: (status: string): boolean => {
+  return status !== "Completed";
+},
+
+// New formatter for row styling based on status
+formatRowSelectable: (status: string): string => {
+  return status === "Completed" ? "disabledRow" : "";
+}
 };
+
+
 
 export default Formatter;
