@@ -2,6 +2,18 @@ namespace cuibono;
 
 using {managed} from '@sap/cds/common';
 
+type TrancheStatusEnum             : String @assert.range enum {
+  Running;
+  Locked;
+  Completed;
+};
+
+type ParticipantCreationStatusEnum : String @assert.range enum {
+  InProcess;
+  Failed;
+  Done;
+}
+
 entity Location {
   key ID   : UUID;
       name : String(50) not null;
@@ -23,9 +35,11 @@ entity BonusTranche : managed {
       beginDate                 : DateTime   @mandatory;
       endDate                   : DateTime   @mandatory;
       dateOfOrigin              : DateTime   @mandatory;
-      status                    : String default 'Running';
+      status                    : TrancheStatusEnum default 'Running';
       trancheWeight             : Decimal;
-      participantCreationStatus : String default 'InProcess';
+      participantCreationStatus : ParticipantCreationStatusEnum default 'InProcess';
+      fiscalYear                : String;
+
       Target                    : Association to many Target
                                     on Target.BonusTranche = $self;
       trancheParticipation      : Association to many TrancheParticipation

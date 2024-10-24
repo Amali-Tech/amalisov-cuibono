@@ -12,13 +12,16 @@ service BonusTrancheService @(requires: 'authenticated-user') {
     @readonly
     entity Location             as projection on db.Location;
 
+    @readyonly
+    entity Department           as projection on db.Department;
+
     action updateBonusTranche(bonusTrancheId : String @mandatory,
                               name : String @mandatory,
                               beginDate : DateTime @mandatory,
                               endDate : DateTime @mandatory,
                               dateOfOrigin : DateTime @mandatory,
                               description : String,
-                              status : String,
+                              status : db.TrancheStatusEnum,
                               trancheWeight : Decimal,
                               Location_ID : String @mandatory,
                               targets : array of Target @mandatory ) returns BonusTranche;
