@@ -38,6 +38,7 @@ entity BonusTranche : managed {
       status                    : TrancheStatusEnum default 'Running';
       trancheWeight             : Decimal;
       participantCreationStatus : ParticipantCreationStatusEnum default 'InProcess';
+      fiscalYear                : String;
 
       Target                    : Association to many Target
                                     on Target.BonusTranche = $self;
