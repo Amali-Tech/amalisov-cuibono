@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Dialog title="Override Amount" class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer">
+        <content>
+            <VBox>
+                <Input
+                    id="amountInput"
+                    type="Number"
+                    placeholder="Enter amount"
+                    required="true"
+                />
+                <TextArea
+                    id="justificationInput"
+                    placeholder="Enter justification"
+                    rows="6"
+                    required="true"
+                     class="customInput"
+                />
+            </VBox>
+        </content>
+        <buttons>
+            <Button text="Submit" type="Emphasized" press=".onSubmitOverride"/>
+            <Button text="Cancel" press=".onCancelOverride"/>
+            
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>
