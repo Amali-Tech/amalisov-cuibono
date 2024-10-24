@@ -15,6 +15,10 @@ import {
   TrancheParticipation,
 } from "../../@cds-models/BonusTrancheService";
 import { DeleteParam } from "../utils/types/delete-bonus-tranche";
+import {
+  ParticipantCreationStatusEnum,
+  TrancheStatusEnum,
+} from "../../@cds-models/cuibono";
 
 const logger = cds.log("Bonus Tranche handler.");
 
@@ -40,14 +44,14 @@ export class BonusTrancheHandler {
         return req.error(400, "Total weight of targets must not exceed 100%");
       }
 
-      if (totalTargetsWeight !== 100 && status === "Locked") {
+      if (totalTargetsWeight !== 100 && status === TrancheStatusEnum.Locked) {
         return req.error(
           400,
           "The target should have a total weight of 100% while the status in Locked"
         );
       }
 
-      if (status === "Completed") {
+      if (status === TrancheStatusEnum.Completed) {
         return req.error(400, "Cannot create a bonus tranche as completed");
       }
 
@@ -95,15 +99,15 @@ export class BonusTrancheHandler {
     });
 
     job.on("succeeded", async () => {
-      await UPDATE(BonusTranche.name)
-        .where({ ID: newBonusTranche.ID })
-        .with({ participantCreationStatus: "Done" });
+      await UPDATE(BonusTranche.name).where({ ID: newBonusTranche.ID }).with({
+        participantCreationStatus: ParticipantCreationStatusEnum.Done,
+      });
     });
 
     job.on("failed", async (error) => {
-      await UPDATE(BonusTranche.name)
-        .where({ ID: newBonusTranche.ID })
-        .with({ participantCreationStatus: "Failed" });
+      await UPDATE(BonusTranche.name).where({ ID: newBonusTranche.ID }).with({
+        participantCreationStatus: ParticipantCreationStatusEnum.Failed,
+      });
 
       logger.error("Error in participant creation Job: \n", error);
       throw error;
