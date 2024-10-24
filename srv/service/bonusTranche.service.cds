@@ -35,6 +35,4 @@ service BonusTrancheService @(requires: 'authenticated-user') {
     action excludeParticipants(trancheParticipationIds : array of UUID @mandatory,
                                justification : String @mandatory )   returns {};
 
-    @readyonly
-    entity Department           as projection on db.Department;
 }

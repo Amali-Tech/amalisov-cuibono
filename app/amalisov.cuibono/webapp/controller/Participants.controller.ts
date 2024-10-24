@@ -151,12 +151,7 @@ export default class Participants extends BaseController {
         // Check if the control is a MultiComboBox and get selected keys
         if ((oControl as ComboBox).getSelectedKey && (oControl as ComboBox).getSelectedKey() && oItem.getName() === "fiscalYear") {
             const fiscalYear = (oControl as ComboBox).getSelectedKey();
-            const [startYear, endYear] = fiscalYear.trim().split('-').map(year => parseInt(year, 10));
-
-            const startDate = new Date(startYear, 9, 22);
-            const endDate = new Date(endYear, 9, 22);
-
-            return [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
+            return fiscalYear
         }
         else if (
             (oControl as MultiComboBox).getSelectedKeys && oItem.getName() === "excluded"
@@ -195,7 +190,7 @@ export default class Participants extends BaseController {
             case "location":
                 return "bonusTranche/Location_ID";
             case "fiscalYear":
-                return "fiscal";
+                return "bonusTranche/fiscalYear";
             case "localID":
                 return "participant/ID";
             case "participantName":

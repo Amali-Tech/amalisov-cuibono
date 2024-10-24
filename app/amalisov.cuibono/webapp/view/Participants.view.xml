@@ -311,7 +311,7 @@
                                 text="{trancheModel>participant/firstName}  {trancheModel>participant/lastName}"
                             />
                             <m:Text
-                                text="{ path: 'trancheModel>participant/department/name', formatter: '.formatter.formatNullValue' }"
+                                text="{trancheModel>participant/department/name}"
                             />
 
                             <m:Text text="{trancheModel>bonusTranche/name}" />
