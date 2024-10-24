@@ -13,10 +13,10 @@
     >
         <m:HBox width="100%">
             <fb:FilterBar
-                id="filterbar"
+                id="participantFilterbar"
                 persistencyKey="myPersKey"
                 useToolbar="false"
-                search=""
+                search="onSearchParticipants"
                 dragDropConfig="move"
                 class="_filterBarClass"
             >
@@ -36,7 +36,7 @@
                         <fb:control>
                             <m:MultiComboBox
                                 id="statusMultiCombo2"
-                                name="bonusTrancheFilter"
+                                name="status"
                                 class="filtersStyle"
                                 items="{path: 'dropdownModel>/trancheStatus',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
@@ -61,15 +61,14 @@
                         <fb:control>
                             <m:MultiComboBox
                                 id="locationMultiCombo2"
-                                name="bonusTrancheFilter"
+                                name="location"
                                 class="filtersStyle"
-                                items="{path: 'dropdownModel>/trancheLocation',templateShareable: true}"
+                                items="{path: 'trancheModel>/Location',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
-                                    id="locationItems2"
-                                    key="{dropdownModel>key}"
-                                    text="{dropdownModel>text}"
+                                    key="{trancheModel>ID}"
+                                    text="{trancheModel>name}"
                                 />
                             </m:MultiComboBox>
                         </fb:control>
@@ -78,24 +77,25 @@
                     <!-- Fiscal Year Filter -->
                     <fb:FilterGroupItem
                         id="fiscalYearID2"
-                        name="fiscal"
+                        name="fiscalYear"
                         label="{i18n>fiscal}"
                         groupName="Group1"
                         visibleInFilterBar="true"
                     >
                         <fb:control>
-                            <m:MultiComboBox
+                            <m:ComboBox
                                 id="fiscalMultiCombo2"
-                                name="bonusTrancheFilter"
+                                name="fiscalYear"
                                 items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
+                                selectedKey="2024-2025"
                             >
                                 <core:Item
                                     id="filterItems2"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
                                 />
-                            </m:MultiComboBox>
+                            </m:ComboBox>
                         </fb:control>
                     </fb:FilterGroupItem>
 
@@ -111,7 +111,7 @@
                             <m:MultiInput
                                 name="localId"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpIdRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputGLocalId"
                                 showValueHelp="true"
                             />
@@ -121,16 +121,16 @@
                     <!-- Name Filter -->
                     <fb:FilterGroupItem
                         id="nameFilter2"
-                        name="name"
+                        name="participantName"
                         label="{i18n>nameOfParticipant}"
                         groupName="Group1"
                         visibleInFilterBar="true"
                     >
                         <fb:control>
                             <m:MultiInput
-                                name="partipantName"
+                                name="participantName"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpParticipantRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputParticipantName"
                                 showValueHelp="true"
                             />
@@ -149,7 +149,7 @@
                             <m:MultiInput
                                 name="department"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpDepartmentRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputDepartment"
                                 showValueHelp="true"
                             />
@@ -159,7 +159,7 @@
                     <!-- Tranche Filter -->
                     <fb:FilterGroupItem
                         id="trancheFilter2"
-                        name="tranche"
+                        name="trancheName"
                         label="{i18n>trancheName}"
                         groupName="Group1"
                         visibleInFilterBar="true"
@@ -168,7 +168,7 @@
                             <m:MultiInput
                                 name="trancheName"
                                 class="filtersStyle"
-                                valueHelpRequest=".onValueHelpTrancheRequested"
+                                valueHelpRequest=".onDialogRequested"
                                 id="multiInputTaxAmount"
                                 showValueHelp="true"
                             />
@@ -187,7 +187,7 @@
                         <fb:control>
                             <m:MultiComboBox
                                 id="excludedSelect"
-                                name="bonusTrancheFilter"
+                                name="excluded"
                                 class="filtersStyle"
                                 items="{path: '',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
@@ -208,10 +208,10 @@
             vertical="true"
         >
             <m:Table
-                id="idTranchesTable2"
+                id="idParticipantTable2"
                 inset="false"
                 growing="true"
-                growingThreshold="5"
+                growingThreshold="10"
                 items="{ path: 'trancheModel>/TrancheParticipation', parameters: { $expand: 'participant($expand=department),bonusTranche($expand=Location)' } }"
                 width="auto"
                 class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
@@ -229,13 +229,15 @@
                         text="{i18n>excludeTranche}"
                         type="Emphasized"
                         press="onCreateTranche"
-                        enabled="{viewModel>/isSelectionActive}"
+                               enabled="{viewModel>/isSelectionActive}"
+                      
                     />
                     <m:Button
                         text="{i18n>overrideAmount}"
                         type="Emphasized"
                         press=".onOpenOverrideDialog"
-                        enabled="{viewModel>/isSelectionActive}"
+                               enabled="{viewModel>/isSelectionActive}"
+                      
                     />
                         <m:OverflowToolbarButton
                             icon="sap-icon://sort"
@@ -291,15 +293,7 @@
                 <m:items>
                     <m:ColumnListItem
 
-                    type="Inactive"
-    class="{
-        path: 'trancheModel>bonusTranche/status',
-        formatter: '.formatter.formatRowSelectable'
-    }"
-    enableSelection="{
-        path: 'trancheModel>bonusTranche/status',
-        formatter: '.formatter.isSelectionEnabled'
-    }"
+                 
          
                     
                     >
@@ -307,11 +301,11 @@
                             <m:ObjectIdentifier 
                             
                             text="{
-                                path: 'trancheModel>ID',
+                                path: 'trancheModel>participant/ID',
                                 formatter: '.formatter.formatTruncatedId'
                             }"
                             tooltip="{
-                                path: 'trancheModel>ID',
+                                path: 'trancheModel>participant/ID',
                                 formatter: '.formatter.formatIdTooltip'
                             }"
                             />
@@ -328,7 +322,6 @@
                             <m:Text
                                 text="{trancheModel>bonusTranche/Location/name}"
                             />
-
                             <m:Text
                                 text="{
                         path: 'trancheModel>bonusTranche/beginDate',

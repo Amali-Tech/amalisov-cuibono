@@ -40,7 +40,7 @@ export default class BonusTranches extends BaseController {
         oRouter.getRoute("RouteMain")?.attachMatched(this.onRouteMatched, this);
         const oModel = new JSONModel(this.initialOdata.getDropdownData());
         this.getView()?.setModel(oModel, "dropdownModel");
-        this._oFilterBar = this.byId("filterbar2") as FilterBar;
+        this._oFilterBar = this.byId("bonusFilterBar") as FilterBar;
         this._oTable1 = this.byId("idTranchesTable") as Table;
         const oIdModel = new JSONModel({ currentEditId: "" });
         this.getView()?.setModel(oIdModel, "currentID");
@@ -96,7 +96,7 @@ export default class BonusTranches extends BaseController {
         if (trancheId) {
             const currentIdOBJ: CurrentEditID = { currentEditId: trancheId }
             this.updateModelData("currentID", currentIdOBJ)
-            const oQuery = {
+            const oQuery: RouterArguments = {
                 "?query": {
                     tab: "bonusTranches",
                     operation: "edit",
@@ -116,7 +116,7 @@ export default class BonusTranches extends BaseController {
 
         const trancheId = oContext?.getProperty("ID");
         if (trancheId) {
-            const oQuery = {
+            const oQuery: RouterArguments = {
                 "?query": {
                     tab: "bonusTranches",
                     operation: "create",
@@ -191,7 +191,7 @@ export default class BonusTranches extends BaseController {
                 let sPath: string = "";
                 const sOperator: FilterOperator = FilterOperator.Contains;
                 // Check if the control is a MultiComboBox and get selected keys
-                if ((oControl as ComboBox).getSelectedKey && oItem.getName() === "fiscalYear") {
+                if ((oControl as ComboBox).getSelectedKey && (oControl as ComboBox).getSelectedKey() && oItem.getName() === "fiscalYear") {
                     const fiscalYear = (oControl as ComboBox).getSelectedKey();
                     const [startYear, endYear] = fiscalYear.trim().split('-').map(year => parseInt(year, 10));
                     // Generate the start and end dates dynamically (e.g., 22 October for both years)
@@ -233,16 +233,16 @@ export default class BonusTranches extends BaseController {
                     }
                 }
             }
-            // Apply filters to the table binding
-            if (this._oTable1 && this._oTable1.getBinding) {
-                const oBinding = this._oTable1.getBinding("items") as ListBinding;
-                if (oBinding) {
-                    oBinding.filter(aFilters);
-                }
-            } else {
-                this.messageShow("tableBinding"); // Show error if table binding fails
-            }
         })
+        // Apply filters to the table binding
+        if (this._oTable1 && this._oTable1.getBinding) {
+            const oBinding = this._oTable1.getBinding("items") as ListBinding;
+            if (oBinding) {
+                oBinding.filter(aFilters);
+            }
+        } else {
+            this.messageShow("tableBinding"); // Show error if table binding fails
+        }
     }
 
     private getPathName(oItem: FilterItem): string {

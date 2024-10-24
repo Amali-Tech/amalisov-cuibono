@@ -16,6 +16,7 @@ import Context from "sap/ui/model/odata/v4/Context";
 import CustomListItem from "sap/m/CustomListItem";
 import Formatter from "../model/formatter";
 import TextArea from "sap/m/TextArea";
+import IconTabBar from "sap/m/IconTabBar";
 
 /**
  * @namespace amalisov.cuibono.controller
@@ -28,6 +29,7 @@ export default class AddEditTranche extends BaseController {
     private _oEditContext: Context;
     private currentOperation: "edit" | "create" | null = null
     private targetCurrentOperation: "edit" | "create"
+    private currentTrancheID: string = ""
 
     public onInit(): void {
         this.initialOdata = new InitializationHelper(this.getI18nText.bind(this));
@@ -41,11 +43,19 @@ export default class AddEditTranche extends BaseController {
         this.getView()?.setModel(currentView, "currentView");
         const oToday = new Date();
         const oTrancheDataModel = this.getView()?.getModel("trancheData") as JSONModel;
-         oTrancheDataModel.setProperty("/currentDate", oToday);
+        oTrancheDataModel.setProperty("/currentDate", oToday);
     }
     private onRouteMatched = (oEvent: Route$MatchedEvent): void => {
         const oArgs = oEvent.getParameter("arguments") as RouterArguments;
         const oQuery = oArgs["?query"];
+
+        // Access the IconTabBar control
+        const iconTabBar = this.byId("IconTabBarNoIcons") as IconTabBar;
+
+        // Set the selected tab based on tabKey from URL
+        if (iconTabBar) {
+            iconTabBar.setSelectedKey(oQuery?.tab || "bonusTranche");
+        }
 
         if (oQuery && oQuery.operation === "edit" && oQuery.trancheId) {
             this.currentOperation = "edit"
@@ -69,7 +79,6 @@ export default class AddEditTranche extends BaseController {
             this.onEditTranche()
         }
     }
-
     public async onCreatePress(): Promise<void> {
         try {
             const trancheName = this.byId("trancheName") as Input;
@@ -157,7 +166,6 @@ export default class AddEditTranche extends BaseController {
 
         return `${year}-${month}-${day}`;
     }
-
     public async onEditTranche(): Promise<void> {
 
         const trancheLocation = this.byId("trancheLocation") as ComboBox;
@@ -205,9 +213,6 @@ export default class AddEditTranche extends BaseController {
                 }
             );
     }
-
-
-
     private _duplicateTranche(trancheId: string): void {
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
         const sBindingPath = `/BonusTranche('${trancheId}')`;
@@ -222,12 +227,12 @@ export default class AddEditTranche extends BaseController {
                 const duplicateData: Partial<Tranche> = {
                     name: oData.name,
                     Location_ID: oData.Location_ID,
-                    description: oData.description ,
-                    trancheWeight: oData.trancheWeight ,
-                    status: "Running", 
+                    description: oData.description,
+                    trancheWeight: oData.trancheWeight,
+                    status: "Running",
                     Target: oData.Target.map((target) => ({
-                        name: target.name ,
-                        weight: target.weight ,
+                        name: target.name,
+                        weight: target.weight,
                         achievement: target.achievement,
                         description: target.description,
                     })),
@@ -244,10 +249,10 @@ export default class AddEditTranche extends BaseController {
                 MessageToast.show(this.getI18nText("errorDuplicatingTranche"));
             });
     }
-
     private _loadTrancheDetails(trancheId: string): void {
         // Get the OData V4 model
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
+        this.currentTrancheID = trancheId
         const sBindingPath = `/BonusTranche('${trancheId}')`;
         // Create a context binding (without binding it to the view)
         const oContextBinding = oModel.bindContext(sBindingPath, undefined, {
@@ -278,9 +283,6 @@ export default class AddEditTranche extends BaseController {
                 MessageToast.show(this.getI18nText("FetchError"));
             });
     }
-
-
-
     public onAddTarget(): void {
         this.targetCurrentOperation = "create"
         this.checkDialog()
@@ -294,10 +296,6 @@ export default class AddEditTranche extends BaseController {
             MessageToast.show(this.getI18nText("errorDialog"))
         });
     }
-
-
-
-
     private updateModelData(
         modelName: string,
         data: object,
@@ -326,7 +324,6 @@ export default class AddEditTranche extends BaseController {
             });
         }
     }
-
     public CreateTarget() {
 
         // Get the new target details from the input fields
@@ -453,7 +450,6 @@ export default class AddEditTranche extends BaseController {
             oDialog.destroy();
         }
     }
-
     public onDeleteTargetPress(oEvent: Event) {
         // Get the row/context binding where the delete button was pressed
         const oItem = <CustomListItem>oEvent.getSource(); // ColumnListItem or CustomListItem
@@ -481,8 +477,6 @@ export default class AddEditTranche extends BaseController {
         }
         this.updateTotalWeightDisplay()
     }
-
-
     private updateTotalWeightDisplay(): void {
         const totalWeight = this.calculateTotalTargetWeight();
         const oModel = this.getView()?.getModel("trancheData") as JSONModel;;
@@ -518,12 +512,15 @@ export default class AddEditTranche extends BaseController {
     private messageShow = (error: string): void => {
         MessageToast.show(this.getI18nText(error));
     };
-
+    // onLockTranche handler
+    public onLockTranche(): void {
+        this.updateTrancheStatus("Locked");
+    }
 
     public updateTrancheStatus(status: string): void {
         const oModel = this.getView()?.getModel("trancheModel") as ODataModel;
         const oTrancheData = this.getView()?.getModel("trancheData")?.getObject("/") as Tranche;
-    
+
         if (oTrancheData && oModel) {
             // Keep the other required fields and change only the status
             const updatedTranche = {
@@ -537,9 +534,9 @@ export default class AddEditTranche extends BaseController {
                 targets: oTrancheData.Target,
                 status: status, // Update status based on the input
             };
-    
+
             const sBindingPath = "/updateBonusTranche(...)"; // Specify the correct path
-    
+
             oModel
                 ?.bindContext(sBindingPath)
                 .setParameter("bonusTrancheId", updatedTranche.bonusTrancheId)
@@ -564,7 +561,7 @@ export default class AddEditTranche extends BaseController {
                 });
         }
     }
-    
+
     // Helper function to get success message based on the status
     private getSuccessMessageForStatus(status: string): string {
         switch (status) {
@@ -578,7 +575,7 @@ export default class AddEditTranche extends BaseController {
                 return "";
         }
     }
-    
+
     // Helper function to get error message based on the status
     private getErrorMessageForStatus(status: string): string {
         switch (status) {
@@ -592,207 +589,213 @@ export default class AddEditTranche extends BaseController {
                 return "";
         }
     }
-    
+
     // onReOpenTranche handler
     public onReOpenTranche(): void {
         this.updateTrancheStatus("Running");
     }
-    
+
     // onCompleteTranche handler
     public onCompleteTranche(): void {
         const oTrancheData = this.getView()?.getModel("trancheData")?.getObject("/");
-    
+
         if (oTrancheData && oTrancheData.totalWeight === 100) {
             this.updateTrancheStatus("Completed");
         } else {
             MessageToast.show(this.getI18nText("cannotCompleteTrancheNot100"));
         }
     }
-    
-    // onLockTranche handler
-    public onLockTranche(): void {
-        this.updateTrancheStatus("Locked");
-    }
-    
-  
 
-private validateDateString(dateStr: string): Date | null {
-    const dateRegex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
-    const match = dateStr.match(dateRegex);
-    
-    if (!match) return null;
-    
-    const [, day, month, year] = match;
-    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-    
-    if (date.getDate() !== parseInt(day) || 
-        date.getMonth() !== parseInt(month) - 1 || 
-        date.getFullYear() !== parseInt(year)) {
-        return null;
-    }
-    
-    return date;
-}
 
-public onStartDateInput(oEvent: Event): void {
-    const oStartDatePicker = oEvent.getSource() as DatePicker;
-    const sValue = oStartDatePicker.getValue();
-    const oToday = new Date();
-    oToday.setHours(0, 0, 0, 0);
 
-    if (!sValue) {
-        oStartDatePicker.setValueState("None");
-        return;
+    private validateDateString(dateStr: string): Date | null {
+        const dateRegex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
+        const match = dateStr.match(dateRegex);
+
+        if (!match) return null;
+
+        const [, day, month, year] = match;
+        const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+
+        if (date.getDate() !== parseInt(day) ||
+            date.getMonth() !== parseInt(month) - 1 ||
+            date.getFullYear() !== parseInt(year)) {
+            return null;
+        }
+
+        return date;
     }
 
-    const oDate = this.validateDateString(sValue);
-    
-    if (!oDate) {
-        oStartDatePicker.setValueState("Error");
-        oStartDatePicker.setValueStateText(this.getI18nText("invalidDate"));
-        return;
+    public onStartDateInput(oEvent: Event): void {
+        const oStartDatePicker = oEvent.getSource() as DatePicker;
+        const sValue = oStartDatePicker.getValue();
+        const oToday = new Date();
+        oToday.setHours(0, 0, 0, 0);
+
+        if (!sValue) {
+            oStartDatePicker.setValueState("None");
+            return;
+        }
+
+        const oDate = this.validateDateString(sValue);
+
+        if (!oDate) {
+            oStartDatePicker.setValueState("Error");
+            oStartDatePicker.setValueStateText(this.getI18nText("invalidDate"));
+            return;
+        }
+
+        if (oDate < oToday) {
+            oStartDatePicker.setValueState("Error");
+            oStartDatePicker.setValueStateText(this.getI18nText("startDatePast"));
+        } else {
+            oStartDatePicker.setValueState("None");
+
+            // Update end date constraints
+            const oEndDatePicker = this.byId("endDate") as DatePicker;
+            const oMinEndDate = new Date(oDate);
+            oMinEndDate.setDate(oMinEndDate.getDate() + 1);
+            oEndDatePicker.setMinDate(oMinEndDate);
+        }
+
+    }
+    public onTabSelect(oEvent: Event): void {
+        const selectedKey = oEvent.getParameter("selectedKey" as never);
+        const oQuery: RouterArguments = {
+            "?query": {
+                tab: selectedKey,
+                trancheId: this.currentTrancheID
+            }
+        }
+        this.getRouter().navTo("RouteMain", oQuery, true);
     }
 
-    if (oDate < oToday) {
-        oStartDatePicker.setValueState("Error");
-        oStartDatePicker.setValueStateText(this.getI18nText("startDatePast"));
-    } else {
-        oStartDatePicker.setValueState("None");
-        
-        // Update end date constraints
+    public onEndDateInput(oEvent: Event): void {
+        const oEndDatePicker = oEvent.getSource() as DatePicker;
+        const sValue = oEndDatePicker.getValue();
+
+        if (!sValue) {
+            oEndDatePicker.setValueState("None");
+            return;
+        }
+
+        const oEndDate = this.validateDateString(sValue);
+
+        if (!oEndDate) {
+            oEndDatePicker.setValueState("Error");
+            oEndDatePicker.setValueStateText(this.getI18nText("invalidDate"));
+            return;
+        }
+
+        const oStartDatePicker = this.byId("beginDate") as DatePicker;
+        const oStartDate = oStartDatePicker.getDateValue();
+
+        if (oStartDate && oEndDate <= oStartDate) {
+            oEndDatePicker.setValueState("Error");
+            oEndDatePicker.setValueStateText(this.getI18nText("endDateBeforeStart"));
+        } else {
+            oEndDatePicker.setValueState("None");
+
+            // Update origin date constraints
+            const oOriginDatePicker = this.byId("trancheOriginDate") as DatePicker;
+            const oMinOriginDate = new Date(oEndDate);
+            oMinOriginDate.setDate(oMinOriginDate.getDate() + 1);
+            oOriginDatePicker.setMinDate(oMinOriginDate);
+        }
+    }
+
+    public onOriginDateInput(oEvent: Event): void {
+        const oOriginDatePicker = oEvent.getSource() as DatePicker;
+        const sValue = oOriginDatePicker.getValue();
+
+        if (!sValue) {
+            oOriginDatePicker.setValueState("None");
+            return;
+        }
+
+        const oOriginDate = this.validateDateString(sValue);
+
+        if (!oOriginDate) {
+            oOriginDatePicker.setValueState("Error");
+            oOriginDatePicker.setValueStateText(this.getI18nText("invalidDate"));
+            return;
+        }
+
         const oEndDatePicker = this.byId("endDate") as DatePicker;
-        const oMinEndDate = new Date(oDate);
+        const oEndDate = oEndDatePicker.getDateValue();
+
+        if (oEndDate && oOriginDate <= oEndDate) {
+            oOriginDatePicker.setValueState("Error");
+            oOriginDatePicker.setValueStateText(this.getI18nText("originDateMustBeAfterEnd"));
+            MessageToast.show(this.getI18nText("originDateEndDate"));
+        } else {
+            oOriginDatePicker.setValueState("None");
+        }
+    }
+
+    public onStartDateChange(oEvent: Event): void {
+        const oStartDatePicker = oEvent.getSource() as DatePicker;
+        const oStartDate = oStartDatePicker.getDateValue();
+        const oToday = new Date();
+        oToday.setHours(0, 0, 0, 0);
+
+        if (!oStartDate) {
+            oStartDatePicker.setValueState("Error");
+            oStartDatePicker.setValueStateText(this.getI18nText("invalidDate"));
+            return;
+        }
+
+        if (oStartDate < oToday) {
+            oStartDatePicker.setValueState("Error");
+            oStartDatePicker.setValueStateText(this.getI18nText("startDatePast"));
+            MessageToast.show(this.getI18nText("StartDateFuture"));
+            return;
+        }
+
+        const oEndDatePicker = this.byId("endDate") as DatePicker;
+        const oMinEndDate = new Date(oStartDate);
         oMinEndDate.setDate(oMinEndDate.getDate() + 1);
         oEndDatePicker.setMinDate(oMinEndDate);
-    }
-}
 
-public onEndDateInput(oEvent: Event): void {
-    const oEndDatePicker = oEvent.getSource() as DatePicker;
-    const sValue = oEndDatePicker.getValue();
-    
-    if (!sValue) {
-        oEndDatePicker.setValueState("None");
-        return;
+        oStartDatePicker.setValueState("None");
     }
 
-    const oEndDate = this.validateDateString(sValue);
-    
-    if (!oEndDate) {
-        oEndDatePicker.setValueState("Error");
-        oEndDatePicker.setValueStateText(this.getI18nText("invalidDate"));
-        return;
-    }
+    public onEndDateChange(oEvent: Event): void {
+        const oEndDatePicker = oEvent.getSource() as DatePicker;
+        const oEndDate = oEndDatePicker.getDateValue();
+        const oStartDatePicker = this.byId("beginDate") as DatePicker;
+        const oStartDate = oStartDatePicker.getDateValue();
 
-    const oStartDatePicker = this.byId("beginDate") as DatePicker;
-    const oStartDate = oStartDatePicker.getDateValue();
+        if (oStartDate && oEndDate && oEndDate <= oStartDate) {
+            oEndDatePicker.setValueState("Error");
+            oEndDatePicker.setValueStateText(this.getI18nText("endDateBeforeStart"));
+            return;
+        }
 
-    if (oStartDate && oEndDate <= oStartDate) {
-        oEndDatePicker.setValueState("Error");
-        oEndDatePicker.setValueStateText(this.getI18nText("endDateBeforeStart"));
-    } else {
-        oEndDatePicker.setValueState("None");
-        
         // Update origin date constraints
         const oOriginDatePicker = this.byId("trancheOriginDate") as DatePicker;
-        const oMinOriginDate = new Date(oEndDate);
-        oMinOriginDate.setDate(oMinOriginDate.getDate() + 1);
-        oOriginDatePicker.setMinDate(oMinOriginDate);
-    }
-}
+        if (oEndDate) {
+            const oMinOriginDate = new Date(oEndDate);
+            oMinOriginDate.setDate(oMinOriginDate.getDate() + 1);
+            oOriginDatePicker.setMinDate(oMinOriginDate);
+        }
 
-public onOriginDateInput(oEvent: Event): void {
-    const oOriginDatePicker = oEvent.getSource() as DatePicker;
-    const sValue = oOriginDatePicker.getValue();
-    
-    if (!sValue) {
-        oOriginDatePicker.setValueState("None");
-        return;
+        oEndDatePicker.setValueState("None");
     }
 
-    const oOriginDate = this.validateDateString(sValue);
-    
-    if (!oOriginDate) {
-        oOriginDatePicker.setValueState("Error");
-        oOriginDatePicker.setValueStateText(this.getI18nText("invalidDate"));
-        return;
-    }
+    public onOriginDateChange(oEvent: Event): void {
+        const oOriginDatePicker = oEvent.getSource() as DatePicker;
+        const oOriginDate = oOriginDatePicker.getDateValue();
+        const oEndDatePicker = this.byId("endDate") as DatePicker;
+        const oEndDate = oEndDatePicker.getDateValue();
 
-    const oEndDatePicker = this.byId("endDate") as DatePicker;
-    const oEndDate = oEndDatePicker.getDateValue();
+        if (oEndDate && oOriginDate && oOriginDate <= oEndDate) {
+            oOriginDatePicker.setValueState("Error");
+            oOriginDatePicker.setValueStateText(this.getI18nText("originDateMustBeAfterEnd"));
+            MessageToast.show(this.getI18nText("originDateEndDate"));
+            return;
+        }
 
-    if (oEndDate && oOriginDate <= oEndDate) {
-        oOriginDatePicker.setValueState("Error");
-        oOriginDatePicker.setValueStateText(this.getI18nText("originDateMustBeAfterEnd"));
-        MessageToast.show(this.getI18nText("originDateEndDate"));
-    } else {
         oOriginDatePicker.setValueState("None");
     }
-}
-
-public onStartDateChange(oEvent: Event): void {
-    const oStartDatePicker = oEvent.getSource() as DatePicker;
-    const oStartDate = oStartDatePicker.getDateValue();
-    const oToday = new Date();
-    oToday.setHours(0, 0, 0, 0);
-
-    if (!oStartDate) {
-        oStartDatePicker.setValueState("Error");
-        oStartDatePicker.setValueStateText(this.getI18nText("invalidDate"));
-        return;
-    }
-
-    if (oStartDate < oToday) {
-        oStartDatePicker.setValueState("Error");
-        oStartDatePicker.setValueStateText(this.getI18nText("startDatePast"));
-        MessageToast.show(this.getI18nText("StartDateFuture"));
-        return;
-    }
-
-    const oEndDatePicker = this.byId("endDate") as DatePicker;
-    const oMinEndDate = new Date(oStartDate);
-    oMinEndDate.setDate(oMinEndDate.getDate() + 1);
-    oEndDatePicker.setMinDate(oMinEndDate);
-
-    oStartDatePicker.setValueState("None");
-}
-
-public onEndDateChange(oEvent: Event): void {
-    const oEndDatePicker = oEvent.getSource() as DatePicker;
-    const oEndDate = oEndDatePicker.getDateValue();
-    const oStartDatePicker = this.byId("beginDate") as DatePicker;
-    const oStartDate = oStartDatePicker.getDateValue();
-
-    if (oStartDate && oEndDate && oEndDate <= oStartDate) {
-        oEndDatePicker.setValueState("Error");
-        oEndDatePicker.setValueStateText(this.getI18nText("endDateBeforeStart"));
-        return;
-    }
-
-    // Update origin date constraints
-    const oOriginDatePicker = this.byId("trancheOriginDate") as DatePicker;
-    if (oEndDate) {
-        const oMinOriginDate = new Date(oEndDate);
-        oMinOriginDate.setDate(oMinOriginDate.getDate() + 1);
-        oOriginDatePicker.setMinDate(oMinOriginDate);
-    }
-
-    oEndDatePicker.setValueState("None");
-}
-
-public onOriginDateChange(oEvent: Event): void {
-    const oOriginDatePicker = oEvent.getSource() as DatePicker;
-    const oOriginDate = oOriginDatePicker.getDateValue();
-    const oEndDatePicker = this.byId("endDate") as DatePicker;
-    const oEndDate = oEndDatePicker.getDateValue();
-
-    if (oEndDate && oOriginDate && oOriginDate <= oEndDate) {
-        oOriginDatePicker.setValueState("Error");
-        oOriginDatePicker.setValueStateText(this.getI18nText("originDateMustBeAfterEnd"));
-        MessageToast.show(this.getI18nText("originDateEndDate"));
-        return;
-    }
-
-    oOriginDatePicker.setValueState("None");
-}
 }
