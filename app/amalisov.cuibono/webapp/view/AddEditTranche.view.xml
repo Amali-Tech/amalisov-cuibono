@@ -250,6 +250,12 @@
                     />
 
                     <m:ToolbarSpacer />
+                    <core:Icon
+                color="red"
+                src="sap-icon://alert"
+                visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
+                class="iconAlert"
+            />
                     <m:Text
                         text="{ 
                         path: 'trancheData>/totalWeight', 
@@ -299,7 +305,7 @@
                 />
                 <m:Button
                     press=".onDiscardPress"
-                    type="Default"
+                    type="Reject"
                     text="{i18n>discard}"
                 />
             </m:OverflowToolbar>

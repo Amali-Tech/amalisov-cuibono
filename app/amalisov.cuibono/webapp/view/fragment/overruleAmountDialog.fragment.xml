@@ -2,12 +2,14 @@
     <Dialog title="Override Amount" class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer">
         <content>
             <VBox>
+                <Label text="Amount" />
                 <Input
                     id="amountInput"
                     type="Number"
                     placeholder="Enter amount"
                     required="true"
                 />
+                <Label text="Justification" />
                 <TextArea
                     id="justificationInput"
                     placeholder="Enter justification"
