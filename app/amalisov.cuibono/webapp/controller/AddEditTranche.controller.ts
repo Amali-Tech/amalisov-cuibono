@@ -74,12 +74,13 @@ export default class AddEditTranche extends BaseController {
     };
     public onSavePress() {
         if (this.currentOperation === "create") {
-            this.onCreatePress()
-        } else if (this.currentOperation === "edit") {
-            this.onEditTranche()
+            this.createTarget()
+        }
+        else if (this.currentOperation === "edit") {
+            this.editTranche()
         }
     }
-    public async onCreatePress(): Promise<void> {
+    public async createTarget(): Promise<void> {
         try {
             const trancheName = this.byId("trancheName") as Input;
             const trancheLocation = this.byId("trancheLocation") as ComboBox;
@@ -166,7 +167,7 @@ export default class AddEditTranche extends BaseController {
 
         return `${year}-${month}-${day}`;
     }
-    public async onEditTranche(): Promise<void> {
+    public async editTranche(): Promise<void> {
 
         const trancheLocation = this.byId("trancheLocation") as ComboBox;
         const trancheLocationValue = trancheLocation.getSelectedKey();
@@ -187,6 +188,7 @@ export default class AddEditTranche extends BaseController {
             trancheWeight: oTrancheData.trancheWeight,
             targets: oTrancheData.Target
         }
+
         const sBindingPath = '/updateBonusTranche(...)';
         // Create a context binding (without binding it to the view)
         oModel?.bindContext(sBindingPath)
@@ -258,6 +260,7 @@ export default class AddEditTranche extends BaseController {
         const oContextBinding = oModel.bindContext(sBindingPath, undefined, {
             $expand: "Target",
         });
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
 
         // Fetch the data from the bound context
         oContextBinding
@@ -266,11 +269,11 @@ export default class AddEditTranche extends BaseController {
                 const editTranche: Tranche = {
                     ID: oData.ID,
                     name: oData.name,
-                    beginDate: oData.beginDate,
-                    dateOfOrigin: oData.dateOfOrigin,
+                    beginDate: new Date(oData.beginDate).toLocaleDateString('en-US', options),
+                    dateOfOrigin: new Date(oData.dateOfOrigin).toLocaleDateString('en-US', options),
                     modifiedBy: oData.modifiedBy,
                     status: oData.status,
-                    endDate: oData.endDate,
+                    endDate: new Date(oData.endDate).toLocaleDateString('en-US', options),
                     Location_ID: oData.Location_ID,
                     Target: oData.Target,
                     trancheWeight: oData.trancheWeight,

@@ -121,12 +121,12 @@
                                 />
                                 <m:DatePicker
                                     id="beginDate"
-                                    value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
+                                    minDate="{trancheData>/currentDate}"
+                                    value="{trancheData>/beginDate}"
                                     class="customInput"
                                     required="true"
                                     change="onStartDateChange"
                                     liveChange="onStartDateInput"
-                                    minDate="{trancheData>/currentDate}"
                                 />
                             </m:VBox>
                             <m:VBox width="48%">
@@ -136,7 +136,7 @@
                                 />
                                 <m:DatePicker
                                     id="endDate"
-                                    value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
+                                    value="{trancheData>/endDate}"
                                     class="customInput"
                                     required="true"
                                     change="onEndDateChange"
@@ -162,7 +162,7 @@
                                 <m:Label text="{i18n>originDate}" />
                                 <m:DatePicker
                                     id="trancheOriginDate"
-                                    value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
+                                    value="{trancheData>/dateOfOrigin}"
                                     class="customInput"
                                     required="true"
                                     change="onOriginDateChange"
@@ -272,7 +272,7 @@
                 <m:Button
                     type="Emphasized"
                     text="{i18n>save}"
-                    press="onSavePress"
+                    press=".onSavePress"
                     visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
                 />
 
