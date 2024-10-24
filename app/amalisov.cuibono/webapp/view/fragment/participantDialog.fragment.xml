@@ -8,7 +8,7 @@
         <!-- Aggregation for sort items -->
         <m:sortItems>
             <m:ViewSettingsItem
-                text="{i18n>name}"
+                text="{i18n>bonusTranche}"
                 key="sortName"
                 id="sortName"
             />

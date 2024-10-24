@@ -84,7 +84,7 @@ export default class Participants extends BaseController {
                 this._oSortDialog = oDialog;
                 this._oSortDialog.open();
             }).catch((err) => {
-                MessageBox.show(err + "faileToLoad");
+                MessageBox.show(err + this.getI18nText("faileToLoad"));
             });
         } else {
             this._oSortDialog.open();
@@ -96,10 +96,7 @@ export default class Participants extends BaseController {
 
     public onSortParticipant(oEvent: Event): void {
         const oTable = this.byId("idParticipantTable2") as Table;
-        if (!oTable) {
-            MessageBox.error("The table component is not available.");
-            return;
-        }
+        
     
         const oBinding = oTable.getBinding("items") as ListBinding;
     
@@ -111,7 +108,7 @@ export default class Participants extends BaseController {
     
         switch (sSortKey) {
             case "sortName":
-                oSorter = new Sorter("bonusTranche/name", bDescending); // Sorting by first name
+                oSorter = new Sorter("bonusTranche/name", bDescending); // Sorting by bonus  name
                 break;
             case "sortLocation":
                 oSorter = new Sorter("bonusTranche/Location/name", bDescending); // Sorting by location
@@ -120,13 +117,13 @@ export default class Participants extends BaseController {
                 oSorter = new Sorter("bonusTranche/status", bDescending); // Sorting by tranche status
                 break;
             case "sortFullName":
-                oSorter = new Sorter("participant/firstName", bDescending); // Sorting by full name (first + last)
+                oSorter = new Sorter("participant/firstName", bDescending); // Sorting by first name 
                 break;
             case "sortDepartment":
                 oSorter = new Sorter("participant/department/name", bDescending); // Sorting by department
                 break;
             default:
-                MessageBox.show("invalidCriteria");
+                MessageBox.show(this.getI18nText("invalidCriteria"));
                 return;
         }
     
@@ -201,15 +198,20 @@ public async onSubmitOverride(): Promise<void> {
         const sAmountValue = sAmount.getValue();
         const sJustificationValue = sJustification.getValue();
 
-        if (!sAmountValue || !sJustificationValue) {
-            MessageToast.show("Please provide both amount and justification.");
+        if (!sAmountValue) {
+            MessageToast.show(this.getI18nText("provideAmount"));
+            return;
+        }
+        
+        if (!sJustificationValue) {
+            MessageToast.show(this.getI18nText("justification"));
             return;
         }
 
         // Validate amount is a valid number
         const fAmount = parseFloat(sAmountValue);
         if (isNaN(fAmount)) {
-            MessageToast.show("Please enter a valid amount.");
+            MessageToast.show(this.getI18nText("validAmount"));
             return;
         }
         
@@ -230,25 +232,25 @@ public async onSubmitOverride(): Promise<void> {
             // Execute the create operation
              oBinding.create(oPayload);
             
-            MessageToast.show("Amount overridden successfully.");
+            MessageToast.show(this.getI18nText("amountOverride"));
             this._oOverrideDialog?.close();
             
             // Clear the inputs after successful submission
             sAmount.setValue("");
             sJustification.setValue("");
             
-            // Refresh the table with type-safe binding
+            
             const oTableBinding = oTable.getBinding("items") as ODataListBinding;
            
              oTableBinding.refresh();
             
         
         } catch (error) {
-            MessageBox.error(error + "Failed to override amounts");
+            MessageBox.error(error + this.getI18nText("FailedOverride"));
         }
 
     } catch (error) {
-        MessageBox.error(error + "Unexpected error occurred: ");
+        MessageBox.error(error + this.getI18nText("errorUnexpected"));
     }
 }
 
@@ -435,7 +437,7 @@ public onCancelOverride(): void {
                 this.getView()?.addDependent(this._oDialog);
                 this._oDialog.open();
             }).catch(() => {
-                this.messageShow("Error loading fragment")
+                this.messageShow("erroLoading")
             });
         } else {
             this._oDialog.open();
