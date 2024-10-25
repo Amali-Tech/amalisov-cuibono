@@ -193,12 +193,7 @@ export default class BonusTranches extends BaseController {
                 // Check if the control is a MultiComboBox and get selected keys
                 if ((oControl as ComboBox).getSelectedKey && (oControl as ComboBox).getSelectedKey() && oItem.getName() === "fiscalYear") {
                     const fiscalYear = (oControl as ComboBox).getSelectedKey();
-                    const [startYear, endYear] = fiscalYear.trim().split('-').map(year => parseInt(year, 10));
-                    // Generate the start and end dates dynamically (e.g., 22 October for both years)
-                    const startDate = new Date(startYear, 9, 22);  // October is month 9 (0-based index)
-                    const endDate = new Date(endYear, 9, 22);      // October for the end year
-                    // Use the dynamically generated dates (formatted as "YYYY-MM-DD")
-                    sValue = [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
+                    sValue = fiscalYear
                 }
                 else if (
                     (oControl as MultiComboBox).getSelectedKeys
@@ -217,9 +212,8 @@ export default class BonusTranches extends BaseController {
                 ) {
                     sPath = this.getPathName(oItem);
                     if (sPath) {
-                        if (Array.isArray(sValue) && oItem.getName() === "fiscalYear") {
-                            aFilters.push(new Filter("beginDate", FilterOperator.GE, sValue[0]))
-                            aFilters.push(new Filter("endDate", FilterOperator.LE, sValue[1]))
+                        if (!Array.isArray(sValue) && oItem.getName() === "fiscalYear") {
+                            aFilters.push(new Filter(sPath, FilterOperator.EQ, sValue))
                         }
                         else if (Array.isArray(sValue)) {
                             // Create filters for other array values
@@ -252,16 +246,16 @@ export default class BonusTranches extends BaseController {
             case FilterItemName.SEARCH:
                 return "name";
             case FilterItemName.FISCAL:
-                return "fiscal";
+                return "fiscalYear";
             case FilterItemName.LOCATION:
                 return "Location_ID";
             default:
                 return "";
         }
     }
-    
 
- 
+
+
     public onOpenSortDialog(): void {
         if (!this._oSortDialog) {
             this.loadFragment({
@@ -278,18 +272,18 @@ export default class BonusTranches extends BaseController {
             this._oSortDialog.open();
         }
     }
-    
 
-   
+
+
 
     public onSortTranche(oEvent: Event): void {
         const oTable = this.byId("idTranchesTable") as Table;
-      
-    const oBinding = oTable.getBinding("items") as ListBinding;
 
-    const oSortItem = oEvent.getParameter("sortItem" as never) as ViewSettingsItem;
-    const sSortKey = oSortItem.getKey();
-    const bDescending = oEvent.getParameter("sortDescending" as never) as boolean;
+        const oBinding = oTable.getBinding("items") as ListBinding;
+
+        const oSortItem = oEvent.getParameter("sortItem" as never) as ViewSettingsItem;
+        const sSortKey = oSortItem.getKey();
+        const bDescending = oEvent.getParameter("sortDescending" as never) as boolean;
 
         let oSorter: Sorter | undefined;
 
@@ -313,21 +307,21 @@ export default class BonusTranches extends BaseController {
         }
     }
 
-      
-      public onSortOrderChange(): void {
-       
+
+    public onSortOrderChange(): void {
+
     }
-    
+
 
     public onSortDialogClose(): void {
-        this._oSortDialog?.destroy(); 
-        this._oSortDialog = undefined; 
+        this._oSortDialog?.destroy();
+        this._oSortDialog = undefined;
     }
-    
- 
+
+
     public onSortCancel(): void {
-        this._oSortDialog?.close(); 
-}
+        this._oSortDialog?.close();
+    }
 
 }
 

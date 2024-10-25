@@ -84,11 +84,6 @@
 }
 
 
-
-.totalTitle {
-    margin-left: 15px;
-}
-
 .ToolbarSpacer {
     min-width: 0;
 }
@@ -170,8 +165,4 @@
 
 .iconAlert {
     color: red;
-}
-
-.totalBox {
-    margin-left: 50px;
 }

@@ -88,7 +88,7 @@
                                 name="fiscalYear"
                                 items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
-                                selectedKey="2024-2025"
+                                selectedKey="2025"
                             >
                                 <core:Item
                                     id="filterItems2"
@@ -189,11 +189,13 @@
                                 id="excludedSelect"
                                 name="excluded"
                                 class="filtersStyle"
-                                items="{path: '',templateShareable: true}"
+                                items="{
+                                    path: 'dropdownModel>/excluded',
+                                    templateShareable: true
+                                }"
                                 selectionChange=".onFilterFieldChange"
                             >
                                 <core:Item
-                                    id="selectItems2"
                                     key="{dropdownModel>key}"
                                     text="{dropdownModel>text}"
                                 />
@@ -212,7 +214,12 @@
                 inset="false"
                 growing="true"
                 growingThreshold="10"
-                items="{ path: 'trancheModel>/TrancheParticipation', parameters: { $expand: 'participant($expand=department),bonusTranche($expand=Location)' } }"
+                items="{ 
+                    path: 'trancheModel>/TrancheParticipation', 
+                    parameters: { 
+                        $expand: 'participant($expand=department),bonusTranche($expand=Location)' 
+                    } 
+                }"
                 width="auto"
                 class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
                 mode="MultiSelect"
@@ -227,7 +234,7 @@
                         <m:Button
                             text="{i18n>excludeTranche}"
                             type="Emphasized"
-                            press="onCreateTranche"
+                            press=".onExcludePress"
                         />
                         <m:Button
                             text="{i18n>overrideAmount}"
@@ -295,7 +302,7 @@
                                 text="{trancheModel>participant/firstName}  {trancheModel>participant/lastName}"
                             />
                             <m:Text
-                                text="{ path: 'trancheModel>/participant/department', formatter: '.formatter.formatNullValue' }"
+                                text="{trancheModel>participant/department/name}"
                             />
 
                             <m:Text text="{trancheModel>bonusTranche/name}" />
