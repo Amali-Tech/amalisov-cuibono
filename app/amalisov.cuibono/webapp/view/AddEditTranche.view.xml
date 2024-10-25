@@ -121,12 +121,12 @@
                                 />
                                 <m:DatePicker
                                     id="beginDate"
-                                    value="{path:'trancheData>/beginDate',formatter:'.formatter.formatDate'}"
+                                    minDate="{trancheData>/currentDate}"
+                                    value="{trancheData>/beginDate}"
                                     class="customInput"
                                     required="true"
                                     change="onStartDateChange"
                                     liveChange="onStartDateInput"
-                                    minDate="{trancheData>/currentDate}"
                                 />
                             </m:VBox>
                             <m:VBox width="48%">
@@ -136,7 +136,7 @@
                                 />
                                 <m:DatePicker
                                     id="endDate"
-                                    value="{path:'trancheData>/endDate',formatter:'.formatter.formatDate'}"
+                                    value="{trancheData>/endDate}"
                                     class="customInput"
                                     required="true"
                                     change="onEndDateChange"
@@ -162,7 +162,7 @@
                                 <m:Label text="{i18n>originDate}" />
                                 <m:DatePicker
                                     id="trancheOriginDate"
-                                    value="{path:'trancheData>/dateOfOrigin',formatter:'.formatter.formatDate'}"
+                                    value="{trancheData>/dateOfOrigin}"
                                     class="customInput"
                                     required="true"
                                     change="onOriginDateChange"
@@ -199,7 +199,7 @@
                     <m:Column>
                         <m:Text text="{i18n>targetWeight}" />
                     </m:Column>
-                    <m:Column hAlign="End">
+                    <m:Column hAlign="Left">
                         <m:Text text="{i18n>achievements}" />
                     </m:Column>
                     <m:Column>
@@ -243,26 +243,41 @@
                 </m:items>
             </m:Table>
             <m:VBox class="totalTrancheWeight sapUiLargeMarginBottom">
-                <m:HBox class="totalBox">
-                    <m:Title
-                        text="{i18n>total}"
-                        class="totalTitle"
-                    />
+                <m:FlexBox
+                    class="totalBox"
+                    justifyContent="SpaceAround"
+                >
+                    <m:FlexBox
+                        width="25%"
+                        justifyContent="Start"
+                    >
+                        <m:Title
+                            text="{i18n>total}"
+                            class="totalTitle"
+                        />
+                    </m:FlexBox>
 
-                    <m:ToolbarSpacer />
-                    <m:Text
-                        text="{ 
+                    <m:FlexBox
+                        width="25%"
+                        justifyContent="Center"
+                    >
+                        <core:Icon
+                            color="red"
+                            src="sap-icon://alert"
+                            visible="{path: 'trancheData>/totalWeight', formatter: '.formatter.formatIconVisibility'}"
+                            class="iconAlert"
+                        />
+                        <m:Text
+                            text="{ 
                         path: 'trancheData>/totalWeight', 
                         formatter: '.formatter.formatPercentage' 
                     }"
-                        class="{ 
-                        path: 'trancheData>/totalWeight', 
-                        formatter: '.formatter.formatTextClass'
-                    }"
-                    />
-
-                    <m:ToolbarSpacer />
-                </m:HBox>
+                            class=""
+                        />
+                    </m:FlexBox>
+                    <m:VBox width="25%" />
+                    <m:VBox width="25%" />
+                </m:FlexBox>
             </m:VBox>
         </m:VBox>
 
@@ -272,7 +287,7 @@
                 <m:Button
                     type="Emphasized"
                     text="{i18n>save}"
-                    press="onSavePress"
+                    press=".onSavePress"
                     visible="{parts: [{path: 'trancheData>/status'}, {path: 'trancheData>/totalWeight'}], formatter: '.formatter.formatSaveVisibility'}"
                 />
 
@@ -299,7 +314,7 @@
                 />
                 <m:Button
                     press=".onDiscardPress"
-                    type="Default"
+                    type="Reject"
                     text="{i18n>discard}"
                 />
             </m:OverflowToolbar>

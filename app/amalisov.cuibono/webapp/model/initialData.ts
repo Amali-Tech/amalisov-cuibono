@@ -18,7 +18,7 @@ export interface Tranche {
 }
 export interface Target {
     name: string
-    achievement: string
+    achievement: number
     weight: number
     description?: string
 }
@@ -74,12 +74,16 @@ export class InitializationHelper {
                 { key: "Rwanda", text: this.getI18nText("rwanda") },
             ],
             fiscalYear: [
-                { key: "2024-2025", text: this.getI18nText("2024") },
-                { key: "2023-2024", text: this.getI18nText("2023") },
-                { key: "2022-2023", text: this.getI18nText("2022") },
-                { key: "2021-2022", text: this.getI18nText("2021") },
-                { key: "2020-2021", text: this.getI18nText("2020") },
-                { key: "2019-2020", text: this.getI18nText("2019") },
+                { key: "2025", text: this.getI18nText("2025") },
+                { key: "2024", text: this.getI18nText("2024") },
+                { key: "2023", text: this.getI18nText("2023") },
+                { key: "2022", text: this.getI18nText("2022") },
+                { key: "2021", text: this.getI18nText("2021") },
+                { key: "2020", text: this.getI18nText("2020") },
+            ],
+            excluded: [
+                { key: "Yes", text: this.getI18nText("Yes") },
+                { key: "No", text: this.getI18nText("No") },
             ]
         }
     }

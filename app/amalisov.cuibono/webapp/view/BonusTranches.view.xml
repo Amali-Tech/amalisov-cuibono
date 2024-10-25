@@ -92,6 +92,7 @@
                                 name="bonusTrancheFilter"
                                 items="{path: 'dropdownModel>/fiscalYear',templateShareable: true}"
                                 selectionChange=".onFilterFieldChange"
+                                selectedKey="2025"
                             >
                                 <core:Item
                                     key="{dropdownModel>key}"
@@ -110,7 +111,12 @@
             <m:Table
                 id="idTranchesTable"
                 inset="false"
-                items="{ path: 'trancheModel>/BonusTranche' ,parameters: {$expand: 'Location'}}"
+                items="{
+                    path: 'trancheModel>/BonusTranche',
+                    parameters: {
+                        $expand: 'Location'
+                    }
+                }"
                 class="sapFDynamicPageAlignContent sapUiTinyMarginTop sapUiMediumMarginBeginEnd"
                 width="auto"
                 growing="true"
@@ -129,11 +135,11 @@
                             press="onCreateTranche"
                         />
                         <m:OverflowToolbarButton
-                        icon="sap-icon://sort"
-                        text="{i18n>sort}"
-                        type="Transparent"
-                        press=".onOpenSortDialog"
-                    />
+                            icon="sap-icon://sort"
+                            text="{i18n>sort}"
+                            type="Transparent"
+                            press=".onOpenSortDialog"
+                        />
                     </m:OverflowToolbar>
                 </m:headerToolbar>
                 <m:columns>

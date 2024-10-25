@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="excludeDialog"
+        title="{i18n>excludeTitle}"
+        type="Message"
+        draggable="true"
+        resizable="true"
+    >
+        <VBox>
+            <Label text="{i18n>excludeLabel}" />
+            <TextArea
+                width="100%"
+                value="{i18n>}"
+                rows="5"
+                id="justificationMessage"
+            />
+        </VBox>
+        <beginButton>
+            <Button
+                text="{i18n>Ok}"
+                press="onExcludeDialogOkPress"
+                type="Emphasized"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                text="{i18n>Close}"
+                press="onExcludeDialogCancelPress"
+                type="Default"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
